@@ -19,10 +19,8 @@ import {
   Trash2,
   Search,
   Filter
-} from 'lucide-react';
-
-import SubmitMilestone1Form from './SubmitMilestone1Form';
-import connectToMongo from './db';
+} from 'lucide-react';import SubmitMilestone1Form from './SubmitMilestone1Form';
+import api from "./services/api";
 
 const PolkadotHackathonDashboard = () => {
   const [isExtensionAvailable, setIsExtensionAvailable] = useState(false);
@@ -103,15 +101,19 @@ const PolkadotHackathonDashboard = () => {
 
   // Check for extension availability on component mount
   useEffect(() => {
-    const init = async () => {
-      await connectToMongo();
-    };
-    checkExtension();
+    checkExtension()
 
-    init()
+  }, [])
+  useEffect(() => {
+    api.healthCheck().then(response => {
+      console.log('API Health Check:', response);
+    }).catch(error => {
+      console.error('API Health Check Failed:', error);
+    });
   }, []);
 
   const checkExtension = async () => {
+
     try {
       await waitForExtension();
       setIsExtensionAvailable(true);
