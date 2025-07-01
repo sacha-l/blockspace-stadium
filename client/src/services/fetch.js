@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:2000/api";
 
 async function request(endpoint, { method = "GET", body, headers = {}, ...customConfig } = {}) {
     const config = {

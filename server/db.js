@@ -1,16 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-export async function connectToMongo() {
-  // TODO: Set up environment variables for MongoDB connection string @deji
+dotenv.config();
+
+const connectToMongo = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/hackathon', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('✅ MongoDB connected');
-  } catch (error) {
-    console.error('❌ Mongoose connection failed:', error);
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ Connected to MongoDB Atlas");
+  } catch (err) {
+    console.error("❌ Mongoose connection failed:", err);
+    throw err;
   }
-}
+};
 
 export default connectToMongo;
