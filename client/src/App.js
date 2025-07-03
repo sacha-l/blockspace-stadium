@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  AlertCircle, 
-  CheckCircle, 
-  Loader, 
-  Wallet, 
-  LogOut, 
-  FolderOpen, 
-  FileText, 
-  Settings, 
+import {
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  Wallet,
+  LogOut,
+  FolderOpen,
+  FileText,
+  Settings,
   Plus,
   Calendar,
   Users,
@@ -18,8 +18,18 @@ import {
   Edit,
   Trash2,
   Search,
-  Filter
-} from 'lucide-react';import SubmitMilestone1Form from './SubmitMilestone1Form';
+  Filter,
+  Code,
+  Target,
+  Award,
+  Github,
+  ExternalLink,
+  Lightbulb,
+  ChartBar
+} from 'lucide-react';
+import SubmitMilestone1Form from './SubmitMilestone1Form';
+import Milestone1Display from './Milestone1Display';
+
 import api from "./services/api";
 
 const PolkadotHackathonDashboard = () => {
@@ -99,6 +109,63 @@ const PolkadotHackathonDashboard = () => {
     }
   ]);
 
+  const [formData, setFormData] = useState({
+    ss58Address: selectedAccount,
+    projectTitle: "",
+    projectSummary: "",
+    background: "",
+    techStack: "",
+    gitLink: "",
+    demoLink: "",
+    milestoneTitle: "",
+    milestoneDescription: "",
+    deliverable1: "",
+    deliverable2: "",
+    deliverable3: "",
+    successCriteria: "",
+    additionalNotes: "",
+  });
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const ss58Address = selectedAccount?.address;
+    if (!ss58Address) return; // Don't run until it's set
+
+    const fetchData = async () => {
+      try {
+        const res = await api.getEntryByAddress(ss58Address);
+        const result = res.data;
+        if (result) {
+          setLoaded(true);
+          setFormData({
+            ss58Address: ss58Address || "",
+            projectTitle: result.projectTitle || "",
+            projectSummary: result.projectSummary || "",
+            background: result.background || "",
+            techStack: result.techStack || "",
+            gitLink: result.gitLink || "",
+            demoLink: result.demoLink || "",
+            milestoneTitle: result.milestoneTitle || "",
+            milestoneDescription: result.milestoneDescription || "",
+            deliverable1: result.deliverable1 || "",
+            deliverable2: result.deliverable2 || "",
+            deliverable3: result.deliverable3 || "",
+            successCriteria: result.successCriteria || "",
+            additionalNotes: result.additionalNotes || "",
+          });
+
+          console.log("✅ Loaded formData:", result);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [selectedAccount]); // <- only runs when selectedAccount changes
+
+
   // Check for extension availability on component mount
   useEffect(() => {
     checkExtension()
@@ -112,8 +179,15 @@ const PolkadotHackathonDashboard = () => {
     });
   }, []);
 
-  const checkExtension = async () => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  const checkExtension = async () => {
     try {
       await waitForExtension();
       setIsExtensionAvailable(true);
@@ -128,10 +202,10 @@ const PolkadotHackathonDashboard = () => {
     return new Promise((resolve, reject) => {
       let attempts = 0;
       const maxAttempts = 10;
-      
+
       const checkInterval = setInterval(() => {
         attempts++;
-        
+
         if (window.injectedWeb3 && Object.keys(window.injectedWeb3).length > 0) {
           clearInterval(checkInterval);
           resolve();
@@ -145,32 +219,32 @@ const PolkadotHackathonDashboard = () => {
 
   const connectWallet = async () => {
     if (!isExtensionAvailable) return;
-    
+
     setIsConnecting(true);
     setError('');
-    
+
     try {
       const { web3Accounts, web3Enable, web3FromSource } = await import('@polkadot/extension-dapp');
-      
+
       const extensions = await web3Enable('Hackathonia');
-      
+
       if (extensions.length === 0) {
         throw new Error('No extension authorization given.');
       }
 
       const allAccounts = await web3Accounts();
-      
+
       if (allAccounts.length === 0) {
         throw new Error('No accounts found. Please create an account in your extension.');
       }
 
       setAccounts(allAccounts);
       setIsConnected(true);
-      
+
       if (allAccounts.length === 1) {
         await selectAccount(allAccounts[0]);
       }
-      
+
     } catch (err) {
       setError(`Connection failed: ${err.message}`);
     } finally {
@@ -182,13 +256,13 @@ const PolkadotHackathonDashboard = () => {
     try {
       const { web3FromSource } = await import('@polkadot/extension-dapp');
       const accountInjector = await web3FromSource(account.meta.source);
-      
+
       setSelectedAccount(account);
 
       // Save to local Storage
       sessionStorage["session_account"] = account;
       setInjector(accountInjector);
-      
+
     } catch (err) {
       setError(`Failed to select account: ${err.message}`);
     }
@@ -241,7 +315,7 @@ const PolkadotHackathonDashboard = () => {
         <button
           onClick={connectWallet}
           disabled={!isExtensionAvailable || isConnecting}
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold 
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold
                    hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
                    transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2"
         >
@@ -266,11 +340,10 @@ const PolkadotHackathonDashboard = () => {
                 <div
                   key={account.address}
                   onClick={() => selectAccount(account)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
-                    selectedAccount?.address === account.address
-                      ? 'border-purple-500 bg-purple-50 shadow-md'
-                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
-                  }`}
+                  className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${selectedAccount?.address === account.address
+                    ? 'border-purple-500 bg-purple-50 shadow-md'
+                    : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -304,7 +377,7 @@ const PolkadotHackathonDashboard = () => {
         </div>
       </div>
 
-      <SubmitMilestone1Form sessionAddress={selectedAccount.address} />
+      <SubmitMilestone1Form sessionAddress={selectedAccount.address} onInputChange={handleInputChange} loaded={loaded} formData={formData} />
     </div>
   );
 
@@ -444,7 +517,7 @@ const PolkadotHackathonDashboard = () => {
               </label>
             </div>
           </div>
-          
+
           <div className="mt-6">
             <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
               Save Preferences
@@ -455,10 +528,13 @@ const PolkadotHackathonDashboard = () => {
     </div>
   );
 
+
+
   // Dashboard Component
   const DashboardComponent = () => {
     const tabs = [
       { id: 'projects', label: 'Submit M1', icon: FolderOpen },
+      { id: 'progress', label: 'View', icon: ChartBar },
       { id: 'submissions', label: 'Submissions', icon: FileText },
       { id: 'settings', label: 'Settings', icon: Settings },
     ];
@@ -467,6 +543,8 @@ const PolkadotHackathonDashboard = () => {
       switch (activeTab) {
         case 'projects':
           return <ProjectsTab />;
+        case 'progress':
+          return <Milestone1Display submissionInfo={formData} />;
         case 'submissions':
           return <SubmissionsTab />;
         case 'settings':
@@ -488,7 +566,7 @@ const PolkadotHackathonDashboard = () => {
                 </div>
                 <h1 className="text-xl font-semibold text-gray-900">Hackathonia</h1>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <div className="text-sm text-gray-600">
                   {selectedAccount?.meta.name || 'Account'} • {formatAddress(selectedAccount?.address)}
@@ -515,11 +593,10 @@ const PolkadotHackathonDashboard = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
-                        ? 'border-purple-500 text-purple-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                    className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                      ? 'border-purple-500 text-purple-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     {tab.label}
