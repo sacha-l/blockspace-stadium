@@ -11,77 +11,13 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-export default function SubmitMilestone1Form({ sessionAddress }) {
-  const [formData, setFormData] = useState({
-    ss58Address: sessionAddress,
-    projectTitle: "",
-    projectSummary: "",
-    background: "",
-    techStack: "",
-    gitLink: "",
-    demoLink: "",
-    milestoneTitle: "",
-    milestoneDescription: "",
-    deliverable1: "",
-    deliverable2: "",
-    deliverable3: "",
-    successCriteria: "",
-    additionalNotes: "",
-  });
-
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const ss58Address = sessionAddress;
-    const fetchData = async () => {
-      try {
-        const result = await api.getEntryByAddress(ss58Address);
-        console.log(result);
-        if (result) {
-          setLoaded(true);
-          setFormData({
-            ss58Address: sessionAddress || "",
-            projectTitle: result.projectTitle || "",
-            projectSummary: result.projectSummary || "",
-            background: result.background || "",
-            techStack: result.techStack || "",
-            gitLink: result.gitLink || "",
-            demoLink: result.demoLink || "",
-            milestoneTitle: result.milestoneTitle || "",
-            milestoneDescription: result.milestoneDescription || "",
-            deliverable1: result.deliverable1 || "",
-            deliverable2: result.deliverable2 || "",
-            deliverable3: result.deliverable3 || "",
-            successCriteria: result.successCriteria || "",
-            additionalNotes: result.additionalNotes || "",
-          });
-
-          console.log({formData});
-        }
-      } catch (error) {
-        console.error("❌ Error fetching data:", error);
-      }
-    };
-
-    console.log("----");
-    console.log({formData});
-
-    fetchData();
-  }, []);
+export default function SubmitMilestone1Form({ sessionAddress, formData, loaded, onInputChange }) {
 
   const [completedDeliverables, setCompletedDeliverables] = useState({
     deliverable1: false,
     deliverable2: false,
     deliverable3: false,
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const handleDeliverableToggle = (deliverable) => {
     setCompletedDeliverables((prev) => ({
@@ -136,7 +72,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                   type="text"
                   name="projectTitle"
                   value={formData.projectTitle}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-lg"
                   placeholder="Enter your innovative project title..."
                 />
@@ -148,7 +84,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                 <textarea
                   name="projectSummary"
                   value={formData.projectSummary}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   rows="4"
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 resize-none"
                   placeholder="Describe your project in 2-3 sentences, including target users and key value proposition..."
@@ -161,7 +97,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                 <textarea
                   name="background"
                   value={formData.background}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   rows="5"
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 resize-none"
                   placeholder="Provide context about the problem you're solving and current pain points..."
@@ -188,7 +124,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                 <textarea
                   name="techStack"
                   value={formData.techStack}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   rows="3"
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all duration-200 resize-none"
                   placeholder="List frameworks, languages, databases, APIs, and tools used..."
@@ -216,7 +152,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                   type="text"
                   name="milestoneTitle"
                   value={formData.milestoneTitle}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 text-lg"
                   placeholder="Working prototype title that represents your MVP..."
                 />
@@ -228,7 +164,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                 <textarea
                   name="milestoneDescription"
                   value={formData.milestoneDescription}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   rows="4"
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 resize-none"
                   placeholder="Describe what you built during the 3-day hackathon, focusing on core functionality..."
@@ -242,7 +178,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                   type="text"
                   name="gitLink"
                   value={formData.gitLink}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 text-lg"
                   placeholder="Link to your github repo..."
                 />
@@ -255,7 +191,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                   type="text"
                   name="demoLink"
                   value={formData.demoLink}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 text-lg"
                   placeholder="Link to working prototype of MVP..."
                 />
@@ -298,7 +234,7 @@ export default function SubmitMilestone1Form({ sessionAddress }) {
                     <textarea
                       name={deliverable}
                       value={formData[deliverable]}
-                      onChange={handleInputChange}
+                      onChange={onInputChange}
                       rows="2"
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all duration-200 resize-none ml-9"
                       placeholder={`Describe specific, measurable outcome ${
