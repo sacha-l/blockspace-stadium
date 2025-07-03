@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "./services/api";
+
 import {
   CheckCircle,
   Upload,
@@ -9,8 +11,9 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-export default function SubmitMilestone1Form() {
+export default function SubmitMilestone1Form({ sessionAddress }) {
   const [formData, setFormData] = useState({
+    ss58Address: sessionAddress,
     projectTitle: "",
     projectSummary: "",
     background: "",
@@ -25,6 +28,46 @@ export default function SubmitMilestone1Form() {
     successCriteria: "",
     additionalNotes: "",
   });
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const ss58Address = sessionAddress;
+    const fetchData = async () => {
+      try {
+        const result = await api.getEntryByAddress(ss58Address);
+        console.log(result);
+        if (result) {
+          setLoaded(true);
+          setFormData({
+            ss58Address: sessionAddress || "",
+            projectTitle: result.projectTitle || "",
+            projectSummary: result.projectSummary || "",
+            background: result.background || "",
+            techStack: result.techStack || "",
+            gitLink: result.gitLink || "",
+            demoLink: result.demoLink || "",
+            milestoneTitle: result.milestoneTitle || "",
+            milestoneDescription: result.milestoneDescription || "",
+            deliverable1: result.deliverable1 || "",
+            deliverable2: result.deliverable2 || "",
+            deliverable3: result.deliverable3 || "",
+            successCriteria: result.successCriteria || "",
+            additionalNotes: result.additionalNotes || "",
+          });
+
+          console.log({formData});
+        }
+      } catch (error) {
+        console.error("❌ Error fetching data:", error);
+      }
+    };
+
+    console.log("----");
+    console.log({formData});
+
+    fetchData();
+  }, []);
 
   const [completedDeliverables, setCompletedDeliverables] = useState({
     deliverable1: false,
@@ -47,30 +90,28 @@ export default function SubmitMilestone1Form() {
     }));
   };
 
-
-  const handleSubmit = async (formData, deliverables) => {
-    // try {
-    //   const response = await fetch("http://localhost:5984/milestones", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: "Basic " + btoa("admin:password"), // ⚠️ Use your CouchDB username & password
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
-
-    //   const result = await response.json();
-
-    //   if (response.ok) {
-    //     alert("Milestone submitted successfully!");
-    //   } else {
-    //     alert("Error: " + result.reason);
-    //   }
-    // } catch (error) {
-    //   console.error("Submit error:", error);
-    //   alert("Something went wrong.");
-    // }
+  const handleSubmit = async (formData) => {
+    try {
+      const response = await api.submitEntry(formData);
+      console.log("✅ Entry submitted:", response);
+      // Optionally show success UI
+    } catch (error) {
+      console.error("❌ Submission failed:", error.message || error);
+      // Optionally show error UI
+    }
   };
+
+  if (!loaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          {/* Spinning circle loader */}
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-6">
@@ -199,7 +240,7 @@ export default function SubmitMilestone1Form() {
                 </label>
                 <input
                   type="text"
-                  name="milestoneTitle"
+                  name="gitLink"
                   value={formData.gitLink}
                   onChange={handleInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 text-lg"
@@ -212,7 +253,7 @@ export default function SubmitMilestone1Form() {
                 </label>
                 <input
                   type="text"
-                  name="milestoneTitle"
+                  name="demoLink"
                   value={formData.demoLink}
                   onChange={handleInputChange}
                   className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all duration-200 text-lg"
@@ -274,7 +315,7 @@ export default function SubmitMilestone1Form() {
           <div className="text-center pt-8">
             <button
               type="button"
-              onClick={handleSubmit(formData, completedDeliverables)}
+              onClick={() => handleSubmit(formData)}
               className="inline-flex items-center px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 focus:ring-4 focus:ring-blue-200"
             >
               <Upload className="w-6 h-6 mr-3" />

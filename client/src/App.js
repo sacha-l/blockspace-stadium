@@ -184,6 +184,9 @@ const PolkadotHackathonDashboard = () => {
       const accountInjector = await web3FromSource(account.meta.source);
       
       setSelectedAccount(account);
+
+      // Save to local Storage
+      sessionStorage["session_account"] = account;
       setInjector(accountInjector);
       
     } catch (err) {
@@ -301,7 +304,7 @@ const PolkadotHackathonDashboard = () => {
         </div>
       </div>
 
-      <SubmitMilestone1Form />
+      <SubmitMilestone1Form sessionAddress={selectedAccount.address} />
     </div>
   );
 
