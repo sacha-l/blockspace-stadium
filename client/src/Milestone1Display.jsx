@@ -1,14 +1,19 @@
 import {
-  CheckCircle,
+  Award,
   Calendar,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Clock,
   Code,
+  ExternalLink,
+  Github,
   Lightbulb,
   Target,
-  Users,
-  Award,
-  Github,
-  ExternalLink,
+  User,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Milestone1Display({ submissionInfo }) {
   // Sample data for a completed submission
@@ -56,211 +61,299 @@ export default function Milestone1Display({ submissionInfo }) {
     liveDemo: "https://ecotrack-demo.vercel.app",
   };
 
+  const [expandedSections, setExpandedSections] = useState({
+    projectOverview: true,
+    technicalDetails: true,
+    milestoneDetails: true,
+    successCriteria: true,
+  });
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const StatusBadge = ({ completed }) => (
-    <div
-      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-        completed
-          ? "bg-green-100 text-green-800 border border-green-200"
-          : "bg-gray-100 text-gray-600 border border-gray-200"
+    <span
+      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+        completed ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
       }`}
     >
-      <CheckCircle
-        className={`w-4 h-4 mr-2 ${
-          completed ? "text-green-600" : "text-gray-400"
-        }`}
-      />
-      {completed ? "Completed" : "Pending"}
-    </div>
+      {completed ? (
+        <CheckCircle className="w-4 h-4 mr-1.5 text-green-500" />
+      ) : (
+        <Clock className="w-4 h-4 mr-1.5 text-gray-500" />
+      )}
+      {completed ? "Completed" : "In Progress"}
+    </span>
   );
 
+  const data = submissionInfo || projectData;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-blue-600 rounded-3xl mb-6 shadow-2xl">
-            <Award className="w-12 h-12 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl mb-6 shadow-md">
+            <Award className="w-10 h-10 text-white" />
           </div>
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-8">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
-              {submissionInfo?.projectTitle}
-            </h1>
-            <div className="flex items-center justify-center space-x-6 text-sm text-gray-600 mb-6">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4" />
-                <span>Submitted: {submissionInfo?.submittedDate}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Target className="w-4 h-4" />
-                <span>{submissionInfo?.timeline}</span>
-              </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            {data.projectTitle}
+          </h1>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-6">
+            <div className="flex items-center text-sm text-gray-600">
+              <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+              <span>Submitted: {data.submittedDate}</span>
             </div>
-            <div className="flex items-center justify-center space-x-4">
-              <a
-                href={submissionInfo?.githubRepo}
-                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors duration-200"
-              >
-                <Github className="w-5 h-5 mr-2" />
-                View Code
-              </a>
-              <a
-                href={submissionInfo?.liveDemo}
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
-              >
-                <ExternalLink className="w-5 h-5 mr-2" />
-                Live Demo
-              </a>
+            <div className="flex items-center text-sm text-gray-600">
+              <Clock className="w-4 h-4 mr-2 text-gray-500" />
+              <span>{data.timeline}</span>
             </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <User className="w-4 h-4 mr-2 text-gray-500" />
+              <span>Team: {data?.teamMembers?.join(", ")}</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href={data.githubRepo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-5 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+            >
+              <Github className="w-4 h-4 mr-2" />
+              View Code
+            </a>
+            <a
+              href={data.liveDemo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-colors text-sm font-medium"
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Live Demo
+            </a>
           </div>
         </div>
 
         {/* Project Overview */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          <div
+            className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => toggleSection("projectOverview")}
+          >
             <div className="flex items-center space-x-3">
-              <Lightbulb className="w-6 h-6 text-white" />
-              <h2 className="text-2xl font-bold text-white">
+              <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
+                <Lightbulb className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-800">
                 Project Overview
               </h2>
             </div>
+            {expandedSections.projectOverview ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
           </div>
-          <div className="p-8">
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Project Summary
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-                {submissionInfo?.projectSummary}
-              </p>
+
+          {expandedSections.projectOverview && (
+            <div className="px-6 pb-6 space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Project Summary
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                  {data.projectSummary}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Background & Problem Statement
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg">
+                  {data.background}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Background & Problem Statement
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-gray-50 p-6 rounded-xl">
-                {submissionInfo?.background}
-              </p>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Technical Implementation */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-8 py-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          <div
+            className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => toggleSection("technicalDetails")}
+          >
             <div className="flex items-center space-x-3">
-              <Code className="w-6 h-6 text-white" />
-              <h2 className="text-2xl font-bold text-white">
+              <div className="p-2 rounded-lg bg-purple-50 text-purple-600">
+                <Code className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-800">
                 Technical Implementation
               </h2>
             </div>
+            {expandedSections.technicalDetails ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
           </div>
-          <div className="p-8">
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Tech Stack & Tools
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-purple-50 p-6 rounded-xl border-l-4 border-purple-500">
-                {submissionInfo?.techStack}
-              </p>
+
+          {expandedSections.technicalDetails && (
+            <div className="px-6 pb-6 space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Tech Stack & Tools
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                  {data.techStack}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Curators & Mentors
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg">
+                  {data.curators}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Curators & Mentors
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-gray-50 p-6 rounded-xl">
-                {submissionInfo?.curators}
-              </p>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Milestone Achievement */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-green-500 to-green-600 px-8 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Calendar className="w-6 h-6 text-white" />
-                <h2 className="text-2xl font-bold text-white">
-                  Milestone 1: {submissionInfo?.milestoneTitle}
-                </h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          <div
+            className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => toggleSection("milestoneDetails")}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="p-2 rounded-lg bg-green-50 text-green-600">
+                <Calendar className="w-5 h-5" />
               </div>
-              <StatusBadge completed={true} />
-            </div>
-          </div>
-          <div className="p-8">
-            <p className="text-gray-700 leading-relaxed bg-green-50 p-6 rounded-xl border-l-4 border-green-500 mb-8">
-              {submissionInfo?.milestoneDescription}
-            </p>
-
-            {/* Deliverables */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-6">
-                Deliverables Achieved
-              </h3>
-              {[submissionInfo?.deliverables1, submissionInfo?.deliverables2, submissionInfo?.deliverables3].map((deliverable, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 rounded-xl p-6 border border-gray-200"
-                >
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-5 h-5 text-white" />
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                        {""}
-                      </h4>
-                      <p className="text-gray-600 leading-relaxed">
-                        {deliverable}
-                      </p>
-                      <div className="mt-3">
-                        <StatusBadge completed={""} />
-                      </div>
-                    </div>
-                  </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Milestone 1: {data.milestoneTitle}
+                </h2>
+                <div className="flex items-center mt-1">
+                  <StatusBadge completed={true} />
                 </div>
-              ))}
+              </div>
             </div>
+            {expandedSections.milestoneDetails ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
           </div>
+
+          {expandedSections.milestoneDetails && (
+            <div className="px-6 pb-6 space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Description
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                  {data.milestoneDescription}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Deliverables Achieved
+                </h3>
+                <div className="space-y-4">
+                  {data?.deliverables?.map((deliverable, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div
+                          className={`flex-shrink-0 mt-1 w-5 h-5 rounded-full flex items-center justify-center ${
+                            deliverable.completed
+                              ? "bg-green-500"
+                              : "bg-gray-300"
+                          }`}
+                        >
+                          {deliverable.completed && (
+                            <Check className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-800">
+                            {deliverable.title}
+                          </h4>
+                          <p className="text-gray-600 text-sm mt-1">
+                            {deliverable.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Success Criteria & Notes */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          <div
+            className="px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => toggleSection("successCriteria")}
+          >
             <div className="flex items-center space-x-3">
-              <Target className="w-6 h-6 text-white" />
-              <h2 className="text-2xl font-bold text-white">
+              <div className="p-2 rounded-lg bg-teal-50 text-teal-600">
+                <Target className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-800">
                 Success Criteria & Results
               </h2>
             </div>
+            {expandedSections.successCriteria ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
           </div>
-          <div className="p-8">
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Success Criteria Met
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-teal-50 p-6 rounded-xl border-l-4 border-teal-500">
-                {submissionInfo?.successCriteria}
-              </p>
+
+          {expandedSections.successCriteria && (
+            <div className="px-6 pb-6 space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Success Criteria Met
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                  {data.successCriteria}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Additional Notes & Learnings
+                </h3>
+                <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg">
+                  {data.additionalNotes}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Additional Notes & Learnings
-              </h3>
-              <p className="text-gray-700 leading-relaxed bg-gray-50 p-6 rounded-xl">
-                {submissionInfo?.additionalNotes}
-              </p>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Footer */}
-        <div className="text-center py-8">
-          <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-2xl shadow-xl">
-            <Award className="w-6 h-6 mr-3" />
-            <span className="text-lg font-bold">
+        {/* Completion Badge */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-sm">
+            <Award className="w-5 h-5 mr-2" />
+            <span className="font-medium">
               Milestone 1 Successfully Completed
             </span>
           </div>
