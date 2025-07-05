@@ -5,15 +5,16 @@ mod hackathon_escrow {
     use ink::prelude::string::String;
     use ink::prelude::vec::Vec;
     use ink::storage::Mapping;
+    use ink::primitives::U256;
 
     /// Represents a hackathon escrow account
     #[ink::scale_derive(Encode, Decode, TypeInfo)]
     #[cfg_attr(feature = "std", derive(ink::storage::traits::StorageLayout))]
     pub struct HackathonEscrow {
         pub hackathon_id: u32,
-        pub total_funds: Balance,
-        pub organizer: AccountId,
-        pub multisig_addresses: Vec<AccountId>,
+        pub total_funds: U256,
+        pub organizer: Address,
+        pub multisig_addresses: Vec<Address>,
         pub required_signatures: u32,
         pub is_active: bool,
     }
@@ -24,10 +25,10 @@ mod hackathon_escrow {
     pub struct PayoutRequest {
         pub request_id: u32,
         pub hackathon_id: u32,
-        pub recipient: AccountId,
-        pub amount: Balance,
+        pub recipient: Address,
+        pub amount: U256,
         pub reason: String,
-        pub signatures: Vec<AccountId>,
+        pub signatures: Vec<Address>,
         pub is_executed: bool,
         pub created_at: u64,
     }
@@ -44,62 +45,7 @@ mod hackathon_escrow {
         /// Counter for payout request IDs
         next_request_id: u32,
         /// Contract owner
-        owner: AccountId,
-    }
-
-    /// Contract events
-    #[ink(event)]
-    pub struct HackathonCreated {
-        #[ink(topic)]
-        hackathon_id: u32,
-        #[ink(topic)]
-        organizer: AccountId,
-        initial_funds: Balance,
-    }
-
-    #[ink(event)]
-    pub struct FundsDeposited {
-        #[ink(topic)]
-        hackathon_id: u32,
-        amount: Balance,
-        depositor: AccountId,
-    }
-
-    #[ink(event)]
-    pub struct MultisigAdded {
-        #[ink(topic)]
-        hackathon_id: u32,
-        #[ink(topic)]
-        multisig_address: AccountId,
-    }
-
-    #[ink(event)]
-    pub struct PayoutRequested {
-        #[ink(topic)]
-        request_id: u32,
-        #[ink(topic)]
-        hackathon_id: u32,
-        #[ink(topic)]
-        recipient: AccountId,
-        amount: Balance,
-    }
-
-    #[ink(event)]
-    pub struct PayoutSigned {
-        #[ink(topic)]
-        request_id: u32,
-        #[ink(topic)]
-        signer: AccountId,
-        signatures_count: u32,
-    }
-
-    #[ink(event)]
-    pub struct PayoutExecuted {
-        #[ink(topic)]
-        request_id: u32,
-        #[ink(topic)]
-        recipient: AccountId,
-        amount: Balance,
+        owner: Address,
     }
 
     /// Contract errors
@@ -136,7 +82,7 @@ mod hackathon_escrow {
         #[ink(message, payable)]
         pub fn create_hackathon(
             &mut self,
-            multisig_addresses: Vec<AccountId>,
+            multisig_addresses: Vec<Address>,
             required_signatures: u32,
         ) -> Result<u32> {
             let caller = self.env().caller();
@@ -165,19 +111,12 @@ mod hackathon_escrow {
 
             self.hackathon_escrows.insert(hackathon_id, &escrow);
 
-            self.env().emit_event(HackathonCreated {
-                hackathon_id,
-                organizer: caller,
-                initial_funds,
-            });
-
             Ok(hackathon_id)
         }
 
         /// Deposit additional funds to a hackathon escrow
         #[ink(message, payable)]
         pub fn deposit_funds(&mut self, hackathon_id: u32) -> Result<()> {
-            let caller = self.env().caller();
             let amount = self.env().transferred_value();
 
             let mut escrow = self
@@ -192,12 +131,6 @@ mod hackathon_escrow {
             escrow.total_funds += amount;
             self.hackathon_escrows.insert(hackathon_id, &escrow);
 
-            self.env().emit_event(FundsDeposited {
-                hackathon_id,
-                amount,
-                depositor: caller,
-            });
-
             Ok(())
         }
 
@@ -206,7 +139,7 @@ mod hackathon_escrow {
         pub fn add_multisig_address(
             &mut self,
             hackathon_id: u32,
-            multisig_address: AccountId,
+            multisig_address: Address,
         ) -> Result<()> {
             let caller = self.env().caller();
 
@@ -228,11 +161,6 @@ mod hackathon_escrow {
             if !escrow.multisig_addresses.contains(&multisig_address) {
                 escrow.multisig_addresses.push(multisig_address);
                 self.hackathon_escrows.insert(hackathon_id, &escrow);
-
-                self.env().emit_event(MultisigAdded {
-                    hackathon_id,
-                    multisig_address,
-                });
             }
 
             Ok(())
@@ -243,8 +171,8 @@ mod hackathon_escrow {
         pub fn request_payout(
             &mut self,
             hackathon_id: u32,
-            recipient: AccountId,
-            amount: Balance,
+            recipient: Address,
+            amount: U256,
             reason: String,
         ) -> Result<u32> {
             let caller = self.env().caller();
@@ -283,13 +211,6 @@ mod hackathon_escrow {
 
             self.payout_requests.insert(request_id, &payout_request);
 
-            self.env().emit_event(PayoutRequested {
-                request_id,
-                hackathon_id,
-                recipient,
-                amount,
-            });
-
             Ok(request_id)
         }
 
@@ -326,12 +247,6 @@ mod hackathon_escrow {
             let signatures_count = payout_request.signatures.len() as u32;
 
             self.payout_requests.insert(request_id, &payout_request);
-
-            self.env().emit_event(PayoutSigned {
-                request_id,
-                signer: caller,
-                signatures_count,
-            });
 
             // Auto-execute if enough signatures
             if signatures_count >= escrow.required_signatures {
@@ -384,12 +299,6 @@ mod hackathon_escrow {
                 .insert(payout_request.hackathon_id, &escrow);
             self.payout_requests.insert(request_id, &payout_request);
 
-            self.env().emit_event(PayoutExecuted {
-                request_id,
-                recipient: payout_request.recipient,
-                amount: payout_request.amount,
-            });
-
             Ok(())
         }
 
@@ -431,13 +340,13 @@ mod hackathon_escrow {
 
         /// Get contract balance
         #[ink(message)]
-        pub fn get_contract_balance(&self) -> Balance {
+        pub fn get_contract_balance(&self) -> U256 {
             self.env().balance()
         }
 
         /// Get hackathon balance
         #[ink(message)]
-        pub fn get_hackathon_balance(&self, hackathon_id: u32) -> Result<Balance> {
+        pub fn get_hackathon_balance(&self, hackathon_id: u32) -> Result<U256> {
             let escrow = self
                 .hackathon_escrows
                 .get(hackathon_id)
