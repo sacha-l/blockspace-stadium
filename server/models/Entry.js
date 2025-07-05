@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const EntrySchema = new mongoose.Schema({
   ss58Address: { type: String, required: true, unique: true },
 
+  teamName: String,
   projectTitle: String,
   projectSummary: String,
   background: String,
@@ -11,9 +12,8 @@ const EntrySchema = new mongoose.Schema({
   demoLink: String,
   milestoneTitle: String,
   milestoneDescription: String,
-  deliverable1: String,
-  deliverable2: String,
-  deliverable3: String,
+  status: String,
+  deliverable: String,
   successCriteria: String,
   additionalNotes: String,
 }, { timestamps: true });
