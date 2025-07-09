@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000'; // Adjust port as needed
+const API_BASE_URL = 'http://localhost:2000/api'; // Adjust port as needed
 
 const request = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -36,9 +36,9 @@ export const api = {
     return request(`/projects?${searchParams.toString()}`);
   },
 
-  getProject: (id: string) => request(`/projects/${id}`),
+  getProject: (id: string) => request(`/entry/${id}`),
 
-  updateProjectStatus: (id: string, status: string) => request(`/projects/${id}/status`, {
+  updateProjectStatus: (ss58Address: string, status: string) => request(`/update-project/${ss58Address}`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   }),

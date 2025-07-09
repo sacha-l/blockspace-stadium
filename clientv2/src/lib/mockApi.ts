@@ -6,15 +6,17 @@ import {
   adminCredentials,
 } from "./mockData";
 
+import { api } from "./api";
+
 // Simulate network delays
 const delay = (ms: number = 800) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 // Local storage keys
 const STORAGE_KEYS = {
-  PROJECTS: "hackthonia_projects",
-  PAYOUTS: "hackthonia_payouts",
-  ADMIN_SESSION: "hackthonia_admin_session",
+  PROJECTS: "hackathonia_projects",
+  PAYOUTS: "hackathonia_payouts",
+  ADMIN_SESSION: "hackathonia_admin_session",
 };
 
 // Initialize local storage with mock data
@@ -51,67 +53,86 @@ const setStoredPayouts = (payouts: Payout[]) => {
 
 // Project API
 export const projectApi = {
-  // Get all projects
+  // Get all projects (fetching 10 random ones from the server)
   getProjects: async (): Promise<Project[]> => {
     await delay();
-    return getStoredProjects();
+
+    try {
+      const response = await api.getProjects(/* { limit: 10 } */);
+
+      // If the backend already returns random projects, no need to shuffle
+      return response.data;
+    } catch (err) {
+      console.error("❌ Failed to fetch projects:", err);
+      return [];
+    }
   },
 
-  // Get project by ID
+  // Get project by ID (ss58Address)
   getProject: async (id: string): Promise<Project | null> => {
     await delay();
-    const projects = getStoredProjects();
-    return projects.find((p) => p.id === id) || null;
+    try {
+      const result = await api.getProject(id);
+      if (result.status !== "success") {
+        console.warn("⚠️ Project not found or failed to fetch");
+        return null;
+      }
+
+      return result.data as Project;
+    } catch (err) {
+      console.error("❌ getProject error:", err);
+      return null;
+    }
   },
 
   // Submit new project
   submitProject: async (
-    projectData: Omit<Project, "id" | "status" | "submittedAt">
-  ): Promise<Project> => {
+    projectData: any
+  ): Promise<{ status: string, project: Project }> => {
     await delay();
 
-    const projects = getStoredProjects();
+    try {
+      const newProject: Project = {
+        ...projectData,
+        id: `project-${Date.now()}`,
+        status: "pending",
+        submittedAt: new Date().toISOString(),
+      };
 
-    // Check if ss58Address already exists
-    const existingProject = projects.find(
-      (p) => p.ss58Address === projectData.ss58Address
-    );
-    if (existingProject) {
-      throw new Error("A project with this address already exists");
+      const result = await api.submitEntry(newProject);
+
+      console.log(result);
+      if (result.status !== "success") {
+        throw new Error(result.message || "Failed to submit project");
+      }
+
+      return { status: result.status, project: newProject };
+    } catch (err: any) {
+      console.error("❌ submitProject error:", err);
+      throw new Error(err.message || "Unexpected error");
     }
-
-    const newProject: Project = {
-      ...projectData,
-      id: `project-${Date.now()}`,
-      status: "pending",
-      submittedAt: new Date().toISOString(),
-    };
-
-    const updatedProjects = [...projects, newProject];
-    setStoredProjects(updatedProjects);
-
-    return newProject;
   },
 
   // Update project status (admin only)
   updateProjectStatus: async (
-    id: string,
+    ss58Address: string,
     status: Project["status"]
   ): Promise<Project> => {
     await delay();
 
-    const projects = getStoredProjects();
-    const projectIndex = projects.findIndex((p) => p.id === id);
+    try {
+      const result = await api.updateProjectStatus(ss58Address, status);
 
-    if (projectIndex === -1) {
-      throw new Error("Project not found");
+      if (result.status !== "success") {
+        throw new Error(result.message || "Failed to update project status");
+      }
+
+      return result.data as Project;
+    } catch (err: any) {
+      console.error("❌ updateProjectStatus error:", err);
+      throw new Error(err.message || "Unexpected error while updating status");
     }
-
-    projects[projectIndex].status = status;
-    setStoredProjects(projects);
-
-    return projects[projectIndex];
-  },
+  }
 };
 
 // Admin API

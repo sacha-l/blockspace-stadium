@@ -101,7 +101,7 @@ const AdminLoginModal = ({
                 required
               />
               <p className="text-sm text-muted-foreground mt-1">
-                Hint: hackthonia2024
+                Hint: hackathonia2024
               </p>
             </div>
           </div>
@@ -445,7 +445,7 @@ const AdminPage = () => {
               </TableHeader>
               <TableBody>
                 {projects.map((project) => (
-                  <TableRow key={project.id}>
+                  <TableRow key={project.ss58Address}>
                     <TableCell className="font-medium">
                       {project.projectTitle}
                     </TableCell>
@@ -457,7 +457,7 @@ const AdminPage = () => {
                       <Select
                         value={project.status}
                         onValueChange={(value: Project["status"]) =>
-                          handleStatusChange(project.id, value)
+                          handleStatusChange(project.ss58Address, value)
                         }
                       >
                         <SelectTrigger className="w-32">
@@ -479,7 +479,7 @@ const AdminPage = () => {
                           size="sm"
                           variant="outline"
                           onClick={() =>
-                            window.open(`/project/${project.id}`, "_blank")
+                            window.open(`/project/${project.ss58Address}`, "_blank")
                           }
                         >
                           <Eye className="h-4 w-4" />

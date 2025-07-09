@@ -117,15 +117,22 @@ const SubmissionPage = () => {
         additionalNotes: data.additionalNotes || undefined,
       };
 
-      const newProject = await projectApi.submitProject(projectData);
+      const { status, project } = await projectApi.submitProject(projectData);
 
-      toast({
-        title: "Success!",
-        description: "Your project has been submitted successfully.",
-      });
+      if (status == "success") {
+        toast({
+          title: "Success!",
+          description: "Your project has been submitted successfully.",
+        });
+      } else {
+        toast({
+          title: "Error!",
+          description: "Could not submit your project successfully.",
+        });
+      }
 
       // Navigate to the new project's detail page
-      navigate(`/project/${newProject.id}`);
+      navigate(`/project/${project.ss58Address}`);
     } catch (error) {
       toast({
         title: "Submission Failed",
@@ -145,7 +152,7 @@ const SubmissionPage = () => {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">Submit Your Project</h1>
         <p className="text-xl text-muted-foreground">
-          Share your innovative blockchain project with the Hackthonia community
+          Share your innovative blockchain project with the Hackathonia community
         </p>
       </div>
 
@@ -272,15 +279,16 @@ const SubmissionPage = () => {
                           placeholder="Enter technologies used (e.g., React, Substrate, Rust)"
                         />
                       </FormControl>
+
                       <FormDescription>
-                        Add the technologies and frameworks used in your project
+                        {/* Add the technologies and frameworks used in your project */}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
                   <FormField
                     control={form.control}
                     name="gitLink"

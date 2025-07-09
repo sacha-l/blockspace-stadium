@@ -97,7 +97,7 @@ const HomePage = () => {
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Welcome to{" "}
           <span className="bg-gradient-hero bg-clip-text text-transparent animate-gradient-shift bg-300%">
-            Hackthonia
+            Hackathonia
           </span>
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">

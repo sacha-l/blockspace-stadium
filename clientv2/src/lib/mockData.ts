@@ -157,7 +157,7 @@ export const mockProjects: Project[] = [
 
 // Admin user simulation
 export const adminCredentials = {
-  password: "hackthonia2024",
+  password: "hackathonia2024",
 };
 
 // Mock payout data

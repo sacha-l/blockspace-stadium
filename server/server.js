@@ -59,6 +59,83 @@ app.post("/api/entry", async (req, res) => {
     }
 });
 
+app.get("/api/projects", async (req, res) => {
+    try {
+        const { page = 1, limit = 10, search = "", status } = req.query;
+
+        const query = {};
+
+        // Optional text search
+        if (search) {
+            query.$or = [
+                { projectTitle: { $regex: search, $options: "i" } },
+                { projectSummary: { $regex: search, $options: "i" } },
+                { teamName: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        // Optional status filter
+        if (status) {
+            query.status = status;
+        }
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit) || 10;
+
+        // Count total for pagination
+        const total = await Entry.countDocuments(query);
+
+        // Fetch sorted, paginated results
+        const projects = await Entry.find(query)
+            .sort({ projectTitle: 1 }) // ascending alphabetical order
+            .skip((pageNum - 1) * limitNum)
+            .limit(limitNum);
+
+        res.status(200).json({
+            status: "success",
+            data: projects,
+            meta: {
+                total,
+                count: projects.length,
+                limit: limitNum,
+                page: pageNum
+            }
+        });
+    } catch (err) {
+        console.error("❌ Error fetching projects:", err);
+        res.status(500).json({ status: "error", message: "Failed to fetch projects" });
+    }
+});
+
+app.patch("/update-project/:ss58Address", async (req, res) => {
+    try {
+      const { ss58Address } = req.params;
+      const { status } = req.body;
+
+      console.log(ss58Address, status);
+  
+      if (!status) {
+        return res.status(400).json({ status: "error", message: "Status is required" });
+      }
+  
+      const updated = await Entry.findOneAndUpdate(
+        { ss58Address },
+        { status },
+        { new: true }
+      );
+  
+      if (!updated) {
+        return res.status(404).json({ status: "error", message: "Project not found" });
+      }
+  
+      res.status(200).json({ status: "success", data: updated });
+    } catch (err) {
+      console.error("❌ Error updating project status:", err);
+      res.status(500).json({ status: "error", message: "Failed to update status" });
+    }
+  });
+  
+
 const startServer = async () => {
     try {
         // await connectToMongo();

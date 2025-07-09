@@ -1,0 +1,8 @@
+{
+  "version": 0,
+  "descriptorPath": ".papi/descriptors",
+  "entries": {},
+  "ink": {
+    "hackathonia": ".papi/contracts/hackathonia.json"
+  }
+}

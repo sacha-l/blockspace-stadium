@@ -1,0 +1,1867 @@
+{
+  "source": {
+    "hash": "0xe98dfec6d849652216c2d2d5ecac2fcd77ceedd2747fc0e95c660cfdf4c9a4db",
+    "language": "ink! 4.3.0",
+    "compiler": "rustc 1.87.0-nightly",
+    "build_info": {
+      "build_mode": "Release",
+      "cargo_contract_version": "3.2.0",
+      "rust_toolchain": "nightly-aarch64-apple-darwin",
+      "wasm_opt_settings": {
+        "keep_debug_symbols": false,
+        "optimization_passes": "Z"
+      }
+    }
+  },
+  "contract": {
+    "name": "hackathonia",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          "Constructor - Initialize the contract"
+        ],
+        "label": "new",
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink_primitives",
+            "ConstructorResult"
+          ],
+          "type": 20
+        },
+        "selector": "0x9bae9d5e"
+      }
+    ],
+    "docs": [],
+    "environment": {
+      "accountId": {
+        "displayName": [
+          "AccountId"
+        ],
+        "type": 2
+      },
+      "balance": {
+        "displayName": [
+          "Balance"
+        ],
+        "type": 1
+      },
+      "blockNumber": {
+        "displayName": [
+          "BlockNumber"
+        ],
+        "type": 0
+      },
+      "chainExtension": {
+        "displayName": [
+          "ChainExtension"
+        ],
+        "type": 35
+      },
+      "hash": {
+        "displayName": [
+          "Hash"
+        ],
+        "type": 34
+      },
+      "maxEventTopics": 4,
+      "staticBufferSize": 16384,
+      "timestamp": {
+        "displayName": [
+          "Timestamp"
+        ],
+        "type": 14
+      }
+    },
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "organizer",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "initial_funds",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [
+          "Contract events"
+        ],
+        "label": "HackathonCreated",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0x8a7f8db14545c17ed1f11db873802adefb1f812ddcc4e4359e05e9502ce72c92"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "depositor",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "label": "FundsDeposited",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0xe3e459bc076f1bc3dad8b641467d781e4ba93a77da1c9538b649ffa8ce455243"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "multisig_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "docs": [],
+        "label": "MultisigAdded",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0xa20a4b6b9488391964fa3d0456d825a30ea315d64b3e0db5d4b2bd2b3e68e7a1"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "request_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "recipient",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "label": "PayoutRequested",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0xc8c81cbbaedd7d15958882982fbbc21702cbdf512d12b88164173041a4db7f50"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "request_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "signer",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "signatures_count",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "docs": [],
+        "label": "PayoutSigned",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0xb8e7f7adaad07ad28f0091325ea28277a5c32e5d417eb08528c57efacfe0f28b"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "request_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "recipient",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [],
+        "label": "PayoutExecuted",
+        "module_path": "hackathonia::hackathon_escrow",
+        "signature_topic": "0xdaca19613b2137f970265ba4e4ebb235914244e0abfc984fd09b52a64ef6f974"
+      }
+    ],
+    "lang_error": {
+      "displayName": [
+        "ink",
+        "LangError"
+      ],
+      "type": 21
+    },
+    "messages": [
+      {
+        "args": [
+          {
+            "label": "multisig_addresses",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 5
+            }
+          },
+          {
+            "label": "required_signatures",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "create_hackathon",
+        "mutates": true,
+        "payable": true,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 22
+        },
+        "selector": "0x74cfc6fb"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Deposit additional funds to a hackathon escrow"
+        ],
+        "label": "deposit_funds",
+        "mutates": true,
+        "payable": true,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 25
+        },
+        "selector": "0x3afdf26b"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "multisig_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Add a multisig address to an existing hackathon (only organizer)"
+        ],
+        "label": "add_multisig_address",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 25
+        },
+        "selector": "0x33a759a6"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "recipient",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 2
+            }
+          },
+          {
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 1
+            }
+          },
+          {
+            "label": "reason",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 13
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Request a payout (only multisig addresses can request)"
+        ],
+        "label": "request_payout",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 22
+        },
+        "selector": "0xf6589691"
+      },
+      {
+        "args": [
+          {
+            "label": "request_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Sign a payout request (only multisig addresses)"
+        ],
+        "label": "sign_payout",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 25
+        },
+        "selector": "0x10eb7231"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Deactivate hackathon (only organizer)"
+        ],
+        "label": "deactivate_hackathon",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 25
+        },
+        "selector": "0x9235c038"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Get hackathon details"
+        ],
+        "label": "get_hackathon",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 27
+        },
+        "selector": "0x1d91ac7a"
+      },
+      {
+        "args": [
+          {
+            "label": "request_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Get payout request details"
+        ],
+        "label": "get_payout_request",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 29
+        },
+        "selector": "0x17d83901"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Get contract balance"
+        ],
+        "label": "get_contract_balance",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 31
+        },
+        "selector": "0xbe15a422"
+      },
+      {
+        "args": [
+          {
+            "label": "hackathon_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Get hackathon balance"
+        ],
+        "label": "get_hackathon_balance",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 32
+        },
+        "selector": "0x4acc346c"
+      }
+    ]
+  },
+  "storage": {
+    "root": {
+      "layout": {
+        "struct": {
+          "fields": [
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 0
+                            }
+                          },
+                          "name": "hackathon_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 1
+                            }
+                          },
+                          "name": "total_funds"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 2
+                            }
+                          },
+                          "name": "organizer"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 5
+                            }
+                          },
+                          "name": "multisig_addresses"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 0
+                            }
+                          },
+                          "name": "required_signatures"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xc081a765",
+                              "ty": 6
+                            }
+                          },
+                          "name": "is_active"
+                        }
+                      ],
+                      "name": "HackathonEscrow"
+                    }
+                  },
+                  "root_key": "0xc081a765",
+                  "ty": 7
+                }
+              },
+              "name": "hackathon_escrows"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 0
+                            }
+                          },
+                          "name": "request_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 0
+                            }
+                          },
+                          "name": "hackathon_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 2
+                            }
+                          },
+                          "name": "recipient"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 1
+                            }
+                          },
+                          "name": "amount"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 13
+                            }
+                          },
+                          "name": "reason"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 5
+                            }
+                          },
+                          "name": "signatures"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 6
+                            }
+                          },
+                          "name": "is_executed"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xd07b0a55",
+                              "ty": 14
+                            }
+                          },
+                          "name": "created_at"
+                        }
+                      ],
+                      "name": "PayoutRequest"
+                    }
+                  },
+                  "root_key": "0xd07b0a55",
+                  "ty": 15
+                }
+              },
+              "name": "payout_requests"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "next_hackathon_id"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "next_request_id"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 2
+                }
+              },
+              "name": "owner"
+            }
+          ],
+          "name": "HackathonEscrowContract"
+        }
+      },
+      "root_key": "0x00000000",
+      "ty": 19
+    }
+  },
+  "types": [
+    {
+      "id": 0,
+      "type": {
+        "def": {
+          "primitive": "u32"
+        }
+      }
+    },
+    {
+      "id": 1,
+      "type": {
+        "def": {
+          "primitive": "u128"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 3,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "AccountId"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": {
+        "def": {
+          "array": {
+            "len": 32,
+            "type": 4
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": {
+        "def": {
+          "primitive": "u8"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": {
+        "def": {
+          "primitive": "bool"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 0
+          },
+          {
+            "name": "V",
+            "type": 8
+          },
+          {
+            "name": "KeyType",
+            "type": 9
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "hackathon_id",
+                "type": 0,
+                "typeName": "u32"
+              },
+              {
+                "name": "total_funds",
+                "type": 1,
+                "typeName": "Balance"
+              },
+              {
+                "name": "organizer",
+                "type": 2,
+                "typeName": "AccountId"
+              },
+              {
+                "name": "multisig_addresses",
+                "type": 5,
+                "typeName": "Vec<AccountId>"
+              },
+              {
+                "name": "required_signatures",
+                "type": 0,
+                "typeName": "u32"
+              },
+              {
+                "name": "is_active",
+                "type": 6,
+                "typeName": "bool"
+              }
+            ]
+          }
+        },
+        "path": [
+          "hackathonia",
+          "hackathon_escrow",
+          "HackathonEscrow"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 10
+          },
+          {
+            "name": "R",
+            "type": 11
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "AutoKey"
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 12
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": {
+        "def": {
+          "tuple": []
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": {
+        "def": {
+          "primitive": "str"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "type": {
+        "def": {
+          "primitive": "u64"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 0
+          },
+          {
+            "name": "V",
+            "type": 16
+          },
+          {
+            "name": "KeyType",
+            "type": 17
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "request_id",
+                "type": 0,
+                "typeName": "u32"
+              },
+              {
+                "name": "hackathon_id",
+                "type": 0,
+                "typeName": "u32"
+              },
+              {
+                "name": "recipient",
+                "type": 2,
+                "typeName": "AccountId"
+              },
+              {
+                "name": "amount",
+                "type": 1,
+                "typeName": "Balance"
+              },
+              {
+                "name": "reason",
+                "type": 13,
+                "typeName": "String"
+              },
+              {
+                "name": "signatures",
+                "type": 5,
+                "typeName": "Vec<AccountId>"
+              },
+              {
+                "name": "is_executed",
+                "type": 6,
+                "typeName": "bool"
+              },
+              {
+                "name": "created_at",
+                "type": 14,
+                "typeName": "u64"
+              }
+            ]
+          }
+        },
+        "path": [
+          "hackathonia",
+          "hackathon_escrow",
+          "PayoutRequest"
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 10
+          },
+          {
+            "name": "R",
+            "type": 18
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 12
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "hackathon_escrows",
+                "type": 7,
+                "typeName": "<Mapping<u32, HackathonEscrow> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<1705476544u32,\n()>,>>::Type"
+              },
+              {
+                "name": "payout_requests",
+                "type": 15,
+                "typeName": "<Mapping<u32, PayoutRequest> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<1426750416u32,\n()>,>>::Type"
+              },
+              {
+                "name": "next_hackathon_id",
+                "type": 0,
+                "typeName": "<u32 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<3630402970u32, ()>,>>::Type"
+              },
+              {
+                "name": "next_request_id",
+                "type": 0,
+                "typeName": "<u32 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<2009718381u32, ()>,>>::Type"
+              },
+              {
+                "name": "owner",
+                "type": 2,
+                "typeName": "<AccountId as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<1586039370u32, ()>,>>::Type"
+              }
+            ]
+          }
+        },
+        "path": [
+          "hackathonia",
+          "hackathon_escrow",
+          "HackathonEscrowContract"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 12
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 12
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 1,
+                "name": "CouldNotReadInput"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "LangError"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 23
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 23
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 24
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          },
+          {
+            "name": "E",
+            "type": 24
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "HackathonNotFound"
+              },
+              {
+                "index": 1,
+                "name": "InsufficientFunds"
+              },
+              {
+                "index": 2,
+                "name": "NotAuthorized"
+              },
+              {
+                "index": 3,
+                "name": "InvalidSignatureCount"
+              },
+              {
+                "index": 4,
+                "name": "RequestNotFound"
+              },
+              {
+                "index": 5,
+                "name": "RequestAlreadyExecuted"
+              },
+              {
+                "index": 6,
+                "name": "AlreadySigned"
+              },
+              {
+                "index": 7,
+                "name": "NotEnoughSignatures"
+              },
+              {
+                "index": 8,
+                "name": "TransferFailed"
+              },
+              {
+                "index": 9,
+                "name": "InvalidAddress"
+              },
+              {
+                "index": 10,
+                "name": "HackathonInactive"
+              }
+            ]
+          }
+        },
+        "path": [
+          "hackathonia",
+          "hackathon_escrow",
+          "ContractError"
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 26
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 26
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 12
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 24
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 12
+          },
+          {
+            "name": "E",
+            "type": 24
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 28
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 28
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 8
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 24
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 8
+          },
+          {
+            "name": "E",
+            "type": 24
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 30
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 30
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 16
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 24
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 16
+          },
+          {
+            "name": "E",
+            "type": 24
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 1
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 1
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 33
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 21
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 33
+          },
+          {
+            "name": "E",
+            "type": 21
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 1
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 24
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 1
+          },
+          {
+            "name": "E",
+            "type": 24
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 3,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "Hash"
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "type": {
+        "def": {
+          "variant": {}
+        },
+        "path": [
+          "ink_env",
+          "types",
+          "NoChainExtension"
+        ]
+      }
+    }
+  ],
+  "version": 5
+}
