@@ -487,7 +487,7 @@ const AdminPage = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleDeclareWinner(project.id)}
+                          onClick={() => handleDeclareWinner(project.ss58Address)}
                           disabled={project.status === "winner"}
                         >
                           <Trophy className="h-4 w-4" />

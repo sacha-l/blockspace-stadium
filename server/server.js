@@ -107,7 +107,7 @@ app.get("/api/projects", async (req, res) => {
     }
 });
 
-app.patch("/update-project/:ss58Address", async (req, res) => {
+app.patch("/api/update-project/:ss58Address", async (req, res) => {
     try {
       const { ss58Address } = req.params;
       const { status } = req.body;

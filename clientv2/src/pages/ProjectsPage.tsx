@@ -145,7 +145,7 @@ const ProjectsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {currentProjects.map((project, index) => (
               <Card
-                key={project.id}
+                key={project.ss58Address}
                 className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -206,7 +206,7 @@ const ProjectsPage = () => {
                   <div className="flex w-full gap-2">
                     <Button asChild size="sm" className="flex-1">
                       <Link
-                        to={`/project/${project.id}`}
+                        to={`/project/${project.ss58Address}`}
                         className="flex items-center space-x-2"
                       >
                         <span>View Details</span>

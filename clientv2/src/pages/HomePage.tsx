@@ -97,7 +97,7 @@ const HomePage = () => {
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Welcome to{" "}
           <span className="bg-gradient-hero bg-clip-text text-transparent animate-gradient-shift bg-300%">
-            Hackathonia
+          Blockspace Builders Portal!
           </span>
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
@@ -150,7 +150,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => (
               <Card
-                key={project.id}
+                key={project.ss58Address}
                 className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -211,7 +211,7 @@ const HomePage = () => {
                   <div className="flex w-full gap-2">
                     <Button asChild size="sm" className="flex-1">
                       <Link
-                        to={`/project/${project.id}`}
+                        to={`/project/${project.ss58Address}`}
                         className="flex items-center space-x-2"
                       >
                         <span>View Details</span>
