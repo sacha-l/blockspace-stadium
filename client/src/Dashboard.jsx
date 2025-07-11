@@ -115,7 +115,7 @@ const PolkadotHackathonDashboard = () => {
       const { web3Enable, web3Accounts } = await import(
         "@polkadot/extension-dapp"
       );
-      const extensions = await web3Enable("Hackathonia");
+      const extensions = await web3Enable("Blockspacebuilders");
       if (!extensions.length)
         throw new Error("No extension authorization given.");
 
@@ -231,7 +231,7 @@ const PolkadotHackathonDashboard = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mr-3">
               <Trophy className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-xl font-semibold text-gray-900">Hackathonia</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Blockspacebuilders</h1>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-600">

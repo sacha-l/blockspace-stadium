@@ -236,7 +236,7 @@ const PolkadotHackathonDashboard = () => {
         "@polkadot/extension-dapp"
       );
 
-      const extensions = await web3Enable("Hackathonia");
+      const extensions = await web3Enable("Blockspacebuilders");
 
       if (extensions.length === 0) {
         throw new Error("No extension authorization given.");
@@ -318,7 +318,7 @@ const PolkadotHackathonDashboard = () => {
           <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <Wallet className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Hackathonia</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Blockspacebuilders</h1>
           <p className="text-gray-600">
             Connect your Polkadot wallet to continue
           </p>
@@ -637,7 +637,7 @@ const PolkadotHackathonDashboard = () => {
                   <Trophy className="w-5 h-5 text-white" />
                 </div>
                 <h1 className="text-xl font-semibold text-gray-900">
-                  Hackathonia
+                  Blockspacebuilders
                 </h1>
               </div>
 

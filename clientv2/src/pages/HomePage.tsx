@@ -109,9 +109,7 @@ const HomePage = () => {
           </span>
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Discover innovative blockchain projects built by talented developers
-          in our hackathon community. From DeFi to NFTs, explore the future of
-          decentralized technology.
+        A place to keep an eye on the projects working on post-hackathon milestones and to manage milestone payouts.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" variant="hero" asChild>

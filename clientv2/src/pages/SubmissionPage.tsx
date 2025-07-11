@@ -152,7 +152,7 @@ const SubmissionPage = () => {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">Submit Your Project</h1>
         <p className="text-xl text-muted-foreground">
-          Share your innovative blockchain project with the Hackathonia community
+          Share your innovative blockchain project with the Blockspacebuilders community
         </p>
       </div>
 

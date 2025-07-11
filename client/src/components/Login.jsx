@@ -22,7 +22,7 @@ const Login = ({
           </div>
         </div>
         <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
-          Hackathonia
+          Blockspacebuilders
         </h1>
         <p className="text-indigo-200/90 max-w-xs mx-auto">
           Securely connect your Polkadot wallet
