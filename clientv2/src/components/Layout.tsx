@@ -115,7 +115,7 @@ const Layout = () => {
                 <Code className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="text-sm text-muted-foreground">
-                © 2024 Blockspacebuilders. Built for hackers, by hackers.
+                © 2024 Hackathonia. Built for hackers, by hackers.
               </span>
             </div>
             <div className="flex items-center space-x-4">
