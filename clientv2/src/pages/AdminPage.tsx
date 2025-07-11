@@ -48,7 +48,7 @@ import { adminApi, projectApi } from "@/lib/mockApi";
 import { Project, Payout } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 
-const ADMIN_ADDRESS = "5FRhxSbMycCWJnYn7741JwZwSGWmJwNboZ6QDP1K4M53sptG";
+const ADMIN_ADDRESS = "5HbJ3Gn4x7pbErLnVkhgGgAJETomeosojczhHUffRF11oQua";
 
 const formatAddress = (address = "") =>
   `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -194,7 +194,7 @@ const AdminPage = () => {
     if (isAuthenticated) {
       loadData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, projects]);
 
   const checkExtension = async () => {
     try {
@@ -567,7 +567,9 @@ const AdminPage = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleDeclareWinner(project.ss58Address)}
+                          onClick={() =>
+                            handleDeclareWinner(project.ss58Address)
+                          }
                           disabled={project.status === "winner"}
                         >
                           <Trophy className="h-4 w-4" />

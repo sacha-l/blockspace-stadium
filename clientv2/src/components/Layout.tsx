@@ -24,8 +24,8 @@ const Layout = () => {
             <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <Code className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Hackathonia
+            <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              Blockspace Builders Portal
             </span>
           </Link>
 
@@ -116,7 +116,8 @@ const Layout = () => {
                 <Code className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="text-sm text-muted-foreground">
-                © 2024 Hackathonia. Built for hackers, by hackers.
+                © 2024 Blockspace Builders Portal. Built for hackers, by
+                hackers.
               </span>
             </div>
             <div className="flex items-center space-x-4">

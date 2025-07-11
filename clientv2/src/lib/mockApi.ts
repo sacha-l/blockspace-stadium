@@ -88,7 +88,7 @@ export const projectApi = {
   // Submit new project
   submitProject: async (
     projectData: any
-  ): Promise<{ status: string, project: Project }> => {
+  ): Promise<{ status: string; project: Project }> => {
     await delay();
 
     try {
@@ -131,8 +131,13 @@ export const projectApi = {
     } catch (err: any) {
       console.error("❌ updateProjectStatus error:", err);
       throw new Error(err.message || "Unexpected error while updating status");
+    } finally {
+      // Refresh projects after status update
+
+      api.getProjects();
+      console.log("🔄 Refreshing projects after status update");
     }
-  }
+  },
 };
 
 // Admin API
