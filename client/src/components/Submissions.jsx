@@ -564,9 +564,6 @@ const SubmissionsTab = ({ submissions = demoSubmissions }) => {
                         >
                           View
                         </button>
-                        <button className="text-gray-600 hover:text-gray-900">
-                          Download
-                        </button>
                       </div>
                     </td>
                   </tr>

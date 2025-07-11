@@ -1,11 +1,13 @@
+@import url("./fonts.css");
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Hackathonia Design System - Modern tech-inspired colors and gradients */
-
+/*
 @layer base {
   :root {
     --background: 230 40% 98%;
@@ -41,10 +43,10 @@
 
     --border: 230 30% 88%;
     --input: 230 30% 90%;
-    --ring: 250 80% 60%;
+    --ring: 250 80% 60%; */
 
-    /* Gradients for modern feel */
-    --gradient-primary: linear-gradient(
+/* Gradients for modern feel */
+/* --gradient-primary: linear-gradient(
       135deg,
       hsl(250 80% 60%),
       hsl(280 100% 65%)
@@ -64,15 +66,15 @@
       hsl(250 80% 60%) 0%,
       hsl(280 100% 65%) 50%,
       hsl(320 80% 70%) 100%
-    );
+    ); */
 
-    /* Shadows with color */
-    --shadow-primary: 0 10px 30px -10px hsl(250 80% 60% / 0.3);
+/* Shadows with color */
+/* --shadow-primary: 0 10px 30px -10px hsl(250 80% 60% / 0.3);
     --shadow-glow: 0 0 40px hsl(250 100% 75% / 0.4);
-    --shadow-elegant: 0 4px 20px -2px hsl(230 30% 8% / 0.1);
+    --shadow-elegant: 0 4px 20px -2px hsl(230 30% 8% / 0.1); */
 
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Transitions */
+/* --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --radius: 0.5rem;
@@ -92,9 +94,9 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  } */
 
-  .dark {
+/* .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -113,8 +115,8 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 217.2 32.6% 17.5%; */
+/* --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -131,6 +133,158 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+} */
+
+@layer base {
+  /* Light Theme (based on the dark theme's inverse) */
+  :root {
+    --background: 0 0% 98%; /* Almost white */
+    --foreground: 0 0% 12%; /* Charcoal Black */
+
+    --card: 0 0% 100%; /* Pure white */
+    --card-foreground: 0 0% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    --primary: 160 100% 40%; /* A darker Electric Green for better readability on light backgrounds */
+    --primary-foreground: 0 0% 100%; /* White text on the green button */
+    --primary-glow: 160 100% 48%;
+
+    --secondary: 250 100% 68%; /* Bright Blue/Purple */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 333 100% 50%; /* Vivid Pink */
+    --accent-foreground: 0 0% 100%;
+
+    --success: 140 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 90% 55%;
+    --warning-foreground: 0 0% 12%;
+
+    --destructive: 3 100% 62%; /* Neon Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 88%;
+    --ring: 250 100% 68%; /* Bright Blue/Purple for focus */
+
+    /* Gradients for modern feel */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(160 100% 48%),
+      hsl(250 100% 68%)
+    );
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 96%), hsl(0 0% 90%));
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(250 100% 68%),
+      hsl(333 100% 50%)
+    );
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(160 100% 48%) 0%,
+      hsl(250 100% 68%) 50%,
+      hsl(333 100% 50%) 100%
+    );
+
+    /* Shadows with color */
+    --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
+    --shadow-glow: 0 0 40px hsl(160 100% 48% / 0.4);
+    --shadow-elegant: 0 4px 20px -2px hsl(0 0% 12% / 0.1);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --radius: 0.5rem;
+
+    /* Sidebar specific variables for Light Mode */
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 0 0% 12%;
+    --sidebar-primary: 160 100% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 12%;
+    --sidebar-border: 0 0% 85%;
+    --sidebar-ring: 250 100% 68%;
+  }
+
+  /* Dark Theme from your Figma Design */
+  .dark {
+    --background: 0 0% 12%; /* Charcoal Black */
+    --foreground: 0 0% 92%; /* Off-White */
+
+    --card: 0 0% 14%; /* Slightly lighter than background */
+    --card-foreground: 0 0% 92%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 92%;
+
+    --primary: 160 100% 48%; /* Electric Green */
+    --primary-foreground: 0 0% 10%; /* Dark text on green button */
+    --primary-glow: 160 100% 48%;
+
+    --secondary: 250 100% 68%; /* Bright Blue/Purple */
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 333 100% 50%; /* Vivid Pink */
+    --accent-foreground: 0 0% 100%; /* White text on pink */
+
+    --success: 160 100% 48%; /* Use Electric Green for success */
+    --success-foreground: 0 0% 10%;
+
+    --warning: 51 100% 50%; /* Neon Yellow */
+    --warning-foreground: 0 0% 10%;
+
+    --destructive: 3 100% 62%; /* Neon Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 250 100% 68%; /* Bright Blue/Purple for focus */
+
+    /* Gradients updated for the dark theme */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(160 100% 48%),
+      hsl(250 100% 68%)
+    );
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 14%), hsl(0 0% 18%));
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(250 100% 68%),
+      hsl(333 100% 50%)
+    );
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(160 100% 48%) 0%,
+      hsl(250 100% 68%) 50%,
+      hsl(333 100% 50%) 100%
+    );
+
+    /* Shadows updated for the dark theme */
+    --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
+    --shadow-glow: 0 0 40px hsl(160 100% 48% / 0.4);
+    --shadow-elegant: 0 4px 20px -2px hsl(0 0% 4% / 0.2);
+
+    /* Sidebar specific variables for Dark Mode */
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 92%;
+    --sidebar-primary: 160 100% 48%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 92%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 250 100% 68%;
+  }
 }
 
 @layer base {
@@ -143,8 +297,25 @@
   }
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Redaction20", sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-variation-settings: "YOPQ" 300;
+}
+
 body {
-  font-family: "Kumbh Sans", sans-serif;
+  /* font-family: "Kumbh Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "YOPQ" 300; */
+  font-family: "Sofia Sans Condensed", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "YOPQ" 300;
