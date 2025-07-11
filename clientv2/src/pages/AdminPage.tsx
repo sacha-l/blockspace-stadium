@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Eye, Trophy, DollarSign, Shield, Loader2, LogOut } from "lucide-react";
+import {
+  Eye,
+  Trophy,
+  DollarSign,
+  Shield,
+  Loader2,
+  LogOut,
+  Wallet,
+  AlertCircle,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -39,89 +48,10 @@ import { adminApi, projectApi } from "@/lib/mockApi";
 import { Project, Payout } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 
-const AdminLoginModal = ({
-  isOpen,
-  onClose,
-  onLogin,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onLogin: () => void;
-}) => {
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+const ADMIN_ADDRESS = "5HbJ3Gn4x7pbErLnVkhgGgAJETomeosojczhHUffRF11oQua";
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      await adminApi.login(password);
-      onLogin();
-      onClose();
-      toast({
-        title: "Welcome Admin",
-        description: "Successfully logged in to admin panel.",
-      });
-    } catch (error) {
-      toast({
-        title: "Login Failed",
-        description: "Invalid password. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-      setPassword("");
-    }
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <Shield className="h-5 w-5" />
-            <span>Admin Login</span>
-          </DialogTitle>
-          <DialogDescription>
-            Enter the admin password to access the management panel.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleLogin}>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
-                required
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                Hint: hackathonia2024
-              </p>
-            </div>
-          </div>
-          <DialogFooter className="mt-6">
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                "Login"
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-};
+const formatAddress = (address = "") =>
+  `${address.slice(0, 6)}...${address.slice(-4)}`;
 
 const PayoutModal = ({
   isOpen,
@@ -224,8 +154,17 @@ const PayoutModal = ({
 };
 
 const AdminPage = () => {
+  const [walletState, setWalletState] = useState({
+    isExtensionAvailable: false,
+    isConnected: false,
+    isConnecting: false,
+    accounts: [],
+    selectedAccount: null,
+    error: "",
+    injector: null,
+  });
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [payouts, setPayouts] = useState<Payout[]>([]);
   const [loading, setLoading] = useState(true);
@@ -234,15 +173,21 @@ const AdminPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const authenticated = adminApi.isAuthenticated();
-      setIsAuthenticated(authenticated);
-      if (!authenticated) {
-        setShowLogin(true);
-      }
-    };
+    checkExtension();
 
-    checkAuth();
+    // Restore session if admin account exists in sessionStorage
+    const sessionAccount = sessionStorage.getItem("admin_session_account");
+    if (sessionAccount) {
+      const account = JSON.parse(sessionAccount);
+      if (account.address === ADMIN_ADDRESS) {
+        setWalletState((prev) => ({
+          ...prev,
+          selectedAccount: account,
+          isConnected: true,
+        }));
+        setIsAuthenticated(true);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -250,6 +195,119 @@ const AdminPage = () => {
       loadData();
     }
   }, [isAuthenticated]);
+
+  const checkExtension = async () => {
+    try {
+      await waitForExtension();
+      setWalletState((prev) => ({
+        ...prev,
+        isExtensionAvailable: true,
+        error: "",
+      }));
+    } catch {
+      setWalletState((prev) => ({
+        ...prev,
+        isExtensionAvailable: false,
+        error: "Polkadot-JS extension not found. Please install it first.",
+      }));
+    }
+  };
+
+  const waitForExtension = () =>
+    new Promise((resolve, reject) => {
+      let attempts = 0;
+      const maxAttempts = 10;
+      const interval = setInterval(() => {
+        if (
+          window.injectedWeb3 &&
+          Object.keys(window.injectedWeb3).length > 0
+        ) {
+          clearInterval(interval);
+          resolve();
+        } else if (++attempts >= maxAttempts) {
+          clearInterval(interval);
+          reject();
+        }
+      }, 500);
+    });
+
+  const connectWallet = async () => {
+    if (!walletState.isExtensionAvailable) return;
+
+    setWalletState((prev) => ({ ...prev, isConnecting: true, error: "" }));
+
+    try {
+      const { web3Enable, web3Accounts } = await import(
+        "@polkadot/extension-dapp"
+      );
+      const extensions = await web3Enable("Hackathonia Admin");
+      if (!extensions.length)
+        throw new Error("No extension authorization given.");
+
+      const allAccounts = await web3Accounts();
+      if (!allAccounts.length)
+        throw new Error("No accounts found in extension.");
+
+      // Check if admin account is available
+      const adminAccount = allAccounts.find(
+        (account) => account.address === ADMIN_ADDRESS
+      );
+
+      if (!adminAccount) {
+        throw new Error(
+          "Admin account not found. Please ensure you have the correct admin account in your wallet."
+        );
+      }
+
+      setWalletState((prev) => ({
+        ...prev,
+        accounts: allAccounts,
+        isConnected: true,
+        isConnecting: false,
+      }));
+
+      // Auto-select admin account
+      selectAccount(adminAccount);
+    } catch (err) {
+      setWalletState((prev) => ({
+        ...prev,
+        error: `Connection failed: ${err.message}`,
+        isConnecting: false,
+      }));
+    }
+  };
+
+  const selectAccount = async (account) => {
+    try {
+      if (account.address !== ADMIN_ADDRESS) {
+        throw new Error(
+          "Unauthorized: Only admin account can access this panel."
+        );
+      }
+
+      const { web3FromSource } = await import("@polkadot/extension-dapp");
+      const injector = await web3FromSource(account.meta.source);
+
+      sessionStorage.setItem("admin_session_account", JSON.stringify(account));
+
+      setWalletState((prev) => ({
+        ...prev,
+        selectedAccount: account,
+        injector,
+      }));
+      setIsAuthenticated(true);
+
+      toast({
+        title: "Admin Access Granted",
+        description: "Successfully connected as admin.",
+      });
+    } catch (err) {
+      setWalletState((prev) => ({
+        ...prev,
+        error: `Authentication failed: ${err.message}`,
+      }));
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -301,31 +359,17 @@ const AdminPage = () => {
   };
 
   const handleLogout = () => {
-    adminApi.logout();
+    setWalletState({
+      isExtensionAvailable: true,
+      isConnected: false,
+      isConnecting: false,
+      accounts: [],
+      selectedAccount: null,
+      error: "",
+      injector: null,
+    });
     setIsAuthenticated(false);
-    setShowLogin(true);
-  };
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    loadData();
-  };
-
-  const getStatusColor = (status: Project["status"]) => {
-    switch (status) {
-      case "winner":
-        return "bg-gradient-accent text-accent-foreground";
-      case "approved":
-        return "bg-success text-success-foreground";
-      case "reviewing":
-        return "bg-warning text-warning-foreground";
-      case "pending":
-        return "bg-muted text-muted-foreground";
-      case "rejected":
-        return "bg-destructive text-destructive-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
+    sessionStorage.removeItem("admin_session_account");
   };
 
   const formatDate = (dateString: string) => {
@@ -338,25 +382,52 @@ const AdminPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <>
-        <div className="container py-8">
-          <Card className="max-w-md mx-auto text-center py-12">
-            <CardContent>
-              <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h1 className="text-2xl font-bold mb-2">Admin Access Required</h1>
-              <p className="text-muted-foreground mb-4">
-                Please log in to access the admin panel.
+      <div className="container py-8">
+        <Card className="max-w-md mx-auto text-center py-12">
+          <CardContent>
+            <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Admin Access Required</h1>
+            <p className="text-muted-foreground mb-6">
+              Connect your admin wallet to access the management panel.
+            </p>
+
+            {walletState.error && (
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20 mb-6">
+                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                <span className="text-destructive text-sm">
+                  {walletState.error}
+                </span>
+              </div>
+            )}
+
+            <Button
+              onClick={connectWallet}
+              disabled={
+                !walletState.isExtensionAvailable || walletState.isConnecting
+              }
+              className="w-full"
+            >
+              {walletState.isConnecting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <Wallet className="h-4 w-4 mr-2" />
+                  Connect Admin Wallet
+                </>
+              )}
+            </Button>
+
+            {!walletState.isExtensionAvailable && (
+              <p className="mt-3 text-sm text-muted-foreground">
+                Polkadot extension not detected
               </p>
-              <Button onClick={() => setShowLogin(true)}>Login as Admin</Button>
-            </CardContent>
-          </Card>
-        </div>
-        <AdminLoginModal
-          isOpen={showLogin}
-          onClose={() => setShowLogin(false)}
-          onLogin={handleLogin}
-        />
-      </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -383,10 +454,16 @@ const AdminPage = () => {
             Manage hackathon projects and payouts
           </p>
         </div>
-        <Button variant="outline" onClick={handleLogout}>
-          <LogOut className="h-4 w-4 mr-2" />
-          Logout
-        </Button>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-muted-foreground">
+            {walletState.selectedAccount?.meta.name || "Admin"} •{" "}
+            {formatAddress(walletState.selectedAccount?.address || "")}
+          </span>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -479,7 +556,10 @@ const AdminPage = () => {
                           size="sm"
                           variant="outline"
                           onClick={() =>
-                            window.open(`/project/${project.ss58Address}`, "_blank")
+                            window.open(
+                              `/project/${project.ss58Address}`,
+                              "_blank"
+                            )
                           }
                         >
                           <Eye className="h-4 w-4" />

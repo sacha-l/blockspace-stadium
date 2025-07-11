@@ -87,7 +87,15 @@ const HomePage = () => {
   }
 
   return (
-    <div className="container py-8">
+    <div
+      className="container py-8"
+      style={{
+        backgroundImage: `url("../assets/tye-dye.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center space-x-2 bg-gradient-primary px-4 py-2 rounded-full text-primary-foreground text-sm font-medium mb-4">
@@ -166,7 +174,7 @@ const HomePage = () => {
                       <Trophy className="h-5 w-5 text-yellow-500" />
                     )}
                   </div>
-                  <CardTitle className="group-hover:text-primary transition-colors">
+                  <CardTitle className="capitalize group-hover:text-primary transition-colors">
                     {project.projectTitle}
                   </CardTitle>
                   <CardDescription className="line-clamp-3">
