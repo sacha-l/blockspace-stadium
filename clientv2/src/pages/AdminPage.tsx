@@ -48,7 +48,7 @@ import { adminApi, projectApi } from "@/lib/mockApi";
 import { Project, Payout } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 
-const ADMIN_ADDRESS = "5HbJ3Gn4x7pbErLnVkhgGgAJETomeosojczhHUffRF11oQua";
+const ADMIN_ADDRESS = "5FRhxSbMycCWJnYn7741JwZwSGWmJwNboZ6QDP1K4M53sptG";
 
 const formatAddress = (address = "") =>
   `${address.slice(0, 6)}...${address.slice(-4)}`;
