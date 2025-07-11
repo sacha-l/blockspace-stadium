@@ -21,12 +21,6 @@ const Layout = () => {
             to="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
-            <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <Code className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Blockspace Builders Portal
-            </span>
           </Link>
 
           {/* Navigation Links */}
@@ -37,7 +31,6 @@ const Layout = () => {
               asChild
             >
               <Link to="/" className="flex items-center space-x-2">
-                <Trophy className="h-4 w-4" />
                 <span>Home</span>
               </Link>
             </Button>

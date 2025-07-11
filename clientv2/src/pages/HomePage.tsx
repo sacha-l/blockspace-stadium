@@ -98,25 +98,16 @@ const HomePage = () => {
     >
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <div className="inline-flex items-center space-x-2 bg-gradient-primary px-4 py-2 rounded-full text-primary-foreground text-sm font-medium mb-4">
-          <Trophy className="h-4 w-4" />
-          <span>Hackathon Projects Showcase</span>
-        </div>
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Welcome to{" "}
-          <span className="bg-gradient-hero bg-clip-text text-transparent animate-gradient-shift bg-300%">
-          Blockspace Builders Portal!
-          </span>
+          Blockspace Builders Portal
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Discover innovative blockchain projects built by talented developers
-          in our hackathon community. From DeFi to NFTs, explore the future of
-          decentralized technology.
+          Manage post-hackathon milestone submissions, reviews and prize claims.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" variant="hero" asChild>
             <Link to="/submission" className="flex items-center space-x-2">
-              <span>Submit Your Project</span>
+              <span>Submit Your Completed Milestone for Review</span>
               <ChevronRight className="h-4 w-4" />
             </Link>
           </Button>

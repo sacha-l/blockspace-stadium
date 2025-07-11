@@ -158,9 +158,9 @@ const SubmissionPage = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Project Submission Form</CardTitle>
+          <CardTitle>Milestone Submission Form</CardTitle>
           <CardDescription>
-            Please fill out all required fields to submit your project for
+            Please fill out all required fields to submit your milestone updates for
             review.
           </CardDescription>
         </CardHeader>
@@ -191,10 +191,10 @@ const SubmissionPage = () => {
                     name="ss58Address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>SS58 Address *</FormLabel>
+                        <FormLabel>Polkadot Address *</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+                            placeholder="14aUgiMVhccuJMbdyfvfbUnTkFX7hWzJo8CrvyUUd2JBMEVm"
                             {...field}
                           />
                         </FormControl>
