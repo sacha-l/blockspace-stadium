@@ -37,7 +37,6 @@ const Layout = () => {
               asChild
             >
               <Link to="/" className="flex items-center space-x-2">
-                <Trophy className="h-4 w-4" />
                 <span>Home</span>
               </Link>
             </Button>
