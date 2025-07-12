@@ -22,6 +22,6 @@
     url("./assets/fonts/Redaction20Italic-K7ZJe.otf") format("otf"),
     url("./assets/fonts/Redaction20Italic-K7ZJe.otf") format("otf");
   font-weight: 400;
-  font-style: italic;
+  /* font-style: italic; */
   font-display: swap; /* Optional: improves loading behavior */
 }
