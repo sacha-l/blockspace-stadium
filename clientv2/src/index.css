@@ -182,26 +182,30 @@
     --input: 0 0% 88%;
     --ring: 250 100% 68%;
     /* Bright Blue/Purple for focus */
-
-    /* Gradients for modern feel */
+    /* Gradients for modern feel (updated) */
     --gradient-primary: linear-gradient(135deg,
-        hsl(160 100% 48%),
-        hsl(250 100% 68%));
-    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 96%), hsl(0 0% 90%));
+        #7ef750,
+        #edc2fa);
+    --gradient-secondary: linear-gradient(135deg,
+        #f2f2f2,
+        #e6e6e6);
+    /* Soft light gradient — adjust if you want pure black/gray */
     --gradient-accent: linear-gradient(135deg,
-        hsl(250 100% 68%),
-        hsl(333 100% 50%));
+        #edc2fa,
+        #7ef750);
     --gradient-hero: linear-gradient(135deg,
-        hsl(160 100% 48%) 0%,
-        hsl(250 100% 68%) 50%,
-        hsl(333 100% 50%) 100%);
+        #7ef750 0%,
+        #edc2fa 50%,
+        #010001 100%);
 
-    /* Shadows with color */
-    --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
-    --shadow-glow: 0 0 40px hsl(160 100% 48% / 0.4);
-    --shadow-elegant: 0 4px 20px -2px hsl(0 0% 12% / 0.1);
+    /* Shadows with updated colors */
+    --shadow-primary: 0 10px 30px -10px #7ef75066;
+    /* Green with ~40% opacity */
+    --shadow-glow: 0 0 40px #7ef75066;
+    --shadow-elegant: 0 4px 20px -2px #0100011a;
+    /* Black with ~10% opacity */
 
-    /* Transitions */
+    /* Transitions (unchanged) */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
