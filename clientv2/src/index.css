@@ -248,11 +248,10 @@
 
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 60%;
-
-    --accent: 333 100% 50%;
-    /* Vivid Pink */
-    --accent-foreground: 0 0% 100%;
-    /* White text on pink */
+    --accent: 288 82% 89%;
+    /* Converted #edc2fa to HSL */
+    --accent-foreground: 0 0% 0%;
+    /* Black text on light purple */
 
     --success: 160 100% 48%;
     /* Use Electric Green for success */
