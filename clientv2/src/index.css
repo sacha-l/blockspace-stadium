@@ -139,9 +139,9 @@
 
   /* Light Theme (based on the dark theme's inverse) */
   :root {
-    --background: 0 0% 98%;
+    --background: 0 0% 100%;
     /* Almost white */
-    --foreground: 0 0% 12%;
+    --foreground: 0 0% 98%;
     /* Charcoal Black */
 
     --card: 0 0% 100%;
