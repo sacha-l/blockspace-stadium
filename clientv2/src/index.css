@@ -136,28 +136,36 @@
 } */
 
 @layer base {
+
   /* Light Theme (based on the dark theme's inverse) */
   :root {
-    --background: 0 0% 98%; /* Almost white */
-    --foreground: 0 0% 12%; /* Charcoal Black */
+    --background: 0 0% 98%;
+    /* Almost white */
+    --foreground: 0 0% 12%;
+    /* Charcoal Black */
 
-    --card: 0 0% 100%; /* Pure white */
+    --card: 0 0% 100%;
+    /* Pure white */
     --card-foreground: 0 0% 12%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 12%;
 
-    --primary: 160 100% 40%; /* A darker Electric Green for better readability on light backgrounds */
-    --primary-foreground: 0 0% 100%; /* White text on the green button */
+    --primary: 160 100% 40%;
+    /* A darker Electric Green for better readability on light backgrounds */
+    --primary-foreground: 0 0% 100%;
+    /* White text on the green button */
     --primary-glow: 160 100% 48%;
 
-    --secondary: 250 100% 68%; /* Bright Blue/Purple */
+    --secondary: 250 100% 68%;
+    /* Bright Blue/Purple */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 333 100% 50%; /* Vivid Pink */
+    --accent: 333 100% 50%;
+    /* Vivid Pink */
     --accent-foreground: 0 0% 100%;
 
     --success: 140 70% 45%;
@@ -166,31 +174,27 @@
     --warning: 45 90% 55%;
     --warning-foreground: 0 0% 12%;
 
-    --destructive: 3 100% 62%; /* Neon Red */
+    --destructive: 3 100% 62%;
+    /* Neon Red */
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 90%;
     --input: 0 0% 88%;
-    --ring: 250 100% 68%; /* Bright Blue/Purple for focus */
+    --ring: 250 100% 68%;
+    /* Bright Blue/Purple for focus */
 
     /* Gradients for modern feel */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(160 100% 48%),
-      hsl(250 100% 68%)
-    );
+    --gradient-primary: linear-gradient(135deg,
+        hsl(160 100% 48%),
+        hsl(250 100% 68%));
     --gradient-secondary: linear-gradient(135deg, hsl(0 0% 96%), hsl(0 0% 90%));
-    --gradient-accent: linear-gradient(
-      135deg,
-      hsl(250 100% 68%),
-      hsl(333 100% 50%)
-    );
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(160 100% 48%) 0%,
-      hsl(250 100% 68%) 50%,
-      hsl(333 100% 50%) 100%
-    );
+    --gradient-accent: linear-gradient(135deg,
+        hsl(250 100% 68%),
+        hsl(333 100% 50%));
+    --gradient-hero: linear-gradient(135deg,
+        hsl(160 100% 48%) 0%,
+        hsl(250 100% 68%) 50%,
+        hsl(333 100% 50%) 100%);
 
     /* Shadows with color */
     --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
@@ -216,59 +220,67 @@
 
   /* Dark Theme from your Figma Design */
   .dark {
-    --background: 0 0% 12%; /* Charcoal Black */
-    --foreground: 0 0% 92%; /* Off-White */
+    --background: 0 0% 12%;
+    /* Charcoal Black */
+    --foreground: 0 0% 92%;
+    /* Off-White */
 
-    --card: 0 0% 14%; /* Slightly lighter than background */
+    --card: 0 0% 14%;
+    /* Slightly lighter than background */
     --card-foreground: 0 0% 92%;
 
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 92%;
 
-    --primary: 160 100% 48%; /* Electric Green */
-    --primary-foreground: 0 0% 10%; /* Dark text on green button */
+    --primary: 160 100% 48%;
+    /* Electric Green */
+    --primary-foreground: 0 0% 10%;
+    /* Dark text on green button */
     --primary-glow: 160 100% 48%;
 
-    --secondary: 250 100% 68%; /* Bright Blue/Purple */
+    --secondary: 250 100% 68%;
+    /* Bright Blue/Purple */
     --secondary-foreground: 0 0% 10%;
 
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 333 100% 50%; /* Vivid Pink */
-    --accent-foreground: 0 0% 100%; /* White text on pink */
+    --accent: 333 100% 50%;
+    /* Vivid Pink */
+    --accent-foreground: 0 0% 100%;
+    /* White text on pink */
 
-    --success: 160 100% 48%; /* Use Electric Green for success */
+    --success: 160 100% 48%;
+    /* Use Electric Green for success */
     --success-foreground: 0 0% 10%;
 
-    --warning: 51 100% 50%; /* Neon Yellow */
+    --warning: 51 100% 50%;
+    /* Neon Yellow */
     --warning-foreground: 0 0% 10%;
 
-    --destructive: 3 100% 62%; /* Neon Red */
+    --destructive: 3 100% 62%;
+    /* Neon Red */
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 250 100% 68%; /* Bright Blue/Purple for focus */
+    --ring: 250 100% 68%;
+    /* Bright Blue/Purple for focus */
 
-    /* Gradients updated for the dark theme */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(160 100% 48%),
-      hsl(250 100% 68%)
-    );
-    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 14%), hsl(0 0% 18%));
-    --gradient-accent: linear-gradient(
-      135deg,
-      hsl(250 100% 68%),
-      hsl(333 100% 50%)
-    );
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(160 100% 48%) 0%,
-      hsl(250 100% 68%) 50%,
-      hsl(333 100% 50%) 100%
-    );
+    /* Gradients updated with new theme colors */
+    --gradient-primary: linear-gradient(135deg,
+        #7ef750,
+        #edc2fa);
+    --gradient-secondary: linear-gradient(135deg,
+        #010001,
+        #1a1a1a);
+    --gradient-accent: linear-gradient(135deg,
+        #edc2fa,
+        #7ef750);
+    --gradient-hero: linear-gradient(135deg,
+        #7ef750 0%,
+        #edc2fa 50%,
+        #010001 100%);
 
     /* Shadows updated for the dark theme */
     --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
