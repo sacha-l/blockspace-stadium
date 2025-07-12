@@ -196,13 +196,13 @@
     --gradient-hero: linear-gradient(135deg,
         #7ef750 0%,
         #edc2fa 50%,
-        #010001 100%);
+        #000000 100%);
 
     /* Shadows with updated colors */
     --shadow-primary: 0 10px 30px -10px #7ef75066;
     /* Green with ~40% opacity */
     --shadow-glow: 0 0 40px #7ef75066;
-    --shadow-elegant: 0 4px 20px -2px #0100011a;
+    --shadow-elegant: 0 4px 20px -2px #0000001a;
     /* Black with ~10% opacity */
 
     /* Transitions (unchanged) */
@@ -275,7 +275,7 @@
         #7ef750,
         #edc2fa);
     --gradient-secondary: linear-gradient(135deg,
-        #010001,
+        #000000,
         #1a1a1a);
     --gradient-accent: linear-gradient(135deg,
         #edc2fa,
@@ -283,7 +283,7 @@
     --gradient-hero: linear-gradient(135deg,
         #7ef750 0%,
         #edc2fa 50%,
-        #010001 100%);
+        #000000 100%);
 
     /* Shadows updated for the dark theme */
     --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
