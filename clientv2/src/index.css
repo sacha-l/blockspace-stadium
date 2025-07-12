@@ -182,31 +182,22 @@
     --input: 0 0% 88%;
     --ring: 250 100% 68%;
     /* Bright Blue/Purple for focus */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(96 94% 63%),
-      hsl(288 82% 89%) /* #edc2fa */
-    );
-    
-    --gradient-secondary: linear-gradient(
-      135deg,
-      hsl(0 0% 95%),  /* #f2f2f2 */
-      hsl(0 0% 90%)   /* #e6e6e6 */
-    );
-    
-    --gradient-accent: linear-gradient(
-      135deg,
-      hsl(288 82% 89%),
-      hsl(96 94% 63%)
-    );
-    
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(96 94% 63%) 0%,
-      hsl(288 82% 89%) 50%,
-      hsl(0 0% 0%) 100% /* black */
-    );
-    
+    /* Gradients for modern feel (updated) */
+    --gradient-primary: linear-gradient(135deg,
+        #40ca06,
+        #40ca06);
+    --gradient-secondary: linear-gradient(135deg,
+        #f2f2f2,
+        #e6e6e6);
+    /* Soft light gradient — adjust if you want pure black/gray */
+    --gradient-accent: linear-gradient(135deg,
+    #40ca06,
+        #40ca06);
+    --gradient-hero: linear-gradient(135deg,
+        #40ca06 0%,
+        #40ca06 50%,
+        #000000 100%);
+
     /* Shadows with updated colors */
     --shadow-primary: 0 10px 30px -10px #40ca0666;
     /* Green with ~40% opacity */
