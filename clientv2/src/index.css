@@ -184,7 +184,7 @@
     /* Bright Blue/Purple for focus */
     /* Gradients for modern feel (updated) */
     --gradient-primary: linear-gradient(135deg,
-        #80fa51,
+        #40ca06,
         #edc2fa);
     --gradient-secondary: linear-gradient(135deg,
         #f2f2f2,
@@ -192,16 +192,16 @@
     /* Soft light gradient — adjust if you want pure black/gray */
     --gradient-accent: linear-gradient(135deg,
         #edc2fa,
-        #80fa51);
+        #40ca06);
     --gradient-hero: linear-gradient(135deg,
-        #80fa51 0%,
+        #40ca06 0%,
         #edc2fa 50%,
         #000000 100%);
 
     /* Shadows with updated colors */
-    --shadow-primary: 0 10px 30px -10px #80fa5166;
+    --shadow-primary: 0 10px 30px -10px #40ca0666;
     /* Green with ~40% opacity */
-    --shadow-glow: 0 0 40px #80fa5166;
+    --shadow-glow: 0 0 40px #40ca0666;
     --shadow-elegant: 0 4px 20px -2px #0000001a;
     /* Black with ~10% opacity */
 
@@ -272,16 +272,16 @@
 
     /* Gradients updated with new theme colors */
     --gradient-primary: linear-gradient(135deg,
-        #80fa51,
+        #40ca06,
         #edc2fa);
     --gradient-secondary: linear-gradient(135deg,
         #000000,
         #1a1a1a);
     --gradient-accent: linear-gradient(135deg,
         #edc2fa,
-        #80fa51);
+        #40ca06);
     --gradient-hero: linear-gradient(135deg,
-        #80fa51 0%,
+        #40ca06 0%,
         #edc2fa 50%,
         #000000 100%);
 
