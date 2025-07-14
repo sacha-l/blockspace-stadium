@@ -136,169 +136,103 @@
 } */
 
 @layer base {
-
-  /* Light Theme (based on the dark theme's inverse) */
   :root {
-    --background: 0 0% 100%;
-    /* Almost white */
-    --foreground: 0 0% 98%;
-    /* Charcoal Black */
+    --background: 0 0% 100%; /* white */
+    --foreground: 0 0% 5%; /* near-black for readability */
 
     --card: 0 0% 100%;
-    /* Pure white */
-    --card-foreground: 0 0% 12%;
+    --card-foreground: 0 0% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 12%;
+    --popover-foreground: 0 0% 5%;
 
-    --primary: 160 100% 40%;
-    /* A darker Electric Green for better readability on light backgrounds */
-    --primary-foreground: 0 0% 100%;
-    /* White text on the green button */
-    --primary-glow: 160 100% 48%;
+    --primary: 96 100% 64%; /* #7ef750 */
+    --primary-foreground: 0 0% 0%; /* black text on green */
 
-    --secondary: 250 100% 68%;
-    /* Bright Blue/Purple */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 288 82% 89%; /* #edc2fa */
+    --secondary-foreground: 0 0% 0%; /* black text on purple */
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
-
-    --accent: 333 100% 50%;
-    /* Vivid Pink */
-    --accent-foreground: 0 0% 100%;
-
-    --success: 140 70% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 45 90% 55%;
-    --warning-foreground: 0 0% 12%;
-
-    --destructive: 3 100% 62%;
-    /* Neon Red */
-    --destructive-foreground: 0 0% 100%;
+    --accent: 288 82% 89%; /* #edc2fa */
+    --accent-foreground: 0 0% 0%;
 
     --border: 0 0% 90%;
     --input: 0 0% 88%;
-    --ring: 250 100% 68%;
-    /* Bright Blue/Purple for focus */
-    /* Gradients for modern feel (updated) */
-    --gradient-primary: linear-gradient(135deg,
-        #40ca06,
-        #40ca06);
-    --gradient-secondary: linear-gradient(135deg,
-        #f2f2f2,
-        #e6e6e6);
-    /* Soft light gradient — adjust if you want pure black/gray */
-    --gradient-accent: linear-gradient(135deg,
-    #40ca06,
-        #40ca06);
-    --gradient-hero: linear-gradient(135deg,
-        #40ca06 0%,
-        #40ca06 50%,
-        #000000 100%);
+    --ring: 288 82% 89%; /* purple for focus */
 
-    /* Shadows with updated colors */
-    --shadow-primary: 0 10px 30px -10px #40ca0666;
-    /* Green with ~40% opacity */
-    --shadow-glow: 0 0 40px #40ca0666;
+    --gradient-primary: linear-gradient(135deg, #7ef750, #7ef750);
+    --gradient-secondary: linear-gradient(135deg, #edc2fa, #edc2fa);
+    --gradient-accent: linear-gradient(135deg, #edc2fa, #7ef750);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #7ef750 0%,
+      #edc2fa 50%,
+      #010001 100%
+    );
+
+    --shadow-primary: 0 10px 30px -10px #7ef75066;
+    --shadow-glow: 0 0 40px #7ef75066;
     --shadow-elegant: 0 4px 20px -2px #0000001a;
-    /* Black with ~10% opacity */
 
-    /* Transitions (unchanged) */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --radius: 0.5rem;
 
-    /* Sidebar specific variables for Light Mode */
     --sidebar-background: 0 0% 96%;
-    --sidebar-foreground: 0 0% 12%;
-    --sidebar-primary: 160 100% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 0 0% 12%;
+    --sidebar-foreground: 0 0% 5%;
+    --sidebar-primary: 96 100% 64%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 288 82% 89%;
+    --sidebar-accent-foreground: 0 0% 0%;
     --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 250 100% 68%;
+    --sidebar-ring: 288 82% 89%;
   }
 
-  /* Dark Theme from your Figma Design */
   .dark {
-    --background: 0 0% 12%;
-    /* Charcoal Black */
-    --foreground: 0 0% 92%;
-    /* Off-White */
+    --background: 0 0% 1%; /* #010001 */
+    --foreground: 0 0% 100%; /* white */
 
-    --card: 0 0% 14%;
-    /* Slightly lighter than background */
-    --card-foreground: 0 0% 92%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 92%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 160 100% 48%;
-    /* Electric Green */
-    --primary-foreground: 0 0% 10%;
-    /* Dark text on green button */
-    --primary-glow: 160 100% 48%;
+    --primary: 96 100% 64%; /* #7ef750 */
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 250 100% 68%;
-    /* Bright Blue/Purple */
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 288 82% 89%; /* #edc2fa */
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 288 82% 89%;
-    /* Converted #edc2fa to HSL */
+    --accent: 288 82% 89%; /* #edc2fa */
     --accent-foreground: 0 0% 0%;
-    /* Black text on light purple */
-
-    --success: 160 100% 48%;
-    /* Use Electric Green for success */
-    --success-foreground: 0 0% 10%;
-
-    --warning: 51 100% 50%;
-    /* Neon Yellow */
-    --warning-foreground: 0 0% 10%;
-
-    --destructive: 3 100% 62%;
-    /* Neon Red */
-    --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 250 100% 68%;
-    /* Bright Blue/Purple for focus */
+    --ring: 288 82% 89%; /* purple */
 
-    /* Gradients updated with new theme colors */
-    --gradient-primary: linear-gradient(135deg,
-        #40ca06,
-        #edc2fa);
-    --gradient-secondary: linear-gradient(135deg,
-        #000000,
-        #1a1a1a);
-    --gradient-accent: linear-gradient(135deg,
-        #edc2fa,
-        #40ca06);
-    --gradient-hero: linear-gradient(135deg,
-        #40ca06 0%,
-        #edc2fa 50%,
-        #000000 100%);
+    --gradient-primary: linear-gradient(135deg, #7ef750, #edc2fa);
+    --gradient-secondary: linear-gradient(135deg, #010001, #1a1a1a);
+    --gradient-accent: linear-gradient(135deg, #edc2fa, #7ef750);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #7ef750 0%,
+      #edc2fa 50%,
+      #010001 100%
+    );
 
-    /* Shadows updated for the dark theme */
-    --shadow-primary: 0 10px 30px -10px hsl(160 100% 48% / 0.3);
-    --shadow-glow: 0 0 40px hsl(160 100% 48% / 0.4);
-    --shadow-elegant: 0 4px 20px -2px hsl(0 0% 4% / 0.2);
+    --shadow-primary: 0 10px 30px -10px #7ef7504d;
+    --shadow-glow: 0 0 40px #7ef7504d;
+    --shadow-elegant: 0 4px 20px -2px #00000033;
 
-    /* Sidebar specific variables for Dark Mode */
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 92%;
-    --sidebar-primary: 160 100% 48%;
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 0 0% 16%;
-    --sidebar-accent-foreground: 0 0% 92%;
-    --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 250 100% 68%;
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 96 100% 64%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 288 82% 89%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 288 82% 89%;
   }
 }
 

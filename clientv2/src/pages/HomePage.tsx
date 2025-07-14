@@ -99,10 +99,10 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Blockspace Builders Portal
+          Blockspace Stadium
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Manage post-hackathon milestone submissions, reviews and prize claims.
+          {`A place for builders to showcase and keep shipping.`}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" variant="hero" asChild>
