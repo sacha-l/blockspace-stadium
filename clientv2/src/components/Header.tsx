@@ -44,7 +44,7 @@ export default function Header() {
             { to: "/admin", label: "Admin", icon: Shield },
           ].map(({ to, label, icon: Icon }) => (
             <Button
-              key={to}
+              key={to} 
               variant={isActive(to) ? "default" : "ghost"}
               size="sm"
               asChild
