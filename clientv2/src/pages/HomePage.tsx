@@ -102,10 +102,10 @@ const HomePage = () => {
           Blockspace Stadium
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          {`A place for builders to showcase and keep shipping.`}
+          {`A place for builders to showcase and keep shipping.`}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" variant="hero" asChild>
+          <Button size="lg" asChild>
             <Link to="/submission" className="flex items-center space-x-2">
               <span>Submit Your Completed Milestone for Review</span>
               <ChevronRight className="h-4 w-4" />
