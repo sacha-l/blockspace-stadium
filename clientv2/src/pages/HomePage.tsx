@@ -135,7 +135,7 @@ const HomePage = () => {
         {projects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
-              <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              {/* <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" /> */}
               <h3 className="text-xl font-semibold mb-2">No Projects Yet</h3>
               <p className="text-muted-foreground mb-4">
                 Be the first to submit your innovative project to the hackathon!
