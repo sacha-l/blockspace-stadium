@@ -12,5 +12,5 @@ const connectToMongo = async () => {
     throw err;
   }
 };
-
+ 
 export default connectToMongo;
