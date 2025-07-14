@@ -29,7 +29,7 @@ export default function Header() {
             <Code className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            BlockspaceStadium
+            Blockspace Stadium
           </span>
         </Link>
 
