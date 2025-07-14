@@ -11,6 +11,7 @@ import SubmissionPage from "./pages/SubmissionPage";
 import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
+import PastProjects from "./pages/PastProjects";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
+              <Route path="past-projects" element={<PastProjects />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="project/:id" element={<ProjectDetailsPage />} />
               <Route path="submission" element={<SubmissionPage />} />
