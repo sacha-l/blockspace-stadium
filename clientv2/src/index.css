@@ -146,7 +146,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 5%;
 
-    --primary: 96 100% 64%; /* #7ef750 */
+    --primary: 96 100% 64%; /* #7dff45 */
     --primary-foreground: 0 0% 0%; /* black text on green */
 
     --secondary: 288 82% 89%; /* #edc2fa */
@@ -159,18 +159,18 @@
     --input: 0 0% 88%;
     --ring: 288 82% 89%; /* purple for focus */
 
-    --gradient-primary: linear-gradient(135deg, #7ef750, #7ef750);
+    --gradient-primary: linear-gradient(135deg, #7dff45, #7dff45);
     --gradient-secondary: linear-gradient(135deg, #edc2fa, #edc2fa);
-    --gradient-accent: linear-gradient(135deg, #edc2fa, #7ef750);
+    --gradient-accent: linear-gradient(135deg, #edc2fa, #7dff45);
     --gradient-hero: linear-gradient(
       135deg,
-      #7ef750 0%,
+      #7dff45 0%,
       #edc2fa 50%,
       #010001 100%
     );
 
-    --shadow-primary: 0 10px 30px -10px #7ef75066;
-    --shadow-glow: 0 0 40px #7ef75066;
+    --shadow-primary: 0 10px 30px -10px #7dff4566;
+    --shadow-glow: 0 0 40px #7dff4566;
     --shadow-elegant: 0 4px 20px -2px #0000001a;
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -198,7 +198,7 @@
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 96 100% 64%; /* #7ef750 */
+    --primary: 96 100% 64%; /* #7dff45 */
     --primary-foreground: 0 0% 0%;
 
     --secondary: 288 82% 89%; /* #edc2fa */
@@ -211,18 +211,18 @@
     --input: 0 0% 20%;
     --ring: 288 82% 89%; /* purple */
 
-    --gradient-primary: linear-gradient(135deg, #7ef750, #edc2fa);
+    --gradient-primary: linear-gradient(135deg, #7dff45, #edc2fa);
     --gradient-secondary: linear-gradient(135deg, #010001, #1a1a1a);
-    --gradient-accent: linear-gradient(135deg, #edc2fa, #7ef750);
+    --gradient-accent: linear-gradient(135deg, #edc2fa, #7dff45);
     --gradient-hero: linear-gradient(
       135deg,
-      #7ef750 0%,
+      #7dff45 0%,
       #edc2fa 50%,
       #010001 100%
     );
 
-    --shadow-primary: 0 10px 30px -10px #7ef7504d;
-    --shadow-glow: 0 0 40px #7ef7504d;
+    --shadow-primary: 0 10px 30px -10px #7dff454d;
+    --shadow-glow: 0 0 40px #7dff454d;
     --shadow-elegant: 0 4px 20px -2px #00000033;
 
     --sidebar-background: 0 0% 5%;
