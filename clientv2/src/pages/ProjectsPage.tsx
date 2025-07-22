@@ -164,7 +164,7 @@ const ProjectsPage = () => {
                   <CardTitle className="group-hover:text-primary transition-colors">
                     {project.projectTitle}
                   </CardTitle>
-                  <CardDescription className="line-clamp-3">
+                  <CardDescription className="line-clamp-3 project-card-info">
                     {project.projectSummary}
                   </CardDescription>
                 </CardHeader>

@@ -102,7 +102,7 @@ const HomePage = () => {
           Blockspace Stadium
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          {`A place for builders to showcase and keep shipping.`}
+          {`A place for Blockspace Builders to showcase and keep shipping.`}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" asChild>
@@ -168,7 +168,7 @@ const HomePage = () => {
                   <CardTitle className="capitalize group-hover:text-primary transition-colors">
                     {project.projectTitle}
                   </CardTitle>
-                  <CardDescription className="line-clamp-3">
+                  <CardDescription className="line-clamp-3 project-card-info">
                     {project.projectSummary}
                   </CardDescription>
                 </CardHeader>

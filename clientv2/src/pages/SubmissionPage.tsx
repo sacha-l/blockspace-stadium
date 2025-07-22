@@ -150,10 +150,7 @@ const SubmissionPage = () => {
   return (
     <div className="container py-8 max-w-4xl">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Submit Your Project</h1>
-        <p className="text-xl text-muted-foreground">
-          Share your innovative blockchain project with the Blockspacebuilders community
-        </p>
+        <h1 className="text-4xl font-bold mb-4">Milestone submission</h1>
       </div>
 
       <Card>
@@ -191,7 +188,7 @@ const SubmissionPage = () => {
                     name="ss58Address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Polkadot Address *</FormLabel>
+                        <FormLabel>Rewards Address *</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="14aUgiMVhccuJMbdyfvfbUnTkFX7hWzJo8CrvyUUd2JBMEVm"
@@ -199,8 +196,7 @@ const SubmissionPage = () => {
                           />
                         </FormControl>
                         <FormDescription>
-                          Your unique team identifier (must be a valid SS58
-                          address format)
+                          This is the address your team will receive your rewards to.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

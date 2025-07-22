@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
 @import url("./fonts.css");
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -137,126 +139,105 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* white */
-    --foreground: 0 0% 5%; /* near-black for readability */
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-
-    --primary: 96 100% 64%; /* #7dff45 */
-    --primary-foreground: 0 0% 0%; /* black text on green */
-
-    --secondary: 288 82% 89%; /* #edc2fa */
-    --secondary-foreground: 0 0% 0%; /* black text on purple */
-
-    --accent: 288 82% 89%; /* #edc2fa */
-    --accent-foreground: 0 0% 0%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 88%;
-    --ring: 288 82% 89%; /* purple for focus */
-
-    --gradient-primary: linear-gradient(135deg, #7dff45, #7dff45);
-    --gradient-secondary: linear-gradient(135deg, #edc2fa, #edc2fa);
-    --gradient-accent: linear-gradient(135deg, #edc2fa, #7dff45);
-    --gradient-hero: linear-gradient(
-      135deg,
-      #7dff45 0%,
-      #edc2fa 50%,
-      #010001 100%
-    );
-
-    --shadow-primary: 0 10px 30px -10px #7dff4566;
-    --shadow-glow: 0 0 40px #7dff4566;
-    --shadow-elegant: 0 4px 20px -2px #0000001a;
-
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 96%;
-    --sidebar-foreground: 0 0% 5%;
-    --sidebar-primary: 96 100% 64%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 288 82% 89%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 288 82% 89%;
-  }
-
-  .dark {
-    --background: 0 0% 1%; /* #010001 */
-    --foreground: 0 0% 100%; /* white */
-
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-
-    --primary: 96 100% 64%; /* #7dff45 */
+    --background: 0 0% 6%; /* slightly lighter black */
+    --foreground: 156 100% 75%; /* softer green #6CFFB7 */
+    --primary: 96 100% 64%; /* softer green */
     --primary-foreground: 0 0% 0%;
-
-    --secondary: 288 82% 89%; /* #edc2fa */
+    --secondary: 288 82% 89%; /* blue accent #3EC6FF */
     --secondary-foreground: 0 0% 0%;
-
-    --accent: 288 82% 89%; /* #edc2fa */
+    --accent: 270 60% 60%; /* purple */
     --accent-foreground: 0 0% 0%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 288 82% 89%; /* purple */
-
-    --gradient-primary: linear-gradient(135deg, #7dff45, #edc2fa);
-    --gradient-secondary: linear-gradient(135deg, #010001, #1a1a1a);
-    --gradient-accent: linear-gradient(135deg, #edc2fa, #7dff45);
-    --gradient-hero: linear-gradient(
-      135deg,
-      #7dff45 0%,
-      #edc2fa 50%,
-      #010001 100%
-    );
-
-    --shadow-primary: 0 10px 30px -10px #7dff454d;
-    --shadow-glow: 0 0 40px #7dff454d;
-    --shadow-elegant: 0 4px 20px -2px #00000033;
-
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 96 100% 64%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 288 82% 89%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 288 82% 89%;
+    --border: 156 100% 40%; /* green border */
+    --input: 0 0% 12%; /* dark input */
+    --ring: 156 100% 75%;
+    --radius: 0.375rem; /* allow some rounding */
+  }
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 156 100% 75%;
+    --primary: 156 100% 75%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 199 100% 65%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 270 60% 60%;
+    --accent-foreground: 0 0% 0%;
+    --border: 156 100% 40%;
+    --input: 0 0% 12%;
+    --ring: 156 100% 75%;
+    --radius: 0.375rem;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-atariGreen;
   }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-atariBlack text-atariGreen font-atari;
+    background-color: #0A0A0A;
+    color: #6CFFB7;
+    font-family: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    letter-spacing: 0.03em;
+    font-size: 1.1rem;
+    position: relative;
+    min-height: 100vh;
+  }
+  h1, h2 {
+    font-family: 'Press Start 2P', 'IBM Plex Mono', monospace;
+    color: #fff;
+    text-shadow: 0 0 4px #fff, 0 0 2px #3EC6FF;
+    letter-spacing: 0.08em;
+    font-size: 2rem;
+    line-height: 2.2rem;
+  }
+  h3, h4, h5, h6 {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #3EC6FF;
+    text-shadow: 0 0 4px #6CFFB7, 0 0 2px #3EC6FF;
+    letter-spacing: 0.08em;
+  }
+  code, pre {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #6CFFB7;
+    background: #181818;
+    padding: 0.2em 0.4em;
+    border-radius: 0.375rem;
+  }
+  .project-card {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #3EC6FF;
+    border-radius: 0.375rem;
+    box-shadow: 0 0 8px 2px #6CFFB733, 0 0 2px 1px #3EC6FF22;
+    padding: 1.2em 1.5em;
+    margin-bottom: 1.2em;
+  }
+  .project-card-info {
+    color: #fff !important;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    font-family: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    letter-spacing: 0.01em;
   }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Redaction20", sans-serif;
-  /* font-style: italic; */
-  font-weight: 400;
-  font-optical-sizing: auto;
-  font-variation-settings: "YOPQ" 300;
+/* CRT scanline effect, more subtle */
+.crt {
+  position: relative;
+}
+.crt::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(108,255,183,0.04) 0px,
+    rgba(108,255,183,0.04) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  z-index: 10;
 }
 
 body {
@@ -268,9 +249,4 @@ body {
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "YOPQ" 300;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
