@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://localhost:2000/api"; // Adjust port as needed
+const API_BASE_URL = "https://hw4os4c00wg4k80o.apps.joinwebzero.com/api"; // Adjust port as needed
+// const API_BASE_URL = "http://localhost:2000/api"; 
 
 const request = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
