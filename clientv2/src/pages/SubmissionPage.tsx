@@ -127,7 +127,7 @@ const SubmissionPage = () => {
       } else {
         toast({
           title: "Error!",
-          description: "Could not submit your project successfully.",
+          description: "Could not submit your milestone successfully.",
         });
       }
 

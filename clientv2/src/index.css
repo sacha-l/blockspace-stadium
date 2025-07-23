@@ -250,3 +250,25 @@ body {
   font-style: normal;
   font-variation-settings: "YOPQ" 300;
 }
+
+/* Bubble grid layout for PastProjectsPage */
+.bubble-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  grid-auto-flow: dense;
+}
+
+.project-bubble:nth-child(3n) {
+  grid-row: span 2;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.project-bubble {
+  animation: float 6s ease-in-out infinite;
+  /* --index should be set inline for each bubble */
+}

@@ -1,62 +1,152 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Github, Globe, Users, Calendar, ChevronLeft } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import pastProjects from "@/data/pastProjects.json"; // Import your JSON data
+import pastProjects from "@/data/pastProjects.json";
+import { FilterSidebar } from "@/components/FilterSidebar";
+import { ProjectBubble } from "@/components/ProjectBubble";
+import { DemoVideoModal } from "@/components/DemoVideoModal";
+import { AnimatePresence, motion } from "framer-motion";
 
-interface PastProject {
-  projectName: string;
-  teamLead: string;
-  description: string;
-  eventStartedAt: string;
-  githubRepo: string;
-  demoUrl: string;
-  slidesUrl: string;
-  techStack: string;
-  milestones: string[];
+const CATEGORY_MAP: Record<string, string> = {
+  "Rust": "Developer Tools",
+  "wasm": "Developer Tools",
+  "typescript": "Developer Tools",
+  "TS": "Developer Tools",
+  "react": "Developer Tools",
+  "NEXT": "Developer Tools",
+  "Next.js": "Developer Tools",
+  "NextJS": "Developer Tools",
+  "Golang": "Developer Tools",
+  "Python": "Developer Tools",
+  "deno": "Developer Tools",
+  "Solidity": "DeFi",
+  "EVM": "DeFi",
+  "Polkadot": "DeFi",
+  "Cairo": "DeFi",
+  "NFT": "NFT",
+  "Figma": "NFT",
+  "JavaScript": "Developer Tools",
+  "JS": "Developer Tools",
+  "Jetson Nano": "Gaming",
+  "Substrate": "Developer Tools",
+  "GraphViz": "Developer Tools",
+  "Mongo": "Developer Tools",
+  "mongoDB": "Developer Tools",
+  "Flutter": "Developer Tools",
+  "React Native": "Developer Tools",
+  "Wagmi": "DeFi",
+  "Viem": "DeFi",
+  "Sepolia": "DeFi",
+  "Blink": "DeFi",
+  "Phantom Wallet": "DeFi",
+  "Solana": "DeFi",
+  "Web3.js": "DeFi",
+  "Livepeer": "Social",
+  "Langchain": "Developer Tools",
+  "CSS": "Developer Tools",
+  "HTML": "Developer Tools",
+  "Gaming": "Gaming",
+  "Social": "Social",
+  "F#": "Developer Tools",
+  "Flask": "Developer Tools",
+  "ethers.js": "DeFi",
+  "Ollama": "Developer Tools",
+  "EVM Pallet": "DeFi",
+  "dephy messaging layer": "Developer Tools",
+  "DePHY ID": "Developer Tools",
+  "Structured Causal Models": "Developer Tools",
+  "Rootstock": "DeFi",
+  "Cere Network": "DeFi",
+  "Goldsky Subgraph": "Developer Tools",
+  "SQL": "Developer Tools",
+  "Nextjs": "Developer Tools",
+  "Papi": "Developer Tools",
+  "DotConnect": "Developer Tools",
+};
+
+const ALL_CATEGORIES = [
+  "Gaming",
+  "DeFi",
+  "NFT",
+  "Developer Tools",
+  "Social",
+  "Winners",
+];
+
+function extractCategories(techStack: string): string[] {
+  return techStack
+    .split(",")
+    .map((t) => t.trim())
+    .filter((t) => t && t.toLowerCase() !== "nan")
+    .map((t) => {
+      // Try exact match first
+      if (CATEGORY_MAP[t]) {
+        return CATEGORY_MAP[t];
+      }
+      // Try case-insensitive match
+      const lowerT = t.toLowerCase();
+      for (const [key, value] of Object.entries(CATEGORY_MAP)) {
+        if (key.toLowerCase() === lowerT) {
+          return value;
+        }
+      }
+      return t;
+    });
 }
 
-const PROJECTS_PER_PAGE = 9;
-
 const PastProjectsPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const projects: PastProject[] = pastProjects;
+  const [search, setSearch] = useState("");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [videoProject, setVideoProject] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false); // Simulate loading if needed
 
-  const formatDate = (dateString: string) => {
-    if (dateString === "nan") return "Not specified";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
+  const projects = pastProjects as any[];
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      // Search
+      const matchesSearch =
+        !search ||
+        project.projectName.toLowerCase().includes(search.toLowerCase()) ||
+        project.teamLead.toLowerCase().includes(search.toLowerCase()) ||
+        project.description.toLowerCase().includes(search.toLowerCase());
+      // Filters
+      let matchesFilter = true;
+      if (activeFilters.length > 0) {
+        matchesFilter = false;
+        for (const filter of activeFilters) {
+          if (filter === "Winners") {
+            // Check for specific winner projects
+            const winnerProjects = [
+              "anytype - nft gating",
+              "delegit",
+              "empathy technologies",
+              "hypertents",
+              "papi actions",
+              "propcorn"
+            ];
+            const isWinner = winnerProjects.some(winner =>
+              project.projectName.toLowerCase().includes(winner.toLowerCase())
+            ) || (project.milestones && project.milestones.length > 3);
+            if (isWinner) {
+              matchesFilter = true;
+              break;
+            }
+          }
+          // Check techStack
+          const cats = extractCategories(project.techStack);
+          if (cats.includes(filter)) {
+            matchesFilter = true;
+            break;
+          }
+        }
+      }
+      return matchesSearch && matchesFilter;
     });
-  };
+  }, [projects, search, activeFilters]);
 
-  // Pagination logic
-  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
-  const endIndex = startIndex + PROJECTS_PER_PAGE;
-  const currentProjects = projects.slice(startIndex, endIndex);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Skeleton bubbles for loading state
+  const skeletons = Array.from({ length: 6 });
 
   return (
     <div className="container py-8">
@@ -75,140 +165,63 @@ const PastProjectsPage = () => {
           Browse {projects.length} projects from previous hackathons
         </p>
       </div>
-
-      {/* Projects Grid */}
-      {projects.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <h3 className="text-xl font-semibold mb-2">No Past Projects</h3>
-            <p className="text-muted-foreground mb-4">
-              Check back later for projects from upcoming hackathons
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {currentProjects.map((project, index) => (
-              <Card
-                key={`${project.projectName}-${index}`}
-                className="hover:shadow-muted transition-all duration-300"
-              >
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {project.projectName}
-                  </CardTitle>
-                  <CardDescription className="line-clamp-3">
-                    {project.description}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Users className="h-4 w-4 mr-2" />
-                      <span className="truncate">By {project.teamLead}</span>
-                    </div>
-
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      <span>Event: {project.eventStartedAt}</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {project.techStack
-                        .split(",")
-                        .map((tech) => tech.trim())
-                        .filter((tech) => tech && tech.toLowerCase() !== "nan")
-                        .slice(0, 4)
-                        .map((tech, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {tech}
-                          </Badge>
-                        ))}
-                    </div>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="pt-0 flex justify-end gap-2">
-                  {project.githubRepo.toLowerCase() !== "nan" && (
-                    <Button size="sm" variant="outline" asChild>
-                      <a
-                        href={project.githubRepo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="View on GitHub"
-                      >
-                        <Github className="h-4 w-4" />
-                      </a>
-                    </Button>
-                  )}
-
-                  {project.demoUrl.toLowerCase() !== "nan" && (
-                    <Button size="sm" variant="outline" asChild>
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="View Demo"
-                      >
-                        <Globe className="h-4 w-4" />
-                      </a>
-                    </Button>
-                  )}
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination className="mt-8">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() =>
-                      handlePageChange(Math.max(1, currentPage - 1))
-                    }
-                    className={
-                      currentPage === 1
-                        ? "pointer-events-none opacity-50"
-                        : "cursor-pointer"
-                    }
-                  />
-                </PaginationItem>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        onClick={() => handlePageChange(page)}
-                        isActive={currentPage === page}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-                )}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      handlePageChange(Math.min(totalPages, currentPage + 1))
-                    }
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : "cursor-pointer"
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+      {/* Two-column layout */}
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar */}
+        <FilterSidebar
+          search={search}
+          setSearch={setSearch}
+          activeFilters={activeFilters}
+          setActiveFilters={setActiveFilters}
+          allCategories={ALL_CATEGORIES}
+          activeCount={activeFilters.length}
+          onClear={() => setActiveFilters([])}
+        />
+        {/* Bubble Gallery */}
+        <div className="flex-1 bubble-grid">
+          {loading ? (
+            skeletons.map((_, idx) => (
+              <div
+                key={idx}
+                className="project-bubble bg-gradient-to-br from-primary/10 to-accent/10 animate-pulse"
+                style={{ minHeight: 220 + (idx % 3) * 40 }}
+              />
+            ))
+          ) : (
+            <AnimatePresence>
+              {filteredProjects.length === 0 ? (
+                <motion.div
+                  className="col-span-full text-center text-muted-foreground py-12"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  No projects found.
+                </motion.div>
+              ) : (
+                filteredProjects.map((project, idx) => (
+                  <motion.div
+                    key={project.projectName + idx}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3, delay: idx * 0.04 }}
+                    style={{ "--index": idx } as React.CSSProperties }
+                  >
+                    <ProjectBubble
+                      project={project}
+                      onPlayDemo={setVideoProject}
+                    />
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
           )}
-        </>
-      )}
+        </div>
+      </div>
+      {/* Video Modal */}
+      <DemoVideoModal open={!!videoProject} onClose={() => setVideoProject(null)} project={videoProject} />
     </div>
   );
 };

@@ -136,7 +136,7 @@ const ProjectsPage = () => {
               Be the first to submit your innovative project to the hackathon!
             </p>
             <Button asChild>
-              <Link to="/submission">Submit Your Project</Link>
+              <Link to="/submission">Submit Your Milestone</Link>
             </Button>
           </CardContent>
         </Card>

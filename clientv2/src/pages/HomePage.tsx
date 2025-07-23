@@ -23,17 +23,19 @@ import { Badge } from "@/components/ui/badge";
 import { projectApi } from "@/lib/mockApi";
 import { Project } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { ProjectDetailsDrawer } from "@/components/ProjectDetailsDrawer";
 
 const HomePage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const loadProjects = async () => {
       try {
         const projectsData = await projectApi.getProjects();
-        setProjects(projectsData.slice(0, 6)); // Show only first 6 projects on homepage
+        setProjects(projectsData);
       } catch (error) {
         toast({
           title: "Error",
@@ -44,34 +46,16 @@ const HomePage = () => {
         setLoading(false);
       }
     };
-
     loadProjects();
   }, [toast]);
 
-  const getStatusColor = (status: Project["status"]) => {
-    switch (status) {
-      case "winner":
-        return "bg-gradient-accent text-accent-foreground";
-      case "approved":
-        return "bg-success text-success-foreground";
-      case "reviewing":
-        return "bg-warning text-warning-foreground";
-      case "pending":
-        return "bg-muted text-muted-foreground";
-      case "rejected":
-        return "bg-destructive text-destructive-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
-  };
+  // Stats calculation
+  const totalProjects = projects.length;
+  const totalRewards = 100; // TODO: Replace with real value or calculation
+  const totalTeams = new Set(projects.map(p => p.ss58Address)).size;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+  // Winning projects (first 6)
+  const winningProjects = projects.filter(p => p.status === "winner").slice(0, 6);
 
   if (loading) {
     return (
@@ -87,67 +71,37 @@ const HomePage = () => {
   }
 
   return (
-    <div
-      className="container py-8"
-      style={{
-        backgroundImage: `url("../assets/tye-dye.jpg")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="container py-8">
       {/* Hero Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Blockspace Stadium
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          {`A place for Blockspace Builders to showcase and keep shipping.`}
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild>
-            <Link to="/submission" className="flex items-center space-x-2">
-              <span>Submit Your Completed Milestone for Review</span>
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline">
-            <Link to="/projects" className="flex items-center space-x-2">
-              <Users className="h-4 w-4" />
-              <span>View All Projects</span>
-            </Link>
-          </Button>
-        </div>
+      <div className="text-center mb-10">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">BlockSpace Stadium</h1>
+        <h2 className="text-xl md:text-2xl text-muted-foreground">Where Blockspace Builders Ship Betwen Hackathons</h2>
       </div>
 
-      {/* Projects Grid */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold">Featured Projects</h2>
-          <Button variant="outline" asChild>
-            <Link to="/projects">
-              View All Projects
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
+      {/* Stats Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
+        <span>{totalProjects} Projects Built</span>
+        <span className="hidden sm:inline">|</span>
+        <span>${totalRewards}K in Rewards</span>
+        <span className="hidden sm:inline">|</span>
+        <span>{totalTeams} Teams Shipping</span>
+      </div>
 
-        {projects.length === 0 ? (
+      {/* Winning Projects Section */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold mb-6 text-center">Winning Projects</h2>
+        {winningProjects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
-              {/* <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" /> */}
-              <h3 className="text-xl font-semibold mb-2">No Projects Yet</h3>
+              <h3 className="text-xl font-semibold mb-2">No Winning Projects Yet</h3>
               <p className="text-muted-foreground mb-4">
-                Be the first to submit your innovative project to the hackathon!
+                Winning projects will be displayed here as they are selected.
               </p>
-              <Button asChild>
-                <Link to="/submission">Submit Your Project</Link>
-              </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
+            {winningProjects.map((project, index) => (
               <Card
                 key={project.ss58Address}
                 className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
@@ -155,15 +109,10 @@ const HomePage = () => {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <Badge
-                      className={getStatusColor(project.status)}
-                      variant="secondary"
-                    >
-                      {project.status}
+                    <Badge className="bg-gradient-accent text-accent-foreground" variant="secondary">
+                      Winner
                     </Badge>
-                    {project.status === "winner" && (
-                      <Trophy className="h-5 w-5 text-yellow-500" />
-                    )}
+                    <Trophy className="h-5 w-5 text-yellow-500" />
                   </div>
                   <CardTitle className="capitalize group-hover:text-primary transition-colors">
                     {project.projectTitle}
@@ -172,22 +121,18 @@ const HomePage = () => {
                     {project.projectSummary}
                   </CardDescription>
                 </CardHeader>
-
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Users className="h-4 w-4 mr-2" />
                       <span className="font-mono text-xs truncate">
-                        {project.ss58Address.slice(0, 8)}...
-                        {project.ss58Address.slice(-6)}
+                        {project.ss58Address.slice(0, 8)}...{project.ss58Address.slice(-6)}
                       </span>
                     </div>
-
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4 mr-2" />
-                      <span>{formatDate(project.submittedAt)}</span>
+                      <span>{new Date(project.submittedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
                     </div>
-
                     <div className="flex flex-wrap gap-2">
                       {project.techStack
                         .split(",")
@@ -205,41 +150,25 @@ const HomePage = () => {
                     </div>
                   </div>
                 </CardContent>
-
                 <CardFooter className="pt-0">
                   <div className="flex w-full gap-2">
                     <Button asChild size="sm" className="flex-1">
-                      <Link
-                        to={`/project/${project.ss58Address}`}
-                        className="flex items-center space-x-2"
-                      >
+                      <Link to={`/project/${project.ss58Address}`} className="flex items-center space-x-2">
                         <span>View Details</span>
                         <ChevronRight className="h-4 w-4" />
                       </Link>
                     </Button>
-
                     <div className="flex gap-2">
                       {project.gitLink && (
                         <Button size="sm" variant="outline" asChild>
-                          <a
-                            href={project.gitLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="View on GitHub"
-                          >
+                          <a href={project.gitLink} target="_blank" rel="noopener noreferrer" title="View on GitHub">
                             <Github className="h-4 w-4" />
                           </a>
                         </Button>
                       )}
-
                       {project.demoLink && (
                         <Button size="sm" variant="outline" asChild>
-                          <a
-                            href={project.demoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="View Demo"
-                          >
+                          <a href={project.demoLink} target="_blank" rel="noopener noreferrer" title="View Demo">
                             <Globe className="h-4 w-4" />
                           </a>
                         </Button>
@@ -251,6 +180,15 @@ const HomePage = () => {
             ))}
           </div>
         )}
+      </div>
+      {/* View All Projects Button */}
+      <div className="flex justify-center mt-8">
+        <Button asChild size="lg">
+          <Link to="/projects" className="flex items-center space-x-2">
+            <span>View All Projects</span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </Button>
       </div>
     </div>
   );

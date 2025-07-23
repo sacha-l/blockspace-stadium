@@ -26,12 +26,12 @@ const Layout = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
               <span className="text-sm text-muted-foreground">
-                © 2024 Blockspace Stadium. Built for hackers, by hackers.
+                Built with ❤️ by WebZero.
               </span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
-                to="https://github.com"
+                to="https://github.com/JoinWebZero/"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -39,19 +39,19 @@ const Layout = () => {
                 GitHub
               </Link>
               <Link
-                to="https://docs.polkadot.network"
+                to="https://x.com/JoinWebZero"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Docs
+                X
               </Link>
-              <Link
+              {/* <Link
                 to="/submission"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Submit Project
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
