@@ -242,7 +242,7 @@ const ProjectDetailsPage = () => {
       <Header />
       {/* Main Content */}
       <main className="flex-1">
-        <div className="container py-8">
+        <div className="container py-8 px-2 sm:px-4">
           {/* Back Button */}
           <div className="mb-6">
             <Button variant="ghost" asChild>
@@ -265,11 +265,11 @@ const ProjectDetailsPage = () => {
           </div>
           <div className="max-w-4xl mx-auto space-y-8">
             {/* Top Project Card (wider) */}
-            <Card className="w-full p-4">
+            <Card className="w-full max-w-full sm:max-w-4xl p-2 sm:p-4">
               <CardHeader className="pb-2 relative">
                 {/* Badge in top right */}
                 {project.winner && (
-                  <div className="absolute right-4 top-4">
+                  <div className="absolute right-4 top-4 mt-0 sm:mt-4">
                     <Badge
                       className={
                         project.winner.toLowerCase().includes("kusama")
@@ -285,13 +285,15 @@ const ProjectDetailsPage = () => {
                     </Badge>
                   </div>
                 )}
+                {/* Add vertical space below the label and before the heading */}
+                {project.winner && <div className="h-8 sm:h-10" />}
                 {/* Project Title */}
-                <CardTitle className="text-2xl mb-2">{project.projectName}</CardTitle>
+                <CardTitle className="text-xl sm:text-2xl mb-2">{project.projectName}</CardTitle>
                 {/* Team Name(s) below title */}
                 {project.teamLead && (
                   <span className="block text-sm text-white mb-2">Team Name: {project.teamLead}</span>
                 )}
-                <p className="text-muted-foreground mb-2">{project.description}</p>
+                <p className="text-sm sm:text-base text-muted-foreground mb-2">{project.description}</p>
                 {/* Tech stack badges with improved spacing */}
                 {project.techStack && (
                   <div className="flex flex-wrap gap-3 mb-4">
@@ -333,9 +335,9 @@ const ProjectDetailsPage = () => {
             </Card>
 
             {/* Timeline and Milestone Card (normal width, below) */}
-            <Card className="w-full p-4 relative">
+            <Card className="w-full max-w-full sm:max-w-4xl p-2 sm:p-4 relative">
               {/* Timeline graphic at the top */}
-              <div className="flex items-center justify-center gap-8 mb-6 mt-2">
+              <div className="flex items-center justify-center gap-8 mb-6 mt-2 px-4">
                 {/* Event Start */}
                 <div className="flex flex-col items-center">
                   <button className={`rounded-full p-2 ${eventStarted ? 'bg-green-500 text-white' : 'bg-muted text-muted-foreground'}`}> <CheckCircle className="h-6 w-6" /> </button>
@@ -359,7 +361,7 @@ const ProjectDetailsPage = () => {
                 <h4 className="font-semibold text-base mb-2 text-green-400">Team Address</h4>
                 {project.donationAddress && (
                   <div className="flex flex-col gap-2">
-                    <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-white">Current registered address: {project.donationAddress}</span>
+                    <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-white">Current registered address: {project.donationAddress.slice(0, 6)}...{project.donationAddress.slice(-4)}</span>
                     {editMode === 'updateAddress' && (
                       <div className="flex gap-2 mt-1">
                         <input
@@ -385,17 +387,17 @@ const ProjectDetailsPage = () => {
                 <span className="text-gray-400 text-sm">Coming soon</span>
               </div>
               {/* Milestone work in progress section */}
-              <h3 className="font-semibold mb-2 text-lg text-green-400">Milestone work in progress</h3>
+              <h3 className="font-semibold mb-2 text-base text-green-400">Milestone work in progress</h3>
               {project.milestones && project.milestones.length > 0 ? (
                 <div className="mb-4">
                   <ul className="list-disc pl-6 space-y-1">
                     {project.milestones.map((m: string, i: number) => (
-                      <li key={i} className="text-muted-foreground">{m}</li>
+                      <li key={i} className="text-white">{m}</li>
                     ))}
                   </ul>
                 </div>
               ) : (
-                <div className="mb-4 text-gray-400 text-sm">No milestones confirmed.</div>
+                <div className="mb-4 text-white text-sm">No milestones confirmed.</div>
               )}
               <div className="flex justify-center mt-4">
                 <Button size="sm" variant="outline" className="bg-yellow-200/80 text-yellow-900 font-semibold px-6 py-2 rounded shadow hover:bg-yellow-300 transition-colors" onClick={() => setDeliverableModalOpen(true)}>
@@ -438,7 +440,7 @@ const ProjectDetailsPage = () => {
       </footer>
       {/* Modal for deliverable upload */}
       <Dialog open={deliverableModalOpen} onOpenChange={setDeliverableModalOpen}>
-        <DialogContent className="max-w-lg w-full">
+        <DialogContent className="w-full max-w-xs sm:max-w-md md:max-w-lg">
           <DialogHeader>
             <DialogTitle>Upload or Update Deliverables</DialogTitle>
           </DialogHeader>

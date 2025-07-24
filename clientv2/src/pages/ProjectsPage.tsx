@@ -40,6 +40,7 @@ const ProjectsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
 
+
   useEffect(() => {
     const loadProjects = async () => {
       try {

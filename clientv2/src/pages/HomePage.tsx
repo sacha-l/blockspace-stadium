@@ -83,7 +83,9 @@ const HomePage = () => {
     <div className="container py-8">
       {/* Hero Section */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">BlockSpace Stadium</h1>
+        <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 break-words whitespace-pre-line leading-tight">
+          BlockSpace Stadium
+        </h1>
       </div>
       {/* Stats Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
@@ -157,7 +159,7 @@ const HomePage = () => {
                     onDragEnd={offset === 0 ? handleDragEnd : undefined}
                   >
                     <Card
-                      className={`group transition-all duration-300 animate-fade-in ${offset === 0 ? 'hover:shadow-2xl hover:scale-105 bg-gradient-to-br from-primary/20 to-accent/20 animate-float' : ''}`}
+                      className={`group transition-all duration-300 animate-fade-in ${offset === 0 ? 'hover:shadow-2xl hover:scale-105 animate-float' : ''}`}
                       style={offset === 0 ? { animation: 'float 6s ease-in-out infinite' } : {}}
                     >
                       <CardHeader className="pb-3">
@@ -208,17 +210,17 @@ const HomePage = () => {
                         </div>
                       </CardContent>
                       <CardFooter className="pt-0">
-                        <div className="flex gap-2 w-full">
+                        <div className="flex flex-col md:flex-row gap-2 w-full">
                           <Button 
                             size="sm" 
                             variant="outline" 
-                            className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30"
+                            className="w-full md:flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30"
                             onClick={() => setVideoProject(project)}
                           >
                             <Play className="h-4 w-4 mr-2" />
                             <span>View Demo</span>
                           </Button>
-                          <Button asChild size="sm" variant="outline" className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
+                          <Button asChild size="sm" variant="outline" className="w-full md:flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
                             <Link to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`} className="flex items-center justify-center space-x-2">
                               <span>Project Page</span>
                               <ChevronRight className="h-4 w-4" />
