@@ -124,10 +124,11 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   // Check if project is a winner - handle both data structures
   const isWinner = project.winner && project.winner !== "";
 
-  // Check milestone completion status - for now, all winners are considered completed
+  // Check milestone completion status - 2025 winners don't have completed milestones yet
   const getMilestoneStatus = () => {
     if (!isWinner) return null;
-    return "completed";
+    // For 2025 winners, milestones are not yet completed
+    return "pending";
   };
 
   const milestoneStatus = getMilestoneStatus();
@@ -177,6 +178,11 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
               {milestoneStatus === "completed" && (
                 <Badge variant="secondary" className="px-3 py-1 bg-green-500/20 text-green-300 border-green-500/30">
                   ☑️ Completed Milestones
+                </Badge>
+              )}
+              {milestoneStatus === "pending" && (
+                <Badge variant="secondary" className="px-3 py-1 bg-blue-500/20 text-blue-300 border-blue-500/30">
+                  ⏳ Milestones Pending
                 </Badge>
               )}
             </div>
