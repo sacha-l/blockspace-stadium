@@ -16,7 +16,7 @@ If you are developing a production application, we recommend updating the config
 ```js
 export default {
   // other rules...
-  parserOptions: {
+  parserOptions: { 
     ecmaVersion: 'latest',
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
