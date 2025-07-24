@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
 import { SiwsMessage } from '@talismn/siws';
 import Header from "@/components/Header";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 const ProjectDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,13 @@ const ProjectDetailsPage = () => {
   const [editFields, setEditFields] = useState<any>({});
   const [registerAddress, setRegisterAddress] = useState('');
   const [registerSig, setRegisterSig] = useState('');
+  // Add state for modal and form fields
+  const [deliverableModalOpen, setDeliverableModalOpen] = useState(false);
+  const [milestoneName, setMilestoneName] = useState("");
+  const [milestoneDesc, setMilestoneDesc] = useState("");
+  const [deliverables, setDeliverables] = useState<string[]>([""]);
+  const [formError, setFormError] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
 
   // Talisman Connect
   // const { selectedAccount, connect, disconnect, accounts } = useWallets(); // Removed
@@ -142,6 +150,49 @@ const ProjectDetailsPage = () => {
   const eventStarted = true;
   const bountyPaid = false;
   const milestoneDelivered = false;
+
+  // Add handler for adding/removing deliverables
+  const addDeliverable = () => setDeliverables([...deliverables, ""]);
+  const removeDeliverable = (idx: number) => setDeliverables(deliverables.filter((_, i) => i !== idx));
+  const updateDeliverable = (idx: number, value: string) => setDeliverables(deliverables.map((d, i) => i === idx ? value : d));
+
+  // Handler for form submit
+  const handleDeliverableSubmit = async () => {
+    setFormError("");
+    setFormLoading(true);
+    try {
+      // Connect wallet and sign with SIWS
+      await web3Enable('Hackathonia');
+      const accounts = await web3Accounts();
+      const account = accounts[0];
+      if (!account) throw new Error("No wallet found");
+      if (project.donationAddress && account.address !== project.donationAddress) {
+        setFormError("You must sign in with the project team address to submit deliverables.");
+        setFormLoading(false);
+        return;
+      }
+      const siws = new SiwsMessage({
+        domain: window.location.hostname,
+        uri: window.location.origin,
+        address: account.address,
+        nonce: Math.random().toString(36).slice(2),
+        statement: "Submit milestone deliverables for Hackathonia"
+      });
+      const injector = await web3FromSource(account.meta.source);
+      await siws.sign(injector);
+      // Mock API call to save milestone
+      const newMilestone = `${milestoneName}: ${milestoneDesc}\n${deliverables.map((d, i) => `- ${d}`).join("\n")}`;
+      setProject((prev: any) => ({ ...prev, milestones: [...(prev.milestones || []), newMilestone] }));
+      setDeliverableModalOpen(false);
+      setMilestoneName("");
+      setMilestoneDesc("");
+      setDeliverables([""]);
+    } catch (err: any) {
+      setFormError(err.message || String(err));
+    } finally {
+      setFormLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -346,7 +397,11 @@ const ProjectDetailsPage = () => {
               ) : (
                 <div className="mb-4 text-gray-400 text-sm">No milestones confirmed.</div>
               )}
-              <Button size="sm" variant="outline" className="mt-2 bg-muted/80 text-white">Upload or update deliverables</Button>
+              <div className="flex justify-center mt-4">
+                <Button size="sm" variant="outline" className="bg-yellow-200/80 text-yellow-900 font-semibold px-6 py-2 rounded shadow hover:bg-yellow-300 transition-colors" onClick={() => setDeliverableModalOpen(true)}>
+                  Upload or update deliverables
+                </Button>
+              </div>
             </Card>
           </div>
         </div>
@@ -381,6 +436,44 @@ const ProjectDetailsPage = () => {
           </div>
         </div>
       </footer>
+      {/* Modal for deliverable upload */}
+      <Dialog open={deliverableModalOpen} onOpenChange={setDeliverableModalOpen}>
+        <DialogContent className="max-w-lg w-full">
+          <DialogHeader>
+            <DialogTitle>Upload or Update Deliverables</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Milestone Name</label>
+              <input className="w-full border rounded px-2 py-1" value={milestoneName} onChange={e => setMilestoneName(e.target.value)} placeholder="Enter milestone name" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Milestone Description</label>
+              <textarea className="w-full border rounded px-2 py-1" value={milestoneDesc} onChange={e => setMilestoneDesc(e.target.value)} placeholder="Describe the milestone" rows={2} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">List of Deliverables</label>
+              <div className="space-y-2">
+                {deliverables.map((d, i) => (
+                  <div key={i} className="flex gap-2 items-center">
+                    <input className="flex-1 border rounded px-2 py-1" value={d} onChange={e => updateDeliverable(i, e.target.value)} placeholder={`Deliverable ${i + 1}`} />
+                    {deliverables.length > 1 && (
+                      <Button size="icon" variant="ghost" onClick={() => removeDeliverable(i)}><span className="text-lg">&times;</span></Button>
+                    )}
+                  </div>
+                ))}
+                <Button size="sm" variant="outline" className="mt-1" onClick={addDeliverable}>Add Deliverable</Button>
+              </div>
+            </div>
+            {formError && <div className="text-red-500 text-sm mt-2">{formError}</div>}
+          </div>
+          <DialogFooter>
+            <Button onClick={handleDeliverableSubmit} disabled={formLoading} className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded">
+              {formLoading ? "Submitting..." : "Submit"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
