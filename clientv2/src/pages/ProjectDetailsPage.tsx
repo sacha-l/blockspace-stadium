@@ -220,7 +220,7 @@ const ProjectDetailsPage = () => {
             <Button asChild>
               <Link to="/" className="flex items-center space-x-2">
                 <ArrowLeft className="h-4 w-4" />
-                <span>All Active Projects</span>
+                <span>Go Back Home</span>
               </Link>
             </Button>
           </CardContent>
@@ -248,7 +248,7 @@ const ProjectDetailsPage = () => {
             <Button variant="ghost" asChild>
               <Link to="/" className="flex items-center space-x-2">
                 <ArrowLeft className="h-4 w-4" />
-                <span>All Active Projects</span>
+                <span>Go Back Home</span>
               </Link>
             </Button>
           </div>
