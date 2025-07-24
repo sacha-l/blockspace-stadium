@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import pastProjects from "@/data/pastProjects.json";
+import pastProjects from "@/data/symmetry-2024.json";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { ProjectBubble } from "@/components/ProjectBubble";
 import { DemoVideoModal } from "@/components/DemoVideoModal";
@@ -98,12 +98,17 @@ function extractCategories(techStack: string): string[] {
 const PastProjectsPage = () => {
   const [search, setSearch] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState("symmetry-2024");
   const [videoProject, setVideoProject] = useState<any | null>(null);
   const [loading, setLoading] = useState(false); // Simulate loading if needed
 
   const projects = pastProjects as any[];
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
+      // Event filter
+      const matchesEvent = selectedEvent === "symmetry-2024" || 
+        (selectedEvent === "synergy-2025" && project.eventStartedAt === "synergy-2025");
+      
       // Search
       const matchesSearch =
         !search ||
@@ -119,11 +124,12 @@ const PastProjectsPage = () => {
             // Check for specific winner projects
             const winnerProjects = [
               "anytype - nft gating",
-              "delegit",
+              "delegit", 
               "empathy technologies",
               "hypertents",
               "papi actions",
-              "propcorn"
+              "propcorn",
+              "ChainView"
             ];
             const isWinner = winnerProjects.some(winner =>
               project.projectName.toLowerCase().includes(winner.toLowerCase())
@@ -141,9 +147,9 @@ const PastProjectsPage = () => {
           }
         }
       }
-      return matchesSearch && matchesFilter;
+      return matchesEvent && matchesSearch && matchesFilter;
     });
-  }, [projects, search, activeFilters]);
+  }, [projects, search, activeFilters, selectedEvent]);
 
   // Skeleton bubbles for loading state
   const skeletons = Array.from({ length: 6 });
@@ -162,7 +168,7 @@ const PastProjectsPage = () => {
         </div>
         <h1 className="text-4xl font-bold mb-2">Past Projects</h1>
         <p className="text-muted-foreground">
-          Browse {projects.length} projects from previous hackathons
+          Browse {filteredProjects.length} projects from {selectedEvent === "symmetry-2024" ? "Blockspace Symmetry 2024" : "Blockspace Synergy 2025"}
         </p>
       </div>
       {/* Two-column layout */}
@@ -176,6 +182,8 @@ const PastProjectsPage = () => {
           allCategories={ALL_CATEGORIES}
           activeCount={activeFilters.length}
           onClear={() => setActiveFilters([])}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
         />
         {/* Bubble Gallery */}
         <div className="flex-1 bubble-grid">

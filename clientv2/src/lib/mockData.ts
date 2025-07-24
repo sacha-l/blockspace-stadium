@@ -150,8 +150,36 @@ export const mockProjects: Project[] = [
     successCriteria:
       "Track 1000+ products, integrate with 5+ IoT sensor types, 99.5% data accuracy",
     hasOtherMilestones: false,
-    status: "approved",
+    status: "rejected",
     submittedAt: "2024-01-13T08:15:00Z",
+  },
+  {
+    id: "6",
+    ss58Address: "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+    projectTitle: "Cross-Chain Bridge Protocol",
+    projectSummary:
+      "Secure and efficient bridge protocol for transferring assets between Polkadot parachains and external networks.",
+    background:
+      "Interoperability between different blockchain networks is crucial for DeFi growth and user experience.",
+    techStack: "Rust, Substrate, Solidity, React, Web3.js",
+    gitLink: "https://github.com/example/cross-chain-bridge",
+    demoLink: "https://bridge-protocol-demo.vercel.app",
+    milestoneTitle: "Core Bridge Infrastructure",
+    milestoneDescription:
+      "Develop the foundational bridge infrastructure with security mechanisms and cross-chain communication protocols.",
+    deliverables: [
+      "Multi-chain asset transfer functionality",
+      "Security audit and vulnerability assessment",
+      "User interface for bridge operations",
+      "Real-time transaction monitoring",
+    ],
+    successCriteria:
+      "Support 3+ major networks, sub-5 minute transfer times, 99.9% security rating",
+    additionalNotes:
+      "Focus on Polkadot-Kusama bridge initially, then expand to Ethereum and other networks",
+    hasOtherMilestones: true,
+    status: "approved",
+    submittedAt: "2024-01-18T10:30:00Z",
   },
 ];
 

@@ -53,19 +53,22 @@ const setStoredPayouts = (payouts: Payout[]) => {
 
 // Project API
 export const projectApi = {
-  // Get all projects (fetching 10 random ones from the server)
+  // Get all projects (using mock data for demo)
   getProjects: async (): Promise<Project[]> => {
     await delay();
 
-    try {
-      const response = await api.getProjects(/* { limit: 10 } */);
-
-      // If the backend already returns random projects, no need to shuffle
-      return response.data;
-    } catch (err) {
-      console.error("❌ Failed to fetch projects:", err);
-      return [];
-    }
+    // HARDCODED: Return mock data instead of API call for demo purposes
+    console.log("📋 Using mock data for projects demo");
+    return mockProjects;
+    
+    // Original API call (commented out for demo):
+    // try {
+    //   const response = await api.getProjects(/* { limit: 10 } */);
+    //   return response.data;
+    // } catch (err) {
+    //   console.error("❌ Failed to fetch projects:", err);
+    //   return [];
+    // }
   },
 
   // Get project by ID (ss58Address)

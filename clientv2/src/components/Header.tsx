@@ -38,7 +38,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center space-x-2">
           {[
             { to: "/", label: "Home" },
-            { to: "/projects", label: "Projects", icon: FolderOpen },
+            { to: "/projects", label: "Active Projects", icon: FolderOpen },
             { to: "/past-projects", label: "Past Projects", icon: History },
             { to: "/submission", label: "Submit", icon: PlusCircle },
             { to: "/admin", label: "Admin", icon: Shield },
@@ -80,7 +80,7 @@ export default function Header() {
             {[
               { to: "/", label: "Home", icon: Trophy },
               { to: "/past-projects", label: "Past Projects", icon: History },
-              { to: "/projects", label: "Projects", icon: FolderOpen },
+              { to: "/projects", label: "Active Projects", icon: FolderOpen },
               { to: "/submission", label: "Submit", icon: PlusCircle },
               { to: "/admin", label: "Admin", icon: Shield },
             ].map(({ to, label, icon: Icon }) => (

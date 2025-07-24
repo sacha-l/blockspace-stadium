@@ -51,7 +51,7 @@ const HomePage = () => {
 
   // Stats calculation
   const totalProjects = projects.length;
-  const totalRewards = 100; // TODO: Replace with real value or calculation
+  const totalRewards = 40; // TODO: Replace with real value or calculation
   const totalTeams = new Set(projects.map(p => p.ss58Address)).size;
 
   // Winning projects (first 6)
@@ -75,21 +75,19 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="text-center mb-10">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">BlockSpace Stadium</h1>
-        <h2 className="text-xl md:text-2xl text-muted-foreground">Where Blockspace Builders Ship Betwen Hackathons</h2>
       </div>
-
       {/* Stats Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
-        <span>{totalProjects} Projects Built</span>
+        <span>{totalProjects} Active Projects Building</span>
         <span className="hidden sm:inline">|</span>
-        <span>${totalRewards}K in Rewards</span>
+        <span>${totalRewards}K in Unclaimed Rewards</span>
         <span className="hidden sm:inline">|</span>
         <span>{totalTeams} Teams Shipping</span>
       </div>
 
       {/* Winning Projects Section */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold mb-6 text-center">Winning Projects</h2>
+        <h2 className="text-xl font-medium mb-6 text-center text-purple-400">📢📢 Congratulations to the Winners of the Polkadot and Kusama Tracks at the Blockspace Synergy Hackathon in Berlin, July 16-18 2025</h2>
         {winningProjects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
@@ -183,9 +181,9 @@ const HomePage = () => {
       </div>
       {/* View All Projects Button */}
       <div className="flex justify-center mt-8">
-        <Button asChild size="lg">
-          <Link to="/projects" className="flex items-center space-x-2">
-            <span>View All Projects</span>
+        <Button asChild size="lg" className="hover:bg-accent hover:text-accent-foreground transition-colors">
+          <Link to="/past-projects" className="flex items-center space-x-2">
+            <span>View All Past Projects</span>
             <ChevronRight className="h-4 w-4" />
           </Link>
         </Button>

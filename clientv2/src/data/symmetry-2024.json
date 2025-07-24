@@ -265,7 +265,7 @@
     "description": "Propcorn is a public good designed to incentivize open-source developers by enabling micro-funding for small features or fixes on GitHub.",
     "eventStartedAt": "funkhaus-2024",
     "githubRepo": "https://github.com/deeecent/propcorn/",
-    "demoUrl": "https://propcorn.deeecent.website/",
+    "demoUrl": "https://propcorn.xyz/",
     "slidesUrl": "nan",
     "techStack": "HardHat, react, wagmi",
     "milestones": [
