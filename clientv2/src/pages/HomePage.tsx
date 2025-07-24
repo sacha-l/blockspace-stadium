@@ -83,7 +83,6 @@ const HomePage = () => {
 
       {/* Winning Projects Section */}
       <div className="mb-8">
-        <h2 className="text-lg font-medium mb-6 text-center text-muted-foreground underline">Congratulations to the winners of the Blockspace Synergy Hackathon 2025</h2>
         {winningProjects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
@@ -98,14 +97,26 @@ const HomePage = () => {
             {winningProjects.map((project: any, index) => (
               <Card
                 key={project.projectName}
-                className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
+                className="group hover:shadow-primary hover:border-purple-500/50 hover:ring-2 hover:ring-purple-500/20 transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between mb-2">
-                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30" variant="secondary">
-                      🏆 {project.winner}
-                    </Badge>
+                    <div className="flex flex-col gap-1">
+                      <Badge 
+                        className={`${
+                          project.winner?.toLowerCase().includes('kusama') 
+                            ? 'bg-purple-600/20 text-purple-300 border-purple-600/30' 
+                            : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                        }`} 
+                        variant="secondary"
+                      >
+                        🏆 {project.winner?.toUpperCase()}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-300 border-blue-500/30">
+                        Blockspace Synergy
+                      </Badge>
+                    </div>
                   </div>
                   <CardTitle className="capitalize group-hover:text-primary transition-colors text-lg">
                     {project.projectName}
