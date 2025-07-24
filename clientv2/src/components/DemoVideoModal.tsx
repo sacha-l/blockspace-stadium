@@ -173,7 +173,10 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             <div className="flex gap-2 flex-wrap">
               {isWinner && (
                 <Badge variant="secondary" className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs break-words max-w-full">
-                  🏆 {project.winner}
+                  🏆 {project.winner
+                    .split(' ')
+                    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                    .join(' ')}
                 </Badge>
               )}
               {milestoneStatus === "completed" && (

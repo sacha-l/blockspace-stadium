@@ -84,17 +84,14 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="text-center mb-10">
         <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 break-words whitespace-pre-line leading-tight">
-          BlockSpace Stadium
+          Blockspace Stadium
         </h1>
       </div>
       {/* Stats Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
-        {/* <span>{totalProjects} Active Projects Building 🏗️</span>
-        <span className="hidden sm:inline">|</span>
-        <span>${totalRewards}K in Unclaimed Rewards 💰</span>
-        <span className="hidden sm:inline">|</span>
-        <span>{totalTeams} Teams Shipping 🚀</span> */}
-        <span> A Blockspace Builder's project progress and showcase portal.</span>
+        <span className="w-full text-center font-pressStart text-base sm:text-lg text-gray-300 tracking-wide mt-2 block" style={{ textShadow: '0 2px 8px #8888' }}>
+          A Blockspace Builder's project progress and showcase portal.
+        </span>
       </div>
 
       {/* Winning Projects Carousel */}

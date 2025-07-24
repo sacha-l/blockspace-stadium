@@ -129,17 +129,29 @@ const ProjectsPage = () => {
                 <Trophy className="h-6 w-6 mr-2 text-yellow-500" />
                 Winners
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {currentProjects.length > 0 ? (
-                  currentProjects.map((project, index) => (
+                  (() => {
+                    // Separate Polkadot and Kusama winners
+                    const polkadotWinners = currentProjects.filter((project: any) => 
+                      project.winner?.toLowerCase().includes('polkadot')
+                    );
+                    const kusamaWinners = currentProjects.filter((project: any) => 
+                      project.winner?.toLowerCase().includes('kusama')
+                    );
+                    
+                    // Combine: Polkadot first, then Kusama
+                    const sortedProjects = [...polkadotWinners, ...kusamaWinners];
+                    
+                    return sortedProjects.map((project, index) => (
                       <Card
                         key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
-                        <CardHeader>
+                        <CardHeader className="pb-2">
                           <div className="flex items-start justify-between">
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-1">
                               <Badge
                                 className={
                                   project.winner?.toLowerCase().includes('kusama')
@@ -157,26 +169,26 @@ const ProjectsPage = () => {
                               </Badge>
                             </div>
                             
-                            <Trophy className="h-5 w-5 text-yellow-500" />
+                            <Trophy className="h-4 w-4 text-yellow-500" />
                           </div>
-                          <CardTitle className="group-hover:text-primary transition-colors">
+                          <CardTitle className="group-hover:text-primary transition-colors text-sm">
                             {project.projectName}
                           </CardTitle>
-                          <CardDescription className="line-clamp-3 project-card-info">
+                          <CardDescription className="line-clamp-2 project-card-info text-xs">
                             {project.description}
                           </CardDescription>
                         </CardHeader>
 
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Users className="h-4 w-4 mr-2" />
+                        <CardContent className="pt-0 pb-2">
+                          <div className="space-y-2">
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <Users className="h-3 w-3 mr-1" />
                               <span className="text-xs">
                                 {project.teamLead}
                               </span>
                             </div>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1">
                               <Badge variant="outline" className="text-xs">
                                 {project.techStack}
                               </Badge>
@@ -185,40 +197,40 @@ const ProjectsPage = () => {
                         </CardContent>
 
                         <CardFooter className="pt-0">
-                          <div className="flex w-full gap-2">
-                            <Button asChild size="sm" className="flex-1">
+                          <div className="flex w-full gap-1">
+                            <Button asChild size="sm" className="flex-1 text-xs">
                               <Link
                                 to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
-                                className="flex items-center space-x-2"
+                                className="flex items-center space-x-1"
                               >
-                                <span>Project Details</span>
-                                <ChevronRight className="h-4 w-4" />
+                                <span>Details</span>
+                                <ChevronRight className="h-3 w-3" />
                               </Link>
                             </Button>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-1">
                               {project.githubRepo && (
-                                <Button size="sm" variant="outline" asChild>
+                                <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0">
                                   <a
                                     href={project.githubRepo}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     title="View on GitHub"
                                   >
-                                    <Github className="h-4 w-4" />
+                                    <Github className="h-3 w-3" />
                                   </a>
                                 </Button>
                               )}
 
                               {project.demoUrl && (
-                                <Button size="sm" variant="outline" asChild>
+                                <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0">
                                   <a
                                     href={project.demoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     title="View Demo"
                                   >
-                                    <Globe className="h-4 w-4" />
+                                    <Globe className="h-3 w-3" />
                                   </a>
                                 </Button>
                               )}
@@ -226,7 +238,8 @@ const ProjectsPage = () => {
                           </div>
                         </CardFooter>
                       </Card>
-                    ))
+                    ));
+                  })()
                 ) : (
                   <Card className="text-center py-8 col-span-full">
                     <CardContent>

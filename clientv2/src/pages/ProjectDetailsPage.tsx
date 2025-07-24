@@ -392,12 +392,12 @@ const ProjectDetailsPage = () => {
                 <div className="mb-4">
                   <ul className="list-disc pl-6 space-y-1">
                     {project.milestones.map((m: string, i: number) => (
-                      <li key={i} className="text-white">{m}</li>
+                      <li key={i} className="text-white text-xs sm:text-sm">{m}</li>
                     ))}
                   </ul>
                 </div>
               ) : (
-                <div className="mb-4 text-white text-sm">No milestones confirmed.</div>
+                <div className="mb-4 text-white text-xs sm:text-sm">No milestones confirmed.</div>
               )}
               <div className="flex justify-center mt-4">
                 <Button size="sm" variant="outline" className="bg-yellow-200/80 text-yellow-900 font-semibold px-6 py-2 rounded shadow hover:bg-yellow-300 transition-colors" onClick={() => setDeliverableModalOpen(true)}>
