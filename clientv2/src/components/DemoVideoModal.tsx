@@ -152,14 +152,14 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-full max-w-xs sm:max-w-md md:max-w-3xl p-2 sm:p-6 mx-auto my-4 max-h-[90vh] overflow-y-auto">
-        <div className="relative bg-black min-h-[220px] h-56 sm:aspect-video sm:h-auto sm:max-h-[60vh] mb-4 rounded overflow-hidden">
+        <div className="relative bg-black min-h-[220px] h-56 sm:aspect-video sm:h-auto sm:max-h-[50vh] mb-6 rounded overflow-hidden">
           {demoUrl && demoUrl !== "nan" ? (
             <iframe
               src={convertToEmbedUrl(demoUrl)}
               className="w-full h-full min-h-[220px] max-w-full rounded"
               allowFullScreen
               title="Demo Video"
-              style={{ display: 'block' }}
+              style={{ display: 'block', maxHeight: '100%' }}
             />
           ) : (
             <div className="flex items-center justify-center h-full text-white">
@@ -167,7 +167,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             </div>
           )}
         </div>
-        <div className="px-2 sm:px-6 pb-4">
+        <div className="px-2 sm:px-6 pb-4 mt-4">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h2 className="text-base sm:text-2xl font-bold pr-2 break-words max-w-full">{project.projectName}</h2>
             <div className="flex gap-2 flex-wrap">

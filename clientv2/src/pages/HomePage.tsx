@@ -51,7 +51,7 @@ const HomePage = () => {
   const totalProjects = projects.length;
   const totalRewards = 40;
   const totalTeams = new Set(projects.map((p: any) => p.teamLead)).size;
-  const winningProjects = projects.filter((p: any) => p.winner && p.winner !== "").slice(0, 6);
+  const winningProjects = projects.filter((p: any) => p.winner && p.winner !== "").slice(0, 9);
 
   // Carousel navigation
   const prevCard = () => setCarouselIndex((i) => (i - 1 + winningProjects.length) % winningProjects.length);
