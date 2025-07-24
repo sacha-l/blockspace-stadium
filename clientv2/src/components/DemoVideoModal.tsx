@@ -151,8 +151,8 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl p-0">
-        <div className="relative aspect-video bg-black">
+      <DialogContent className="max-w-3xl w-full p-0 mx-auto my-8">
+        <div className="relative aspect-video bg-black max-h-[60vh]">
           {demoUrl && demoUrl !== "nan" ? (
             <iframe
               src={convertToEmbedUrl(demoUrl)}

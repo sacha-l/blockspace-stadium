@@ -94,7 +94,7 @@ const ProjectsPage = () => {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/" className="flex items-center space-x-2">
               <ChevronLeft className="h-4 w-4" />
-              <span>Back to Home</span>
+              <span>Go Back Home</span>
             </Link>
           </Button>
         </div>
@@ -140,10 +140,19 @@ const ProjectsPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col gap-2">
                               <Badge
-                                className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                                className={
+                                  project.winner?.toLowerCase().includes('kusama')
+                                    ? 'bg-purple-600/20 text-purple-300 border-purple-600/30'
+                                    : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                                }
                                 variant="secondary"
                               >
-                                🏆 {project.winner}
+                                🏆 {project.winner
+                                  ? project.winner
+                                      .split(' ')
+                                      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                                      .join(' ')
+                                  : ''}
                               </Badge>
                             </div>
                             
@@ -178,10 +187,10 @@ const ProjectsPage = () => {
                           <div className="flex w-full gap-2">
                             <Button asChild size="sm" className="flex-1">
                               <Link
-                                to={project.donationAddress ? `/project/${project.donationAddress}` : `/project/not-found`}
+                                to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
                                 className="flex items-center space-x-2"
                               >
-                                <span>View Details</span>
+                                <span>Project Details</span>
                                 <ChevronRight className="h-4 w-4" />
                               </Link>
                             </Button>
@@ -280,7 +289,7 @@ const ProjectsPage = () => {
                               to="/project-page"
                               className="flex items-center justify-center space-x-1"
                             >
-                              <span>View Details</span>
+                              <span>Project Details</span>
                               <ChevronRight className="h-3 w-3" />
                             </Link>
                           </Button>
@@ -290,9 +299,9 @@ const ProjectsPage = () => {
                 ) : (
                   <Card className="text-center py-8 col-span-full">
                     <CardContent>
-                      <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Pending Projects</h3>
-                      <p className="text-muted-foreground">
+                      <Clock className="h-12 w-12 text-green-500 bg-green-500/10 rounded-full mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2 text-green-500">No Pending Projects</h3>
+                      <p className="text-green-500">
                         No projects are currently pending milestone delivery.
                       </p>
                     </CardContent>
@@ -350,7 +359,7 @@ const ProjectsPage = () => {
                               to="/project-page"
                               className="flex items-center justify-center space-x-1"
                             >
-                              <span>View Details</span>
+                              <span>Project Details</span>
                               <ChevronRight className="h-3 w-3" />
                             </Link>
                           </Button>
@@ -360,9 +369,9 @@ const ProjectsPage = () => {
                 ) : (
                   <Card className="text-center py-8 col-span-full">
                     <CardContent>
-                      <AlertCircle className="h-12 w-12 text-accent mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2 text-accent">No Projects Under Review</h3>
-                      <p className="text-accent/80">
+                      <AlertCircle className="h-12 w-12 text-green-500 bg-green-500/10 rounded-full mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2 text-green-500">No Projects Under Review</h3>
+                      <p className="text-green-500">
                         No projects are currently under review.
                       </p>
                     </CardContent>

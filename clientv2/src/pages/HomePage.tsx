@@ -5,6 +5,8 @@ import {
   ChevronRight,
   Loader2,
   Play,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import {
   Card,
@@ -19,18 +21,19 @@ import synergyProjects from "@/data/synergy-2025.json";
 import { Project } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 import { DemoVideoModal } from "@/components/DemoVideoModal";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 const HomePage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [videoProject, setVideoProject] = useState<any | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const { toast } = useToast();
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
 
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        // Use synergy-2025 data directly
         setProjects(synergyProjects as any[]);
       } catch (error) {
         toast({
@@ -45,13 +48,23 @@ const HomePage = () => {
     loadProjects();
   }, [toast]);
 
-  // Stats calculation
   const totalProjects = projects.length;
-  const totalRewards = 40; // TODO: Replace with real value or calculation
+  const totalRewards = 40;
   const totalTeams = new Set(projects.map((p: any) => p.teamLead)).size;
-
-  // Winning projects from synergy-2025 (first 6)
   const winningProjects = projects.filter((p: any) => p.winner && p.winner !== "").slice(0, 6);
+
+  // Carousel navigation
+  const prevCard = () => setCarouselIndex((i) => (i - 1 + winningProjects.length) % winningProjects.length);
+  const nextCard = () => setCarouselIndex((i) => (i + 1) % winningProjects.length);
+
+  // Drag/swipe logic
+  const handleDragEnd = (event: any, info: any) => {
+    if (info.offset.x < -80) {
+      nextCard();
+    } else if (info.offset.x > 80) {
+      prevCard();
+    }
+  };
 
   if (loading) {
     return (
@@ -74,15 +87,16 @@ const HomePage = () => {
       </div>
       {/* Stats Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
-        <span>{totalProjects} Active Projects Building 🏗️</span>
+        {/* <span>{totalProjects} Active Projects Building 🏗️</span>
         <span className="hidden sm:inline">|</span>
         <span>${totalRewards}K in Unclaimed Rewards 💰</span>
         <span className="hidden sm:inline">|</span>
-        <span>{totalTeams} Teams Shipping 🚀</span>
+        <span>{totalTeams} Teams Shipping 🚀</span> */}
+        <span> A Blockspace Builder's project progress and showcase portal.</span>
       </div>
 
-      {/* Winning Projects Section */}
-      <div className="mb-8">
+      {/* Winning Projects Carousel */}
+      <div className="mb-8 flex flex-col items-center">
         {winningProjects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
@@ -93,76 +107,152 @@ const HomePage = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {winningProjects.map((project: any, index) => (
-              <Card
-                key={project.projectName}
-                className="group hover:shadow-primary hover:border-purple-500/50 hover:ring-2 hover:ring-purple-500/20 transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex flex-col gap-1">
-                      <Badge 
-                        className={`${
-                          project.winner?.toLowerCase().includes('kusama') 
-                            ? 'bg-purple-600/20 text-purple-300 border-purple-600/30' 
-                            : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
-                        }`} 
-                        variant="secondary"
-                      >
-                        🏆 {project.winner?.toUpperCase()}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-300 border-blue-500/30">
-                        Blockspace Synergy
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardTitle className="capitalize group-hover:text-primary transition-colors text-lg">
-                    {project.projectName}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0 pb-4">
-                  <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
-                    {project.description}
-                  </p>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="h-4 w-4 mr-2" />
-                    <span className="text-xs">
-                      {project.teamLead}
-                    </span>
-                  </div>
-                </CardContent>
-                <CardContent className="pt-0 pb-4">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {project.techStack && project.techStack !== "" && (
-                      <Badge variant="outline" className="text-xs">
-                        {project.techStack}
-                      </Badge>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <div className="flex gap-2 w-full">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30"
-                      onClick={() => setVideoProject(project)}
+          <div className="relative w-full flex items-center justify-center min-h-[420px] md:min-h-[520px]">
+            <div className="flex items-center justify-center w-full relative" style={{ minHeight: '400px' }}>
+              {/* Carousel Cards */}
+              {[-1, 0, 1].map((offset) => {
+                const idx = (carouselIndex + offset + winningProjects.length) % winningProjects.length;
+                const project = winningProjects[idx] as any;
+                let scale = 1, opacity = 1, zIndex = 10, translateX = 0, rotateY = 0, blur = "";
+                if (offset === 0) {
+                  scale = 1;
+                  opacity = 1;
+                  zIndex = 30;
+                  translateX = 0;
+                  rotateY = 0;
+                  blur = "";
+                } else if (offset === -1) {
+                  scale = 0.85;
+                  opacity = 0.6;
+                  zIndex = 20;
+                  translateX = -180; // Reduced for mobile
+                  rotateY = 20;
+                  blur = "blur-sm";
+                } else if (offset === 1) {
+                  scale = 0.85;
+                  opacity = 0.6;
+                  zIndex = 20;
+                  translateX = 180; // Reduced for mobile
+                  rotateY = -20;
+                  blur = "blur-sm";
+                }
+                return (
+                  <motion.div
+                    key={project.projectName + offset}
+                    initial={{ opacity: 0, scale: 0.8, x: 0 }}
+                    animate={{
+                      opacity,
+                      scale,
+                      x: translateX,
+                      zIndex,
+                      rotateY,
+                    }}
+                    exit={{ opacity: 0, scale: 0.8, x: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className={`absolute w-full max-w-sm md:max-w-lg ${blur} ${offset === 0 ? "shadow-2xl border-2 border-purple-500/50" : ""}`}
+                    style={{ perspective: 1000, pointerEvents: offset === 0 ? "auto" : "none" }}
+                    drag={offset === 0 ? "x" : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragEnd={offset === 0 ? handleDragEnd : undefined}
+                  >
+                    <Card
+                      className={`group transition-all duration-300 animate-fade-in ${offset === 0 ? 'hover:shadow-2xl hover:scale-105 bg-gradient-to-br from-primary/20 to-accent/20 animate-float' : ''}`}
+                      style={offset === 0 ? { animation: 'float 6s ease-in-out infinite' } : {}}
                     >
-                      <Play className="h-4 w-4 mr-2" />
-                      <span>View Demo</span>
-                    </Button>
-                    <Button asChild size="sm" variant="outline" className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
-                      <Link to="/project-page" className="flex items-center justify-center space-x-2">
-                        <span>Project Page</span>
-                        <ChevronRight className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex flex-col gap-1">
+                            <Badge 
+                              className={`${
+                                project.winner?.toLowerCase().includes('kusama') 
+                                  ? 'bg-purple-600/20 text-purple-300 border-purple-600/30' 
+                                  : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                              }`} 
+                              variant="secondary"
+                            >
+                              🏆 {project.winner
+                                ? project.winner
+                                    .split(' ')
+                                    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                                    .join(' ')
+                                : ''}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-300 border-blue-500/30">
+                              Blockspace Synergy 2025
+                            </Badge>
+                          </div>
+                        </div>
+                        <CardTitle className="capitalize group-hover:text-primary transition-colors text-lg">
+                          {project.projectName}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-0 pb-4">
+                        <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
+                          {project.description}
+                        </p>
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Users className="h-4 w-4 mr-2" />
+                          <span className="text-xs">
+                            {project.teamLead}
+                          </span>
+                        </div>
+                      </CardContent>
+                      <CardContent className="pt-0 pb-4">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {project.techStack && project.techStack !== "" && (
+                            <Badge variant="outline" className="text-xs">
+                              {project.techStack}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                      <CardFooter className="pt-0">
+                        <div className="flex gap-2 w-full">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30"
+                            onClick={() => setVideoProject(project)}
+                          >
+                            <Play className="h-4 w-4 mr-2" />
+                            <span>View Demo</span>
+                          </Button>
+                          <Button asChild size="sm" variant="outline" className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
+                            <Link to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`} className="flex items-center justify-center space-x-2">
+                              <span>Project Page</span>
+                              <ChevronRight className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+              {/* Left Arrow (flush with card) */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20"
+                onClick={prevCard}
+                disabled={winningProjects.length < 2}
+                aria-label="Previous project"
+              >
+                <ArrowLeft className="h-8 w-8 text-muted-foreground" />
+              </Button>
+              {/* Right Arrow (flush with card) */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20"
+                onClick={nextCard}
+                disabled={winningProjects.length < 2}
+                aria-label="Next project"
+              >
+                <ArrowRight className="h-8 w-8 text-muted-foreground" />
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -175,7 +265,6 @@ const HomePage = () => {
           </Link>
         </Button>
       </div>
-      
       {/* Video Modal */}
       <DemoVideoModal open={!!videoProject} onClose={() => setVideoProject(null)} project={videoProject} />
     </div>

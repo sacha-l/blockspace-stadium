@@ -49,11 +49,11 @@ const App = () => {
               <Route index element={<HomePage />} />
               <Route path="past-projects" element={<PastProjects />} />
               <Route path="projects" element={<ProjectsPage />} />
-              <Route path="project/:id" element={<ProjectDetailsPage />} />
               <Route path="project-page" element={<ProjectPage />} />
               <Route path="submission" element={<SubmissionPage />} />
               <Route path="admin" element={<AdminPage />} />
             </Route>
+            <Route path="projects/:id" element={<ProjectDetailsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

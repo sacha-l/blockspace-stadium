@@ -7,6 +7,7 @@ import {
 } from "./mockData";
 
 import { api } from "./api";
+import synergyProjects from '@/data/synergy-2025.json';
 
 // Simulate network delays
 const delay = (ms: number = 800) =>
@@ -72,20 +73,11 @@ export const projectApi = {
   },
 
   // Get project by ID (ss58Address)
-  getProject: async (id: string): Promise<Project | null> => {
+  getProject: async (id: string): Promise<any | null> => {
     await delay();
-    try {
-      const result = await api.getProject(id);
-      if (result.status !== "success") {
-        console.warn("⚠️ Project not found or failed to fetch");
-        return null;
-      }
-
-      return result.data as Project;
-    } catch (err) {
-      console.error("❌ getProject error:", err);
-      return null;
-    }
+    // Search synergyProjects for a project with matching donationAddress
+    const project = synergyProjects.find((p: any) => p.donationAddress === id);
+    return project || null;
   },
 
   // Submit new project

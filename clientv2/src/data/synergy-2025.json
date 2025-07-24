@@ -83,10 +83,9 @@
       "demoUrl": "https://youtu.be/Y8a1-c3COwo",
       "slidesUrl": "https://interplaynetary.github.io/free-association/",
       "techStack": "Kusama",
-      "milestones": [
-        "**Deliverables:**\n\n- [ ] Deliverable 1: Web3 ecosystem can use free-association gift-economy economics to distribute tokens and validate contributions. Concretely: meaning tokens can easily be transferred according to mutual-recognition proportions.\n- [ ] Deliverable 2: Collective-Recognition (derived from mutual-recognition) has been deployed with convenient UX: Concretely, now collective-assets (DAO treasuries etc.) can be distributed according to collective-recognition easily.\n- [ ] Deliverable 3: Collective-Tree (derived from individual trees and Collective-Recognition) has been deployed with convenient UX allowing organizations and communities (DAOs etc.) to easily view what is concretely important to the collective. Concretely this means extending the protocol further, and adapting the Resizable-TreeMap to a collective context."
+      "milestones": ["Web3 ecosystem can use free-association gift-economy economics to distribute tokens and validate contributions. Concretely: meaning tokens can easily be transferred according to mutual-recognition proportions.", "Collective-Recognition (derived from mutual-recognition) has been deployed with convenient UX: Concretely, now collective-assets (DAO treasuries etc.) can be distributed according to collective-recognition easily.", "Collective-Tree (derived from individual trees and Collective-Recognition) has been deployed with convenient UX allowing organizations and communities (DAOs etc.) to easily view what is concretely important to the collective. Concretely this means extending the protocol further, and adapting the Resizable-TreeMap to a collective context."
       ],
-      "donationAddress": "",
+      "donationAddress": "5FafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Kusama main track"
     },
     {
@@ -185,7 +184,7 @@
       "slidesUrl": "https://www.youtube.com/watch?v=_Us1moAl3Nc",
       "techStack": "Kusama",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5AaEWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Kusama main track"
     },
     {
@@ -230,14 +229,14 @@
     {
       "projectName": "Milkyway2",
       "teamLead": "tatiana.dzhambinova",
-      "description": "MilkyWay is an on-chain game built on Polkadot, offering players a unique blend of strategy, resource management, and exploration. Players navigate a virtual universe, discover new planets, gather resources, and build their galactic empire. The game leverages blockchain technology to provide true ownership of in-game assets, enabling players to trade, sell, or use their resources across the ecosystem.",
+      "description": "Milkyway2 delivers transparent, privacy-first risk and incident reporting across Polkadot, Kusama and parachains. Users see real-time, color-coded risk indicators for each validator—paired with clear action steps—so anyone can make informed moves instantly. The platform combines advanced zero-knowledge, Sybil-resistant reporting and encrypted validator messaging, ensuring that every alert brings both context and security for the entire network.",
       "eventStartedAt": "synergy-hack-2024",
-      "githubRepo": "https://github.com/lana-shanghai/milkyway",
+      "githubRepo": "https://github.com/tatdz/milkyway2",
       "demoUrl": "https://milkyway-2-ubvant.replit.app",
-      "slidesUrl": "https://docs.google.com/presentation/d/1e9bE5AhDKBe0vGD7IYfzVKKN4dxQOzMnhOBSfK5tS5o/edit?usp=sharing",
+      "slidesUrl": "https://docs.google.com/presentation/d/14uqsXmstUvj2FWImFQv1frIORn4BB-z26BDHaYE9FsA/edit?usp=sharing",
       "techStack": "ink!",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5DafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Polkadot main track"
     },
     {
@@ -269,13 +268,17 @@
     {
       "projectName": "CrackedDevZ",
       "teamLead": "Armsves",
-      "description": "Build the future, faster. AI-powered developer marketplace matching vetted devs with ambitious projects. Skip hiring headaches - ship code that matters.",
+      "description": "This project marks the first steps toward real life applicable ZK use cases for the Polkadot community. By leveraging the state of the art ZK tooling such Noir, ZK-SNARKS,HONKS and Pederson Commitment, “PolkaVote” introduces an anonymous voting protocol to the Polkadot eco-system for anonymous and decentralized governing.<br>At its core, the idea is to create a flexible, reusable and robust Zero Knowledge voting platform on Polkadot for Polkadot.",
       "eventStartedAt": "synergy-hack-2024",
-      "githubRepo": "https://github.com/ArmsVestIde/CrackedDevz",
-      "demoUrl": "https://www.loom.com/share/3a899d48f7e94971836b58b60fc00de8?sid=ee228802-f2f2-4e95-86e8-e0833f2e9a3e",
+      "githubRepo": "https://github.com/armsves/PolkaVote/tree/feat/server",
+      "demoUrl": "https://www.youtube.com/watch?v=awTz5q-QLQU",
       "slidesUrl": "https://www.canva.com/design/DAGYEJlI1qM/nslQFnNaD8DHJdEXGb-W3g/edit?utm_content=DAGYEJlI1qM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
       "techStack": "Other",
-      "milestones": [],
+      "milestones": ["**Problem Statement and Research** propose a new cryptographic primitives that suit the needs of the protocol",
+      "**Commitment Scheme Implementation** Implementation of the new candidate to the commitment scheme variants that was proposed in the research phase",
+      "1. Landing page launch, attract (nonanonymous) email submissions.",
+      "2. With Polkavote team development, establish a site where cryptoholders and anonymously vote/join.",
+      "**Off Chain Merkle Tree** Implementation of a server that stores the voting commitments off chain and leverages blockchain for integrity by posting Merkle Tree root on chain"],
       "donationAddress": "",
       "winner": ""
     },
@@ -367,7 +370,7 @@
       "slidesUrl": "https://docs.google.com/presentation/d/1UVOLcJ2yE7fhahBQD3YKP6Jc10m1VJKx3kLiGdgYP5c/edit?usp=sharing",
       "techStack": "Other",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5GafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Polkadot main track"
     },
     {
@@ -462,16 +465,16 @@
       "winner": ""
     },
     {
-      "projectName": "monsters ink!",
+      "projectName": "Monsters ink!",
       "teamLead": "kilianvaldman",
-      "description": "A play to earn top down shooter where the player slays hordes of enemies and earns tokens for their achievements. The game features fast-paced combat, various weapon upgrades, and a blockchain-based economy where players truly own their in-game assets and earnings.",
+      "description": "Create an adorable creature by learning Polkadot and Ink.",
       "eventStartedAt": "synergy-hack-2024",
-      "githubRepo": "https://gitlab.com/4thtech-alliance/monsters-ink",
+      "githubRepo": "https://github.com/forever8896/inkverse",
       "demoUrl": "https://www.loom.com/share/d2172876d4c24d4d8f03f3ccd26b17cd?sid=1386d650-063f-4db1-9bb8-47556d807689",
       "slidesUrl": "https://docs.google.com/presentation/d/1Y29e6dFRJQgKqQ8Bf-nRdFN8h8hJNxgQh23Nuz8YmKE/edit?usp=sharing",
       "techStack": "ink!",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5JafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Polkadot main track"
     },
     {
@@ -570,12 +573,12 @@
       "teamLead": "viktorko99",
       "description": "Memo Self is a digital well-being companion that helps users track, understand, and improve their daily habits and mental health through blockchain-verified journaling and AI-powered insights. By combining secure data storage with personalized analytics, it creates a trusted space for self-reflection and growth.",
       "eventStartedAt": "synergy-hack-2024",
-      "githubRepo": "https://github.com/viktorko99/memo-self",
+      "githubRepo": "https://www.github.com/vikiival/memoself",
       "demoUrl": "https://www.loom.com/share/317b328b5f774468a1cb7001952cb50a?sid=82028085-73ff-40fa-aa75-ccd0b14848d1",
       "slidesUrl": "https://docs.google.com/presentation/d/14RTgJJN1JKQoU4fTPzEWQAKHJqJ_cg1KMWdykLJBPf8/edit?usp=sharing",
       "techStack": "Polkadot",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5AafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLue",
       "winner": "Kusama main track"
     },
     {
@@ -588,7 +591,7 @@
       "slidesUrl": "https://docs.google.com/presentation/d/1pNyXRsUJI8pMYTtFKfMwfZfLRdHBRO88QZ6bX3GyJvw/edit?usp=sharing",
       "techStack": "Polkadot",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5EafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Kusama main track"
     },
     {
@@ -597,11 +600,11 @@
       "description": "Emerald is a cutting-edge blockchain solution focused on sustainable finance and green investments. The platform connects eco-conscious investors with verified environmental projects, using smart contracts to ensure transparent fund allocation and measurable impact tracking for carbon reduction and sustainability initiatives.",
       "eventStartedAt": "synergy-hack-2024",
       "githubRepo": "https://github.com/Emerald-Invest/emerald-web",
-      "demoUrl": "https://drive.google.com/file/d/1YGyQrPQE5R5cQJHQJqgfoEm1RhStP4TC/view?usp=sharing",
+      "demoUrl": "https://alex.sellstrom.me/papers/Emerald.mov",
       "slidesUrl": "https://docs.google.com/presentation/d/1GQH7Qfqv9afMf98WKJcT2aEhJcqDC1kc_0PYDCt9xQU/edit#slide=id.g3150605c4f0_0_0",
       "techStack": "Other",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5BafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Kusama main track"
     },
     {
@@ -614,7 +617,7 @@
       "slidesUrl": "https://www.canva.com/design/DAGYIa6RhQA/iEd6vTRHU85a4r5VdQnGQA/edit?utm_content=DAGYIa6RhQA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
       "techStack": "Other",
       "milestones": [],
-      "donationAddress": "",
+      "donationAddress": "5HafWVqMP4iRjoFz9tJpTUmmUmwsEaWJBi3u1GExemgRbLud",
       "winner": "Polkadot main track"
     },
     {
