@@ -1,41 +1,37 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  ExternalLink,
-  Github,
-  Globe,
-  Trophy,
   Users,
-  Calendar,
   ChevronRight,
   Loader2,
+  Play,
 } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { projectApi } from "@/lib/mockApi";
+import synergyProjects from "@/data/synergy-2025.json";
 import { Project } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
-import { ProjectDetailsDrawer } from "@/components/ProjectDetailsDrawer";
+import { DemoVideoModal } from "@/components/DemoVideoModal";
+
 
 const HomePage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [videoProject, setVideoProject] = useState<any | null>(null);
   const { toast } = useToast();
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const projectsData = await projectApi.getProjects();
-        setProjects(projectsData);
+        // Use synergy-2025 data directly
+        setProjects(synergyProjects as any[]);
       } catch (error) {
         toast({
           title: "Error",
@@ -52,10 +48,10 @@ const HomePage = () => {
   // Stats calculation
   const totalProjects = projects.length;
   const totalRewards = 40; // TODO: Replace with real value or calculation
-  const totalTeams = new Set(projects.map(p => p.ss58Address)).size;
+  const totalTeams = new Set(projects.map((p: any) => p.teamLead)).size;
 
-  // Winning projects (first 6)
-  const winningProjects = projects.filter(p => p.status === "winner").slice(0, 6);
+  // Winning projects from synergy-2025 (first 6)
+  const winningProjects = projects.filter((p: any) => p.winner && p.winner !== "").slice(0, 6);
 
   if (loading) {
     return (
@@ -78,16 +74,16 @@ const HomePage = () => {
       </div>
       {/* Stats Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
-        <span>{totalProjects} Active Projects Building</span>
+        <span>{totalProjects} Active Projects Building 🏗️</span>
         <span className="hidden sm:inline">|</span>
-        <span>${totalRewards}K in Unclaimed Rewards</span>
+        <span>${totalRewards}K in Unclaimed Rewards 💰</span>
         <span className="hidden sm:inline">|</span>
-        <span>{totalTeams} Teams Shipping</span>
+        <span>{totalTeams} Teams Shipping 🚀</span>
       </div>
 
       {/* Winning Projects Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-medium mb-6 text-center text-purple-400">📢📢 Congratulations to the Winners of the Polkadot and Kusama Tracks at the Blockspace Synergy Hackathon in Berlin, July 16-18 2025</h2>
+        <h2 className="text-lg font-medium mb-6 text-center text-muted-foreground underline">Congratulations to the winners of the Blockspace Synergy Hackathon 2025</h2>
         {winningProjects.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
@@ -99,79 +95,59 @@ const HomePage = () => {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {winningProjects.map((project, index) => (
+            {winningProjects.map((project: any, index) => (
               <Card
-                key={project.ss58Address}
+                key={project.projectName}
                 className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <Badge className="bg-gradient-accent text-accent-foreground" variant="secondary">
-                      Winner
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between mb-2">
+                    <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30" variant="secondary">
+                      🏆 {project.winner}
                     </Badge>
-                    <Trophy className="h-5 w-5 text-yellow-500" />
                   </div>
-                  <CardTitle className="capitalize group-hover:text-primary transition-colors">
-                    {project.projectTitle}
+                  <CardTitle className="capitalize group-hover:text-primary transition-colors text-lg">
+                    {project.projectName}
                   </CardTitle>
-                  <CardDescription className="line-clamp-3 project-card-info">
-                    {project.projectSummary}
-                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Users className="h-4 w-4 mr-2" />
-                      <span className="font-mono text-xs truncate">
-                        {project.ss58Address.slice(0, 8)}...{project.ss58Address.slice(-6)}
-                      </span>
-                    </div>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      <span>{new Date(project.submittedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {project.techStack
-                        .split(",")
-                        .slice(0, 3)
-                        .map((tech, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {tech.trim()}
-                          </Badge>
-                        ))}
-                      {project.techStack.split(",").length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{project.techStack.split(",").length - 3} more
-                        </Badge>
-                      )}
-                    </div>
+                <CardContent className="pt-0 pb-4">
+                  <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
+                    {project.description}
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="h-4 w-4 mr-2" />
+                    <span className="text-xs">
+                      {project.teamLead}
+                    </span>
+                  </div>
+                </CardContent>
+                <CardContent className="pt-0 pb-4">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {project.techStack && project.techStack !== "" && (
+                      <Badge variant="outline" className="text-xs">
+                        {project.techStack}
+                      </Badge>
+                    )}
                   </div>
                 </CardContent>
                 <CardFooter className="pt-0">
-                  <div className="flex w-full gap-2">
-                    <Button asChild size="sm" className="flex-1">
-                      <Link to={`/project/${project.ss58Address}`} className="flex items-center space-x-2">
-                        <span>View Details</span>
+                  <div className="flex gap-2 w-full">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30"
+                      onClick={() => setVideoProject(project)}
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      <span>View Demo</span>
+                    </Button>
+                    <Button asChild size="sm" variant="outline" className="flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
+                      <Link to="/project-page" className="flex items-center justify-center space-x-2">
+                        <span>Project Page</span>
                         <ChevronRight className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <div className="flex gap-2">
-                      {project.gitLink && (
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={project.gitLink} target="_blank" rel="noopener noreferrer" title="View on GitHub">
-                            <Github className="h-4 w-4" />
-                          </a>
-                        </Button>
-                      )}
-                      {project.demoLink && (
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={project.demoLink} target="_blank" rel="noopener noreferrer" title="View Demo">
-                            <Globe className="h-4 w-4" />
-                          </a>
-                        </Button>
-                      )}
-                    </div>
                   </div>
                 </CardFooter>
               </Card>
@@ -188,6 +164,9 @@ const HomePage = () => {
           </Link>
         </Button>
       </div>
+      
+      {/* Video Modal */}
+      <DemoVideoModal open={!!videoProject} onClose={() => setVideoProject(null)} project={videoProject} />
     </div>
   );
 };

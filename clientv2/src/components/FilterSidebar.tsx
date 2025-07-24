@@ -27,6 +27,7 @@ const categoryIcons: Record<string, string> = {
   "NFT": "🎨",
   "Developer Tools": "🛠️",
   "Social": "🌐",
+  "Other": "🔧",
   "Winners": "🏆",
 };
 

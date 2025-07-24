@@ -5,12 +5,10 @@ import {
   Globe,
   Trophy,
   Users,
-  Calendar,
   ChevronRight,
   Loader2,
   ChevronLeft,
   Clock,
-  CheckCircle,
   AlertCircle,
 } from "lucide-react";
 import {
@@ -31,14 +29,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { projectApi } from "@/lib/mockApi";
-import { Project } from "@/lib/mockData";
+import synergyProjects from "@/data/synergy-2025.json";
 import { useToast } from "@/hooks/use-toast";
 
 const PROJECTS_PER_PAGE = 9;
 
 const ProjectsPage = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
@@ -46,8 +43,9 @@ const ProjectsPage = () => {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const projectsData = await projectApi.getProjects();
-        setProjects(projectsData);
+        // Use synergy-2025 data and filter for winners only
+        const winnerProjects = synergyProjects.filter((project: any) => project.winner && project.winner !== "");
+        setProjects(winnerProjects);
       } catch (error) {
         toast({
           title: "Error",
@@ -62,47 +60,7 @@ const ProjectsPage = () => {
     loadProjects();
   }, [toast]);
 
-  // HARDCODED: Determine project status indicators based on project data
-  // This is a simplified logic - in a real app, these would come from the backend
-  const getProjectStatusInfo = (project: Project) => {
-    // HARDCODED: Projects with milestones under completion
-    // Logic: Projects with hasOtherMilestones = true and status = "approved" are considered "under completion"
-    const hasMilestonesUnderCompletion = project.hasOtherMilestones && project.status === "approved";
-    
-    // HARDCODED: Projects with deliverables under review  
-    // Logic: Projects with status = "reviewing" have deliverables under review
-    const hasDeliverablesUnderReview = project.status === "reviewing";
-    
-    return {
-      hasMilestonesUnderCompletion,
-      hasDeliverablesUnderReview
-    };
-  };
 
-  const getStatusColor = (status: Project["status"]) => {
-    switch (status) {
-      case "winner":
-        return "bg-gradient-accent text-accent-foreground";
-      case "approved":
-        return "bg-success text-success-foreground";
-      case "reviewing":
-        return "bg-warning text-warning-foreground";
-      case "pending":
-        return "bg-muted text-muted-foreground";
-      case "rejected":
-        return "bg-destructive text-destructive-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
 
   // Pagination logic
   const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
@@ -140,9 +98,9 @@ const ProjectsPage = () => {
             </Link>
           </Button>
         </div>
-        <h1 className="text-4xl font-bold mb-2">Active Projects</h1>
+        <h1 className="text-4xl font-bold mb-2">Synergy 2025 Winners</h1>
         <p className="text-muted-foreground">
-          Stay informed about the progress of the projects continuing to build in between hackathons.
+          Congratulations to the winners of the Blockspace Synergy Hackathon 2025!
         </p>
       </div>
 
@@ -171,14 +129,10 @@ const ProjectsPage = () => {
                 Winners
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                {currentProjects
-                  .filter(project => project.status === "winner")
-                  .length > 0 ? (
-                  currentProjects
-                    .filter(project => project.status === "winner")
-                    .map((project, index) => (
+                {currentProjects.length > 0 ? (
+                  currentProjects.map((project, index) => (
                       <Card
-                        key={project.ss58Address}
+                        key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
@@ -186,41 +140,20 @@ const ProjectsPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col gap-2">
                               <Badge
-                                className={getStatusColor(project.status)}
+                                className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
                                 variant="secondary"
                               >
-                                {project.status}
+                                🏆 {project.winner}
                               </Badge>
-                              
-                              {/* HARDCODED: Status indicators for milestones and deliverables */}
-                              {(() => {
-                                const statusInfo = getProjectStatusInfo(project);
-                                return (
-                                  <div className="flex flex-wrap gap-1">
-                                    {statusInfo.hasMilestonesUnderCompletion && (
-                                      <Badge variant="outline" className="text-xs border-blue-500/30 text-blue-400">
-                                        <Clock className="h-3 w-3 mr-1" />
-                                        Milestones under completion
-                                      </Badge>
-                                    )}
-                                    {statusInfo.hasDeliverablesUnderReview && (
-                                      <Badge variant="outline" className="text-xs border-orange-500/30 text-orange-400">
-                                        <AlertCircle className="h-3 w-3 mr-1" />
-                                        Deliverables under review
-                                      </Badge>
-                                    )}
-                                  </div>
-                                );
-                              })()}
                             </div>
                             
                             <Trophy className="h-5 w-5 text-yellow-500" />
                           </div>
                           <CardTitle className="group-hover:text-primary transition-colors">
-                            {project.projectTitle}
+                            {project.projectName}
                           </CardTitle>
                           <CardDescription className="line-clamp-3 project-card-info">
-                            {project.projectSummary}
+                            {project.description}
                           </CardDescription>
                         </CardHeader>
 
@@ -228,31 +161,15 @@ const ProjectsPage = () => {
                           <div className="space-y-3">
                             <div className="flex items-center text-sm text-muted-foreground">
                               <Users className="h-4 w-4 mr-2" />
-                              <span className="font-mono text-xs truncate">
-                                {project.ss58Address.slice(0, 8)}...
-                                {project.ss58Address.slice(-6)}
+                              <span className="text-xs">
+                                {project.teamLead}
                               </span>
                             </div>
 
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Calendar className="h-4 w-4 mr-2" />
-                              <span>{formatDate(project.submittedAt)}</span>
-                            </div>
-
                             <div className="flex flex-wrap gap-2">
-                              {project.techStack
-                                .split(",")
-                                .slice(0, 3)
-                                .map((tech, i) => (
-                                  <Badge key={i} variant="outline" className="text-xs">
-                                    {tech.trim()}
-                                  </Badge>
-                                ))}
-                              {project.techStack.split(",").length > 3 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{project.techStack.split(",").length - 3} more
-                                </Badge>
-                              )}
+                              <Badge variant="outline" className="text-xs">
+                                {project.techStack}
+                              </Badge>
                             </div>
                           </div>
                         </CardContent>
@@ -261,7 +178,7 @@ const ProjectsPage = () => {
                           <div className="flex w-full gap-2">
                             <Button asChild size="sm" className="flex-1">
                               <Link
-                                to={`/project/${project.ss58Address}`}
+                                to={project.donationAddress ? `/project/${project.donationAddress}` : `/project/not-found`}
                                 className="flex items-center space-x-2"
                               >
                                 <span>View Details</span>
@@ -270,10 +187,10 @@ const ProjectsPage = () => {
                             </Button>
 
                             <div className="flex gap-2">
-                              {project.gitLink && (
+                              {project.githubRepo && (
                                 <Button size="sm" variant="outline" asChild>
                                   <a
-                                    href={project.gitLink}
+                                    href={project.githubRepo}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     title="View on GitHub"
@@ -283,10 +200,10 @@ const ProjectsPage = () => {
                                 </Button>
                               )}
 
-                              {project.demoLink && (
+                              {project.demoUrl && (
                                 <Button size="sm" variant="outline" asChild>
                                   <a
-                                    href={project.demoLink}
+                                    href={project.demoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     title="View Demo"
@@ -314,9 +231,7 @@ const ProjectsPage = () => {
               </div>
             </div>
 
-
-
-            {/* Pending Projects Section */}
+            {/* Pending Milestone Delivery Section */}
             <div>
               <h2 className="text-2xl font-bold mb-4 text-black flex items-center">
                 <Clock className="h-6 w-6 mr-2 text-gray-500" />
@@ -324,36 +239,37 @@ const ProjectsPage = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {currentProjects
-                  .filter(project => project.status === "pending")
+                  .filter((project: any) => !project.winner || project.winner === "")
+                  .slice(0, 3)
                   .length > 0 ? (
                   currentProjects
-                    .filter(project => project.status === "pending")
+                    .filter((project: any) => !project.winner || project.winner === "")
+                    .slice(0, 3)
                     .map((project, index) => (
                       <Card
-                        key={project.ss58Address}
+                        key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between">
                             <Badge
-                              className={getStatusColor(project.status)}
+                              className="bg-blue-500/20 text-blue-300 border-blue-500/30"
                               variant="secondary"
                             >
-                              {project.status}
+                              Pending
                             </Badge>
                           </div>
                           <CardTitle className="group-hover:text-primary transition-colors text-lg">
-                            {project.projectTitle}
+                            {project.projectName}
                           </CardTitle>
                         </CardHeader>
 
                         <CardContent className="pt-0 pb-3">
                           <div className="flex items-center text-sm text-muted-foreground">
                             <Users className="h-4 w-4 mr-2" />
-                            <span className="font-mono text-xs truncate">
-                              {project.ss58Address.slice(0, 8)}...
-                              {project.ss58Address.slice(-6)}
+                            <span className="text-xs">
+                              {project.teamLead}
                             </span>
                           </div>
                         </CardContent>
@@ -361,7 +277,7 @@ const ProjectsPage = () => {
                         <CardFooter className="pt-0">
                           <Button asChild size="sm" variant="outline" className="w-full text-xs">
                             <Link
-                              to={`/project/${project.ss58Address}`}
+                              to="/project-page"
                               className="flex items-center justify-center space-x-1"
                             >
                               <span>View Details</span>
@@ -385,7 +301,7 @@ const ProjectsPage = () => {
               </div>
             </div>
 
-                        {/* Under Review Section - Moved to bottom */}
+            {/* Under Review Section */}
             <div>
               <h2 className="text-2xl font-bold mb-4 text-black flex items-center">
                 <AlertCircle className="h-6 w-6 mr-2 text-gray-500" />
@@ -393,36 +309,37 @@ const ProjectsPage = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {currentProjects
-                  .filter(project => project.status === "reviewing")
+                  .filter((project: any) => !project.winner || project.winner === "")
+                  .slice(3, 6)
                   .length > 0 ? (
                   currentProjects
-                    .filter(project => project.status === "reviewing")
+                    .filter((project: any) => !project.winner || project.winner === "")
+                    .slice(3, 6)
                     .map((project, index) => (
                       <Card
-                        key={project.ss58Address}
+                        key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between">
                             <Badge
-                              className={getStatusColor(project.status)}
+                              className="bg-orange-500/20 text-orange-300 border-orange-500/30"
                               variant="secondary"
                             >
-                              {project.status}
+                              Under Review
                             </Badge>
                           </div>
                           <CardTitle className="group-hover:text-primary transition-colors text-lg">
-                            {project.projectTitle}
+                            {project.projectName}
                           </CardTitle>
                         </CardHeader>
 
                         <CardContent className="pt-0 pb-3">
                           <div className="flex items-center text-sm text-muted-foreground">
                             <Users className="h-4 w-4 mr-2" />
-                            <span className="font-mono text-xs truncate">
-                              {project.ss58Address.slice(0, 8)}...
-                              {project.ss58Address.slice(-6)}
+                            <span className="text-xs">
+                              {project.teamLead}
                             </span>
                           </div>
                         </CardContent>
@@ -430,7 +347,7 @@ const ProjectsPage = () => {
                         <CardFooter className="pt-0">
                           <Button asChild size="sm" variant="outline" className="w-full text-xs">
                             <Link
-                              to={`/project/${project.ss58Address}`}
+                              to="/project-page"
                               className="flex items-center justify-center space-x-1"
                             >
                               <span>View Details</span>
@@ -453,6 +370,7 @@ const ProjectsPage = () => {
                 )}
               </div>
             </div>
+
           </div>
 
           {/* Pagination */}

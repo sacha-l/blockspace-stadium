@@ -8,20 +8,8 @@ interface ProjectBubbleProps {
 }
 
 export const ProjectBubble: React.FC<ProjectBubbleProps> = ({ project, onPlayDemo }) => {
-  // Check if project is a winner
-  const winnerProjects = [
-    "anytype - nft gating",
-    "delegit", 
-    "empathy technologies",
-    "hypertents",
-    "papi actions",
-    "propcorn",
-    "ChainView"
-  ];
-  
-  const isWinner = winnerProjects.some(winner => 
-    project.projectName.toLowerCase().includes(winner.toLowerCase())
-  );
+  // Check if project is a winner - handle both data structures
+  const isWinner = project.winner && project.winner !== "";
 
   return (
     <div
@@ -33,7 +21,7 @@ export const ProjectBubble: React.FC<ProjectBubbleProps> = ({ project, onPlayDem
             <h3 className="font-bold text-lg truncate text-white drop-shadow-sm flex-1 mr-2">{project.projectName}</h3>
             {isWinner && (
               <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-                🏆 Winner
+                🏆 {project.winner}
               </Badge>
             )}
           </div>

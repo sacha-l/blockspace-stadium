@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import ProjectPage from "./pages/ProjectPage";
 import SubmissionPage from "./pages/SubmissionPage";
 import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="past-projects" element={<PastProjects />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="project/:id" element={<ProjectDetailsPage />} />
+              <Route path="project-page" element={<ProjectPage />} />
               <Route path="submission" element={<SubmissionPage />} />
               <Route path="admin" element={<AdminPage />} />
             </Route>

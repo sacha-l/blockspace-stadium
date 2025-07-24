@@ -40,7 +40,7 @@ export default function Header() {
             { to: "/", label: "Home" },
             { to: "/projects", label: "Active Projects", icon: FolderOpen },
             { to: "/past-projects", label: "Past Projects", icon: History },
-            { to: "/submission", label: "Submit", icon: PlusCircle },
+            // { to: "/submission", label: "Submit", icon: PlusCircle },
             { to: "/admin", label: "Admin", icon: Shield },
           ].map(({ to, label, icon: Icon }) => (
             <Button
@@ -81,7 +81,7 @@ export default function Header() {
               { to: "/", label: "Home", icon: Trophy },
               { to: "/past-projects", label: "Past Projects", icon: History },
               { to: "/projects", label: "Active Projects", icon: FolderOpen },
-              { to: "/submission", label: "Submit", icon: PlusCircle },
+              // { to: "/submission", label: "Submit", icon: PlusCircle },
               { to: "/admin", label: "Admin", icon: Shield },
             ].map(({ to, label, icon: Icon }) => (
               <Button

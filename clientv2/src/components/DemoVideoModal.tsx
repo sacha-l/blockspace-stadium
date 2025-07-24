@@ -20,6 +20,7 @@ function convertToEmbedUrl(url: string) {
 
 // Category mapping for tech stack
 const CATEGORY_MAP: Record<string, string> = {
+  // Symmetry 2024 categories
   "Rust": "Developer Tools",
   "wasm": "Developer Tools",
   "typescript": "Developer Tools",
@@ -74,6 +75,10 @@ const CATEGORY_MAP: Record<string, string> = {
   "Nextjs": "Developer Tools",
   "Papi": "Developer Tools",
   "DotConnect": "Developer Tools",
+  // Synergy 2025 categories
+  "Kusama": "DeFi", 
+  "ink!": "Developer Tools",
+  "Other": "Other",
 };
 
 function extractCategories(techStack: string): string[] {
@@ -103,6 +108,7 @@ const categoryIcons: Record<string, string> = {
   "NFT": "🎨",
   "Developer Tools": "🛠️",
   "Social": "🌐",
+  "Other": "🔧",
   "Winners": "🏆",
 };
 
@@ -115,36 +121,13 @@ interface DemoVideoModalProps {
 export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, project }) => {
   if (!project) return null;
 
-  // Check if project is a winner
-  const winnerProjects = [
-    "anytype - nft gating",
-    "delegit", 
-    "empathy technologies",
-    "hypertents",
-    "papi actions",
-    "propcorn",
-    "ChainView"
-  ];
-  
-  const isWinner = winnerProjects.some(winner => 
-    project.projectName.toLowerCase().includes(winner.toLowerCase())
-  );
+  // Check if project is a winner - handle both data structures
+  const isWinner = project.winner && project.winner !== "";
 
-  // Check milestone completion status
+  // Check milestone completion status - for now, all winners are considered completed
   const getMilestoneStatus = () => {
     if (!isWinner) return null;
-    
-    const completedProjects = [
-      "propcorn",
-      "delegit", 
-      "chainview"
-    ];
-    
-    const isCompleted = completedProjects.some(completed => 
-      project.projectName.toLowerCase().includes(completed.toLowerCase())
-    );
-    
-    return isCompleted ? "completed" : "incomplete";
+    return "completed";
   };
 
   const milestoneStatus = getMilestoneStatus();
@@ -188,7 +171,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             <div className="flex gap-2">
               {isWinner && (
                 <Badge variant="secondary" className="px-3 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-                  🏆 Winner
+                  🏆 {project.winner}
                 </Badge>
               )}
               {milestoneStatus === "completed" && (

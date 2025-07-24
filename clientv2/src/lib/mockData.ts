@@ -49,7 +49,7 @@ export const mockProjects: Project[] = [
   {
     id: "2",
     ss58Address: "5FNQc3j6wTN2AkXAUf4dWrPXy5LQWXcPL7H7rGQvzXfkVQ2q",
-    projectTitle: "DAO Governance Analytics",
+    projectTitle: "Samaritan",
     projectSummary:
       "Advanced analytics platform for DAO governance activities, proposal tracking, and voter participation insights.",
     background:

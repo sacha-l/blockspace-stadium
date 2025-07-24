@@ -2,13 +2,15 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import pastProjects from "@/data/symmetry-2024.json";
+import symmetryProjects from "@/data/symmetry-2024.json";
+import synergyProjects from "@/data/synergy-2025.json";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { ProjectBubble } from "@/components/ProjectBubble";
 import { DemoVideoModal } from "@/components/DemoVideoModal";
 import { AnimatePresence, motion } from "framer-motion";
 
 const CATEGORY_MAP: Record<string, string> = {
+  // Symmetry 2024 categories
   "Rust": "Developer Tools",
   "wasm": "Developer Tools",
   "typescript": "Developer Tools",
@@ -63,6 +65,10 @@ const CATEGORY_MAP: Record<string, string> = {
   "Nextjs": "Developer Tools",
   "Papi": "Developer Tools",
   "DotConnect": "Developer Tools",
+  // Synergy 2025 categories
+  "Kusama": "DeFi", 
+  "ink!": "Developer Tools",
+  "Other": "Other",
 };
 
 const ALL_CATEGORIES = [
@@ -71,6 +77,7 @@ const ALL_CATEGORIES = [
   "NFT",
   "Developer Tools",
   "Social",
+  "Other",
   "Winners",
 ];
 
@@ -98,16 +105,17 @@ function extractCategories(techStack: string): string[] {
 const PastProjectsPage = () => {
   const [search, setSearch] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState("symmetry-2024");
+  const [selectedEvent, setSelectedEvent] = useState("synergy-2025");
   const [videoProject, setVideoProject] = useState<any | null>(null);
   const [loading, setLoading] = useState(false); // Simulate loading if needed
 
-  const projects = pastProjects as any[];
+  // Select projects based on event
+  const projects = selectedEvent === "symmetry-2024" ? symmetryProjects : synergyProjects;
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
+    return projects.filter((project: any) => {
       // Event filter
       const matchesEvent = selectedEvent === "symmetry-2024" || 
-        (selectedEvent === "synergy-2025" && project.eventStartedAt === "synergy-2025");
+        (selectedEvent === "synergy-2025" && project.eventStartedAt === "synergy-hack-2024");
       
       // Search
       const matchesSearch =
@@ -115,25 +123,34 @@ const PastProjectsPage = () => {
         project.projectName.toLowerCase().includes(search.toLowerCase()) ||
         project.teamLead.toLowerCase().includes(search.toLowerCase()) ||
         project.description.toLowerCase().includes(search.toLowerCase());
+      
       // Filters
       let matchesFilter = true;
       if (activeFilters.length > 0) {
         matchesFilter = false;
         for (const filter of activeFilters) {
           if (filter === "Winners") {
-            // Check for specific winner projects
-            const winnerProjects = [
-              "anytype - nft gating",
-              "delegit", 
-              "empathy technologies",
-              "hypertents",
-              "papi actions",
-              "propcorn",
-              "ChainView"
-            ];
-            const isWinner = winnerProjects.some(winner =>
-              project.projectName.toLowerCase().includes(winner.toLowerCase())
-            ) || (project.milestones && project.milestones.length > 3);
+            let isWinner = false;
+            
+            if (selectedEvent === "symmetry-2024") {
+              // Check for specific winner projects in symmetry-2024
+              const winnerProjects = [
+                "anytype - nft gating",
+                "delegit", 
+                "empathy technologies",
+                "hypertents",
+                "papi actions",
+                "propcorn",
+                "ChainView"
+              ];
+              isWinner = winnerProjects.some(winner =>
+                project.projectName.toLowerCase().includes(winner.toLowerCase())
+              ) || (project.milestones && project.milestones.length > 3);
+            } else {
+              // Check for winner projects based on winner field in synergy-2025
+              isWinner = project.winner && project.winner !== "";
+            }
+            
             if (isWinner) {
               matchesFilter = true;
               break;
