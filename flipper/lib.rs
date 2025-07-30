@@ -94,7 +94,7 @@ mod flipper {
         async fn default_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
             // Given
             let constructor = FlipperRef::default();
-
+ 
             // When
             let contract_account_id = client
                 .instantiate("flipper", &ink_e2e::alice(), constructor, 0, None)
