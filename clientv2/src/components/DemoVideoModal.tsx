@@ -151,14 +151,15 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl p-0">
-        <div className="relative aspect-video bg-black">
+      <DialogContent className="w-full max-w-xs sm:max-w-md md:max-w-3xl p-2 sm:p-6 mx-auto my-4 max-h-[90vh] overflow-y-auto">
+        <div className="relative bg-black min-h-[220px] h-56 sm:aspect-video sm:h-auto sm:max-h-[50vh] mb-6 rounded overflow-hidden">
           {demoUrl && demoUrl !== "nan" ? (
             <iframe
               src={convertToEmbedUrl(demoUrl)}
-              className="w-full h-full"
+              className="w-full h-full min-h-[220px] max-w-full rounded"
               allowFullScreen
               title="Demo Video"
+              style={{ display: 'block', maxHeight: '100%' }}
             />
           ) : (
             <div className="flex items-center justify-center h-full text-white">
@@ -166,39 +167,37 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             </div>
           )}
         </div>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-bold">{project.projectName}</h2>
-            <div className="flex gap-2">
+        <div className="px-2 sm:px-6 pb-4 mt-4">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h2 className="text-base sm:text-2xl font-bold pr-2 break-words max-w-full">{project.projectName}</h2>
+            <div className="flex gap-2 flex-wrap">
               {isWinner && (
-                <Badge variant="secondary" className="px-3 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-                  🏆 {project.winner}
+                <Badge variant="secondary" className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs break-words max-w-full">
+                  🏆 {project.winner
+                    .split(' ')
+                    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                    .join(' ')}
                 </Badge>
               )}
               {milestoneStatus === "completed" && (
-                <Badge variant="secondary" className="px-3 py-1 bg-green-500/20 text-green-300 border-green-500/30">
-                  ☑️ Completed Milestones
-                </Badge>
+                <Badge variant="secondary" className="px-2 py-1 bg-green-500/20 text-green-300 border-green-500/30 text-xs">☑️ Completed Milestones</Badge>
               )}
               {milestoneStatus === "pending" && (
-                <Badge variant="secondary" className="px-3 py-1 bg-blue-500/20 text-blue-300 border-blue-500/30">
-                  ⏳ Milestones Pending
-                </Badge>
+                <Badge variant="secondary" className="px-2 py-1 bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">⏳ Milestones Pending</Badge>
               )}
             </div>
           </div>
-          <p className="text-muted-foreground mb-4">{project.description}</p>
-          
+          <p className="mb-6 text-sm md:text-base text-muted-foreground leading-relaxed break-words max-w-full">{project.description}</p>
           {/* Project Categories */}
           {projectCategories.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold mb-2 text-white">Categories</h3>
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold mb-3 text-white">Categories</h3>
               <div className="flex flex-wrap gap-2">
                 {Array.from(new Set(projectCategories)).map((category, index) => (
                   <Badge 
                     key={index} 
                     variant="outline" 
-                    className="text-xs px-2 py-1 border-primary/30 text-primary"
+                    className="text-xs px-2 py-1 border-primary/30 text-primary break-words max-w-full"
                   >
                     <span className="mr-1">{categoryIcons[category] || "🔧"}</span>
                     {category}
@@ -207,12 +206,11 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
               </div>
             </div>
           )}
-          
           {/* Donation Address Section */}
           {project.donationAddress && (
-            <div className="mb-4 p-3 bg-gradient-to-r from-pink-500/5 to-red-500/5 rounded-md border border-pink-500/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+            <div className="mb-6 p-3 bg-gradient-to-r from-pink-500/5 to-red-500/5 rounded-md border border-pink-500/20 overflow-x-auto">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center space-x-2 break-all">
                   <Heart className="h-3 w-3 text-pink-500" />
                   <span className="text-xs text-pink-500 font-medium">Donate:</span>
                   <span className="text-xs text-muted-foreground font-mono">
@@ -238,17 +236,16 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
               </div>
             </div>
           )}
-          
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {project.githubRepo && project.githubRepo !== "nan" && (
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="text-xs sm:text-sm break-words max-w-full">
                 <a href={project.githubRepo} target="_blank" rel="noopener noreferrer">
                   <Github className="mr-2 h-4 w-4" /> View Code
                 </a>
               </Button>
             )}
             {demoUrl && demoUrl !== "nan" && (
-              <Button asChild>
+              <Button asChild className="text-xs sm:text-sm break-words max-w-full">
                 <a href={demoUrl} target="_blank" rel="noopener noreferrer">
                   <Globe className="mr-2 h-4 w-4" /> Visit Site
                 </a>

@@ -108,6 +108,7 @@ const PastProjectsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState("synergy-2025");
   const [videoProject, setVideoProject] = useState<any | null>(null);
   const [loading, setLoading] = useState(false); // Simulate loading if needed
+  const [filterOpen, setFilterOpen] = useState(false);
 
   // Select projects based on event
   const projects = selectedEvent === "symmetry-2024" ? symmetryProjects : synergyProjects;
@@ -179,7 +180,7 @@ const PastProjectsPage = () => {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/" className="flex items-center space-x-2">
               <ChevronLeft className="h-4 w-4" />
-              <span>Back to Home</span>
+              <span>Go Back Home</span>
             </Link>
           </Button>
         </div>
@@ -190,18 +191,26 @@ const PastProjectsPage = () => {
       </div>
       {/* Two-column layout */}
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar */}
-        <FilterSidebar
-          search={search}
-          setSearch={setSearch}
-          activeFilters={activeFilters}
-          setActiveFilters={setActiveFilters}
-          allCategories={ALL_CATEGORIES}
-          activeCount={activeFilters.length}
-          onClear={() => setActiveFilters([])}
-          selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
-        />
+        {/* Mobile filter toggle button */}
+        <div className="md:hidden mb-4">
+          <Button size="sm" variant="outline" onClick={() => setFilterOpen((v) => !v)}>
+            {filterOpen ? "Hide Filters" : "Show Filters"}
+          </Button>
+        </div>
+        {/* Sidebar, collapsible on mobile */}
+        {(filterOpen || window.innerWidth >= 768) && (
+          <FilterSidebar
+            search={search}
+            setSearch={setSearch}
+            activeFilters={activeFilters}
+            setActiveFilters={setActiveFilters}
+            allCategories={ALL_CATEGORIES}
+            activeCount={activeFilters.length}
+            onClear={() => setActiveFilters([])}
+            selectedEvent={selectedEvent}
+            setSelectedEvent={setSelectedEvent}
+          />
+        )}
         {/* Bubble Gallery */}
         <div className="flex-1 bubble-grid">
           {loading ? (

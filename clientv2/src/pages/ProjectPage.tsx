@@ -11,7 +11,7 @@ const ProjectPage = () => {
         <Button variant="ghost" size="sm" asChild>
           <Link to="/" className="flex items-center space-x-2">
             <ChevronLeft className="h-4 w-4" />
-            <span>Back to Home</span>
+            <span>All Active Projects</span>
           </Link>
         </Button>
       </div>

@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@polkadot/extension-dapp": "^0.61.4",
+    "@talismn/connect-ui": "^1.1.4",
+    "@talismn/siws": "^1.0.0",
     "framer-motion": "^12.23.6"
   }
 }
