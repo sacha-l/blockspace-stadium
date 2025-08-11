@@ -1,6 +1,6 @@
-# 🛠️ Hackathonia
+# 🛠️ Blockspace Stadium
 
-A full-stack web application for managing and reviewing Web3 projects submitted through the Hackathonia platform.
+A full-stack web application for managing and reviewing Web3 projects submitted through the Stadium platform.
 
 ---
 
