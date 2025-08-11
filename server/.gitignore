@@ -26,4 +26,5 @@ yarn-error.log*
 /.papi
 .vercel
 
-./migration-data/*
+/migration-data/*
+!/migration-data/.gitkeep
