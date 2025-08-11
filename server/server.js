@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import connectToMongo from "./db.js";
 
-import Entry from "./models/Entry.js";
+import Entry from "./models/Project.js";
 
 const app = express();
 
