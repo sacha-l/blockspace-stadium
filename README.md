@@ -8,7 +8,7 @@ A full-stack web application for managing and reviewing Web3 projects submitted 
 
 ```
 .
-├── clientv2/        # Frontend (Next.js + TypeScript)
+├── client/        # Frontend (Next.js + TypeScript)
 ├── server/          # Backend (Node.js + Express)
 ├── .papi/           # Project API files (if any)
 ├── hackathonia/     # Ink! project folder (mock data, admin constants, etc.)
@@ -23,7 +23,7 @@ A full-stack web application for managing and reviewing Web3 projects submitted 
 **Tech Stack:** Next.js, TypeScript, Tailwind CSS
 
 ```bash
-cd clientv2
+cd client
 npm install
 npm run dev
 ```

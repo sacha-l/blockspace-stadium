@@ -146,39 +146,23 @@ const ProjectsPage = () => {
                     return sortedProjects.map((project, index) => (
                       <Card
                         key={project.projectName}
-                        className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
+                        className="group hover:shadow-primary transition-all duration-300 animate-fade-in flex flex-col justify-between"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <CardHeader className="pb-2">
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col gap-1">
-                              <Badge
-                                className={
-                                  project.winner?.toLowerCase().includes('kusama')
-                                    ? 'bg-purple-600/20 text-purple-300 border-purple-600/30'
-                                    : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
-                                }
-                                variant="secondary"
-                              >
-                                🏆 {project.winner
-                                  ? project.winner
-                                      .split(' ')
-                                      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-                                      .join(' ')
-                                  : ''}
-                              </Badge>
+                              {/* Remove Badge from here */}
                             </div>
-                            
                             <Trophy className="h-4 w-4 text-yellow-500" />
                           </div>
                           <CardTitle className="group-hover:text-primary transition-colors text-sm">
                             {project.projectName}
                           </CardTitle>
-                          <CardDescription className="line-clamp-2 project-card-info text-xs">
+                          <CardDescription className="line-clamp-6 project-card-info text-xs">
                             {project.description}
                           </CardDescription>
                         </CardHeader>
-
                         <CardContent className="pt-0 pb-2">
                           <div className="space-y-2">
                             <div className="flex items-center text-xs text-muted-foreground">
@@ -187,55 +171,62 @@ const ProjectsPage = () => {
                                 {project.teamLead}
                               </span>
                             </div>
-
                             <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">
-                                {project.techStack}
-                              </Badge>
+                              {/* Remove Badge from here if present */}
                             </div>
                           </div>
                         </CardContent>
-
-                        <CardFooter className="pt-0">
-                          <div className="flex w-full gap-1">
-                            <Button asChild size="sm" className="flex-1 text-xs">
-                              <Link
-                                to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
-                                className="flex items-center space-x-1"
+                        <CardFooter className="pt-0 pb-2 flex items-end mt-auto">
+                          {/* Winner Badge at bottom left */}
+                          <Badge
+                            className={
+                              project.winner?.toLowerCase().includes('kusama')
+                                ? 'bg-purple-600/20 text-purple-300 border-purple-600/30'
+                                : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                            }
+                            variant="secondary"
+                          >
+                            🏆 {project.winner
+                              ? project.winner
+                                  .split(' ')
+                                  .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                                  .join(' ')
+                              : ''}
+                          </Badge>
+                          <div className="flex-1" />
+                          <Button asChild size="sm" className="text-[10px] px-2 py-1">
+                            <Link
+                              to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
+                              className="flex items-center space-x-1"
+                            >
+                              <span>Details</span>
+                              <ChevronRight className="h-3 w-3" />
+                            </Link>
+                          </Button>
+                          {project.githubRepo && (
+                            <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0 ml-1">
+                              <a
+                                href={project.githubRepo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="View on GitHub"
                               >
-                                <span>Details</span>
-                                <ChevronRight className="h-3 w-3" />
-                              </Link>
+                                <Github className="h-3 w-3" />
+                              </a>
                             </Button>
-
-                            <div className="flex gap-1">
-                              {project.githubRepo && (
-                                <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0">
-                                  <a
-                                    href={project.githubRepo}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    title="View on GitHub"
-                                  >
-                                    <Github className="h-3 w-3" />
-                                  </a>
-                                </Button>
-                              )}
-
-                              {project.demoUrl && (
-                                <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0">
-                                  <a
-                                    href={project.demoUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    title="View Demo"
-                                  >
-                                    <Globe className="h-3 w-3" />
-                                  </a>
-                                </Button>
-                              )}
-                            </div>
-                          </div>
+                          )}
+                          {project.demoUrl && (
+                            <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0 ml-1">
+                              <a
+                                href={project.demoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="View Demo"
+                              >
+                                <Globe className="h-3 w-3" />
+                              </a>
+                            </Button>
+                          )}
                         </CardFooter>
                       </Card>
                     ));
