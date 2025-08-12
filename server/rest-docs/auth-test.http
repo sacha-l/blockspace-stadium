@@ -1,0 +1,119 @@
+### ========================================
+### Authentication Test Journey
+### ========================================
+#
+# This file demonstrates the expected behavior of the authentication middleware.
+#
+# NOTE: To perform a successful test, you MUST generate a valid signature
+# from the `/auth-test` page in your frontend application.
+#
+# How to get a valid signature header:
+# 1. Navigate to `http://localhost:3000/auth-test` (or your frontend's URL).
+# 2. Connect a wallet that is listed in your server's .env `ADMIN_WALLETS`.
+# 3. Click the "Sign In and Generate Header" button.
+# 4. Copy the Base64 string that appears on the page.
+# 5. Paste it into the `x-siws-auth` header in the "Successful Request" test below.
+
+###
+# @name successfulRequest
+# >>> SUCCESSFUL REQUEST (ADMIN) <<<
+# This should succeed (200 OK) if the header is correct and the address is an admin.
+#
+# !!! PASTE YOUR VALID BASE64-ENCODED HEADER BELOW !!!
+PATCH http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+x-siws-auth: eyJtZXNzYWdlIjoibG9jYWxob3N0OjgwODAgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFN1YnN0cmF0ZSBhY2NvdW50OlxuNUhpcTdQaFZnampEVGNlRFpuN01lYnJCM2NuNDJUZ1JqOXB5WXFaOVBMellHZGJFXG5cblN1Ym1pdCBtaWxlc3RvbmUgZGVsaXZlcmFibGVzIGZvciBIYWNrYXRob25pYVxuXG5VUkk6IGh0dHA6Ly9sb2NhbGhvc3Q6ODA4MFxuVmVyc2lvbjogMS4wLjBcbk5vbmNlOiAwdHMzZTFmcXdqMVxuSXNzdWVkIEF0OiAyMDI1LTA4LTEyVDA1OjUzOjQ0Ljc5MFoiLCJzaWduYXR1cmUiOiIweDBlMDRjNjIzNWFlMTVmZGYyODRmNjEwNzVhZDdjODI3MWMxNzU4YWM2ZmMyNjUxZjMxZjIyZWNmYzI0MWRhMDgwOGIxYmE4ZWU4NmI3ZDEzOGM1OTVkZmRiODY0NmNiNTdkZTg4ZTRhNmIzZDFhOTk2N2JiNTNlNTRkNTFhZTgzIiwiYWRkcmVzcyI6IjVIaXE3UGhWZ2pqRFRjZURabjdNZWJyQjNjbjQyVGdSajlweVlxWjlQTHpZR2RiRSJ9
+Content-Type: application/json
+
+{
+  "projectState": "Milestone Delivered"
+}
+
+
+###
+# @name failingRequestNoHeader
+# >>> FAILING REQUEST (NO AUTH HEADER) <<<
+# This should fail with a 401 Unauthorized error.
+PATCH http://localhost:2000/api/projects/some-project-id
+Content-Type: application/json
+
+{
+  "projectState": "Milestone Delivered"
+}
+
+
+###
+# @name failingRequestBadFormat
+# >>> FAILING REQUEST (BADLY FORMATTED HEADER) <<<
+# This should fail with a 400 Bad Request error because it's not valid Base64.
+PATCH http://localhost:2000/api/projects/some-project-id
+x-siws-auth: this-is-not-base64
+Content-Type: application/json
+
+{
+  "projectState": "Milestone Delivered"
+}
+
+###
+# @name failingRequestUnauthorizedAddress
+# >>> FAILING REQUEST (UNAUTHORIZED ADDRESS) <<<
+# This should fail with a 403 Forbidden error because the address is not an admin.
+# (This assumes you have a valid signature for a non-admin address)
+PATCH http://localhost:2000/api/projects/some-project-id
+x-siws-auth: {"signature":"0x...","message":"...","address":"some-random-address"}
+Content-Type: application/json
+
+{
+  "projectState": "Milestone Delivered"
+}
+
+###
+# @name adminUpdateProject
+# SUCCESS: Update a project as an Admin
+# An admin wallet can update any project.
+PATCH http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+Content-Type: application/json
+x-siws-auth: eyJtZXNzYWdlIjoibG9jYWxob3N0OjgwODAgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFN1YnN0cmF0ZSBhY2NvdW50OlxuNUhpcTdQaFZnampEVGNlRFpuN01lYnJCM2NuNDJUZ1JqOXB5WXFaOVBMellHZGJFXG5cblN1Ym1pdCBtaWxlc3RvbmUgZGVsaXZlcmFibGVzIGZvciBIYWNrYXRob25pYVxuXG5VUkk6IGh0dHA6Ly9sb2NhbGhvc3Q6ODA4MFxuVmVyc2lvbjogMS4wLjBcbk5vbmNlOiAwdHMzZTFmcXdqMVxuSXNzdWVkIEF0OiAyMDI1LTA4LTEyVDA1OjUzOjQ0Ljc5MFoiLCJzaWduYXR1cmUiOiIweDBlMDRjNjIzNWFlMTVmZGYyODRmNjEwNzVhZDdjODI3MWMxNzU4YWM2ZmMyNjUxZjMxZjIyZWNmYzI0MWRhMDgwOGIxYmE4ZWU4NmI3ZDEzOGM1OTVkZmRiODY0NmNiNTdkZTg4ZTRhNmIzZDFhOTk2N2JiNTNlNTRkNTFhZTgzIiwiYWRkcmVzcyI6IjVIaXE3UGhWZ2pqRFRjZURabjdNZWJyQjNjbjQyVGdSajlweVlxWjlQTHpZR2RiRSJ9
+
+{
+    "description": "This project was updated by an admin.",
+    "teamMembers": [
+        {
+            "name": "Admin Test User",
+            "walletAddress": "5Hiq7PhVgjjDTceDZn7MebrB3cn42TgRj9pyYqZ9PLzYGdbE",
+            "customUrl": ""
+        }
+    ]
+}
+
+###
+# @name teamMemberUpdateProject
+# SUCCESS: Update a project as a Team Member
+# 1. First, ensure the project `{{testProjectId}}` has a team member with the wallet address you will be signing with.
+#    You can use the adminUpdateProject request above to add one.
+# 2. Go to the Auth Test Page (http://localhost:8080/auth-test)
+# 3. Connect and sign with the TEAM MEMBER's wallet.
+# 4. Copy the Base64 signature and paste it into the `teamMemberToken` variable below.
+@teamMemberToken = PASTE_TEAM_MEMBER_TOKEN_HERE
+
+PATCH http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+Content-Type: application/json
+x-siws-auth: {{teamMemberToken}}
+
+{
+    "description": "This project was updated by one of its team members."
+}
+
+###
+# @name unauthorizedUpdate
+# FAILURE: Unauthorized update
+# This request should fail with a 403 Forbidden error because the wallet
+# associated with this token is neither an admin nor a team member.
+@unauthorizedToken = PASTE_NON_ADMIN_NON_TEAM_MEMBER_TOKEN_HERE
+
+PATCH http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+Content-Type: application/json
+x-siws-auth: {{unauthorizedToken}}
+
+{
+    "description": "This update should not be allowed."
+}

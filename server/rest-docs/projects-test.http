@@ -1,0 +1,57 @@
+### ========================================
+### Test Journey: Project Lifecycle
+### ========================================
+#
+# This file outlines a complete, step-by-step journey to test the lifecycle
+# of a single project, from creation to update.
+#
+# You should execute these requests in order from top to bottom.
+
+###
+# @name createTestProject
+# 1. Create a new project (id auto-generated).
+POST http://localhost:2000/api/projects
+Content-Type: application/json
+
+{
+  "projectName": "Lifecycle Test Project",
+  "description": "A project created specifically for end-to-end testing.",
+  "teamMembers": [{ "name": "Initial User" }],
+  "hackathon": {
+    "id": "test-hackathon",
+    "name": "Lifecycle Test Hackathon",
+    "endDate": "2025-01-01T00:00:00Z"
+  },
+  "projectState": "Hackathon Submission"
+}
+
+###
+# @name verifyProjectCreation
+# 2. Verify that the project was created successfully.
+#    Copy the returned `id` and replace below.
+GET http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+
+###
+# @name searchForTestProject
+# 3. Search for the newly created project by its name.
+GET http://localhost:2000/api/projects?search=Lifecycle Test Project
+
+###
+# @name updateTestProject
+# 4. Update the project.
+#    Change its state and add a new team member (no ids required for members).
+PATCH http://localhost:2000/api/projects/lifecycle-test-project-a1ba85
+Content-Type: application/json
+
+{
+  "projectState": "Bounty Payout",
+  "teamMembers": [
+    { "name": "Initial User" },
+    { "name": "Second User", "walletAddress": "0x456..." }
+  ]
+}
+
+###
+# @name verifyProjectUpdate
+# 5. Verify that the update was successful.
+GET http://localhost:2000/api/projects/lifecycle-test-project-a1ba85

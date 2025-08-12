@@ -30,6 +30,18 @@ const generateProjectId = (projectName) => {
   return `${sanitizedName}-${randomString}`;
 };
 
+const generateTeamMemberId = (memberName) => {
+  if (!memberName) {
+    return crypto.randomBytes(6).toString('hex');
+  }
+  const sanitizedName = memberName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  const randomString = crypto.randomBytes(3).toString("hex");
+  return `${sanitizedName}-${randomString}`;
+};
+
 const readCsvData = (filePath) => {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(filePath)) {
@@ -40,7 +52,7 @@ const readCsvData = (filePath) => {
     const payouts = {};
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on('migration-data', (row) => {
+      .on('data', (row) => {
         const hackathonId = row['hackathon-id'];
         const projectName = row['Project'];
         if (hackathonId && projectName) {
@@ -62,7 +74,7 @@ const readCsvData = (filePath) => {
 const migrate = async () => {
   await connectToMongo();
 
-  const payoutsPath = path.resolve(process.cwd(), "data", "payouts.csv");
+  const payoutsPath = path.resolve(process.cwd(), "migration-data", "payouts.csv");
   const payoutsData = await readCsvData(payoutsPath);
   const initialPayoutsCount = Object.keys(payoutsData).length;
   let matchedProjectsCount = 0;
@@ -91,7 +103,7 @@ const migrate = async () => {
   for (const hackathon of pastHackathons) {
     const jsonPath = path.resolve(
       process.cwd(),
-      "../clientv2/src/data",
+      "migration-data",
       `${hackathon.id}.json`
     );
 
@@ -150,9 +162,13 @@ const migrate = async () => {
           : project.milestones;
 
         return {
-          id: generateProjectId(project.projectName),
+          _id: generateProjectId(project.projectName),
           projectName: project.projectName,
-          teamMembers: [{ name: project.teamLead, customUrl: "", walletAddress: walletAddress.trim() }],
+          teamMembers: [{
+            name: project.teamLead,
+            customUrl: "",
+            walletAddress: walletAddress.trim()
+          }],
           description: project.description,
           hackathon: {
             id: hackathon.id,
@@ -211,5 +227,3 @@ migrate().catch(err => {
   mongoose.connection.close();
   process.exit(1);
 });
-
-
