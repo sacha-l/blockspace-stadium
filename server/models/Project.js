@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import { generateId } from "../api/utils/id.js";
 
 const ProjectSchema = new mongoose.Schema({
-  id: { type: String, required: true },
+  _id: { type: String, required: true },
   projectName: { type: String, required: true },
   teamMembers: [{
+    _id: false,
     name: { type: String, required: true },
     customUrl: { type: String },
     walletAddress: { type: String }
@@ -35,6 +37,19 @@ const ProjectSchema = new mongoose.Schema({
   projectState: { type: String, required: true },
   // Flag to indicate if all milestones/bounties have been paid out or finalized (i.e. project abandoned).
   bountiesProcessed: { type: Boolean, default: false, required: true },
-}, { timestamps: true });
+}, { timestamps: true, versionKey: false, toJSON: { virtuals: true, transform: (_doc, ret) => {
+  ret.id = ret._id;
+  delete ret._id;
+  delete ret.createdAt;
+  return ret;
+}}, toObject: { virtuals: true } });
+
+// Auto-generate ids if not provided
+ProjectSchema.pre('validate', function(next) {
+  if (!this._id) {
+    this._id = generateId(this.projectName);
+  }
+  next();
+});
 
 export default mongoose.model("Project", ProjectSchema, "projects");

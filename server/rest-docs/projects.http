@@ -1,0 +1,70 @@
+### ========================================
+### User Journey: Discovering Projects
+### ========================================
+
+# A user browsing the site, looking for interesting projects.
+# They can search by name and filter by status.
+
+# @name discoverProjects
+GET http://localhost:2000/api/projects?search=My Project&projectState=Milestone Delivered
+
+###
+# A user paginating through all projects, sorted by most recently updated.
+# @name paginateProjects
+GET http://localhost:2000/api/projects?page=2&limit=5&sortBy=updatedAt&sortOrder=desc
+
+
+### ========================================
+### User Journey: Admin Panel Management
+### ========================================
+
+# An admin needs to find specific projects based on their processing status.
+
+# @name adminFindUnprocessed
+# Find all projects that still have bounties pending.
+GET http://localhost:2000/api/projects?bountiesProcessed=false
+
+###
+# @name adminFindAbandoned
+# Find all abandoned projects
+GET http://localhost:2000/api/projects?projectState=Abandoned
+
+
+### ========================================
+### User Journey: A User Managing Their Project
+### ========================================
+
+# A project owner checking their project's status or adding a new team member.
+# Replace {{projectId}} with a real ID.
+
+# @name userCheckProjectStatus
+GET http://localhost:2000/api/projects/{{projectId}}
+
+###
+# @name userAddTeamMember
+# The user adds a new member to their team (no member id required).
+PATCH http://localhost:2000/api/projects/{{projectId}}
+Content-Type: application/json
+
+{
+  "teamMembers": [
+    { "name": "Test User" },
+    { "name": "New Developer", "walletAddress": "0x123..." }
+  ]
+}
+
+
+### ========================================
+### User Journey: External System Updates
+### ========================================
+
+# An automated, external system updates a project after a payout is confirmed.
+
+# @name systemUpdateBountyStatus
+PATCH http://localhost:2000/api/projects/{{projectId}}
+Content-Type: application/json
+
+{
+  "projectState": "Milestone Delivered",
+  "bountiesProcessed": true
+}
