@@ -1,5 +1,4 @@
-const API_BASE_URL = "https://hw4os4c00wg4k80o.apps.joinwebzero.com/api"; // Adjust port as needed
-// const API_BASE_URL = "http://localhost:2000/api"; 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:2000/api";
 
 const request = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -21,6 +20,18 @@ const request = async (endpoint: string, options: RequestInit = {}) => {
   return response.json();
 };
 
+type GetProjectsParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string; // legacy client param; mapped to projectState
+  projectState?: string;
+  hackathonId?: string;
+  winnersOnly?: boolean;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+};
+
 export const api = {
   submitEntry: (data: any) =>
     request("/entry", {
@@ -28,19 +39,20 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
-  getProjects: (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    status?: string;
-  }) => {
+  getProjects: (params?: GetProjectsParams) => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.set("page", params.page.toString());
     if (params?.limit) searchParams.set("limit", params.limit.toString());
     if (params?.search) searchParams.set("search", params.search);
-    if (params?.status) searchParams.set("status", params.status);
+    if (params?.projectState) searchParams.set("projectState", params.projectState);
+    if (params?.status) searchParams.set("projectState", params.status);
+    if (params?.hackathonId) searchParams.set("hackathonId", params.hackathonId);
+    if (params?.winnersOnly !== undefined) searchParams.set("winnersOnly", String(params.winnersOnly));
+    if (params?.sortBy) searchParams.set("sortBy", params.sortBy);
+    if (params?.sortOrder) searchParams.set("sortOrder", params.sortOrder);
 
-    return request(`/projects?${searchParams.toString()}`);
+    const queryString = searchParams.toString();
+    return request(`/projects${queryString ? `?${queryString}` : ""}`);
   },
 
   getProject: (id: string) => request(`/entry/${id}`),

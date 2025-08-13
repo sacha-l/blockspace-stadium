@@ -29,13 +29,37 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import synergyProjects from "@/data/synergy-2025.json";
 import { useToast } from "@/hooks/use-toast";
+import { api } from "@/lib/api";
+
+type ApiProject = {
+  id: string;
+  projectName: string;
+  description: string;
+  teamMembers?: { name: string }[];
+  projectRepo?: string;
+  demoUrl?: string;
+  slidesUrl?: string;
+  donationAddress?: string;
+  bountyPrize?: { name: string; amount: number; hackathonWonAtId: string }[];
+};
+
+type LegacyProject = {
+  id?: string;
+  projectName: string;
+  teamLead: string;
+  description: string;
+  githubRepo?: string;
+  demoUrl?: string;
+  slidesUrl?: string;
+  donationAddress?: string;
+  winner?: string;
+};
 
 const PROJECTS_PER_PAGE = 9;
 
 const ProjectsPage = () => {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<LegacyProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
@@ -44,13 +68,38 @@ const ProjectsPage = () => {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        // Use synergy-2025 data and filter for winners only
-        const winnerProjects = synergyProjects.filter((project: any) => project.winner && project.winner !== "");
-        setProjects(winnerProjects);
+        // Query backend API and log response (for mapping step)
+        const response = await api.getProjects({
+          hackathonId: "synergy-2025",
+          winnersOnly: true,
+          sortBy: "updatedAt",
+          sortOrder: "desc",
+          limit: 1000,
+        });
+        console.log("[ProjectsPage] GET /api/projects response:", response);
+
+        // Map API response to legacy JSON shape expected by UI
+        const apiProjects = Array.isArray(response?.data) ? response.data : [];
+        const mapped = apiProjects.map((p: ApiProject) => ({
+          id: p.id,
+          projectName: p.projectName,
+          description: p.description,
+          teamLead: p.teamMembers?.[0]?.name || "",
+          githubRepo: p.projectRepo || "",
+          demoUrl: p.demoUrl || "",
+          slidesUrl: p.slidesUrl || "",
+          donationAddress: p.donationAddress || "",
+          // Winner string preserved from migration in bountyPrize[0].name
+          winner: p.bountyPrize?.[0]?.name || "",
+        }));
+
+        setProjects(mapped);
       } catch (error) {
+        console.error("[ProjectsPage] failed to load API projects:", error);
+        setProjects([]);
         toast({
           title: "Error",
-          description: "Failed to load projects. Please try again.",
+          description: "Failed to load latest projects from server.",
           variant: "destructive",
         });
       } finally {
@@ -133,17 +182,17 @@ const ProjectsPage = () => {
                 {currentProjects.length > 0 ? (
                   (() => {
                     // Separate Polkadot and Kusama winners
-                    const polkadotWinners = currentProjects.filter((project: any) => 
+                    const polkadotWinners = currentProjects.filter((project: LegacyProject) => 
                       project.winner?.toLowerCase().includes('polkadot')
                     );
-                    const kusamaWinners = currentProjects.filter((project: any) => 
+                    const kusamaWinners = currentProjects.filter((project: LegacyProject) => 
                       project.winner?.toLowerCase().includes('kusama')
                     );
                     
                     // Combine: Polkadot first, then Kusama
                     const sortedProjects = [...polkadotWinners, ...kusamaWinners];
                     
-                    return sortedProjects.map((project, index) => (
+                    return sortedProjects.map((project: LegacyProject, index: number) => (
                       <Card
                         key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in flex flex-col justify-between"
@@ -196,7 +245,7 @@ const ProjectsPage = () => {
                           <div className="flex-1" />
                           <Button asChild size="sm" className="text-[10px] px-2 py-1">
                             <Link
-                              to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
+                              to={project.id ? `/projects/${project.id}` : project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
                               className="flex items-center space-x-1"
                             >
                               <span>Details</span>
@@ -215,10 +264,10 @@ const ProjectsPage = () => {
                               </a>
                             </Button>
                           )}
-                          {project.demoUrl && (
+                          {(project.demoUrl || project.slidesUrl) && (
                             <Button size="icon" variant="outline" asChild className="h-6 w-6 p-0 min-w-0 ml-1">
                               <a
-                                href={project.demoUrl}
+                                href={project.demoUrl || project.slidesUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="View Demo"
@@ -253,13 +302,13 @@ const ProjectsPage = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {currentProjects
-                  .filter((project: any) => !project.winner || project.winner === "")
+                  .filter((project: LegacyProject) => !project.winner || project.winner === "")
                   .slice(0, 3)
                   .length > 0 ? (
                   currentProjects
-                    .filter((project: any) => !project.winner || project.winner === "")
+                    .filter((project: LegacyProject) => !project.winner || project.winner === "")
                     .slice(0, 3)
-                    .map((project, index) => (
+                    .map((project: LegacyProject, index: number) => (
                       <Card
                         key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"
@@ -323,13 +372,13 @@ const ProjectsPage = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {currentProjects
-                  .filter((project: any) => !project.winner || project.winner === "")
+                  .filter((project: LegacyProject) => !project.winner || project.winner === "")
                   .slice(3, 6)
                   .length > 0 ? (
                   currentProjects
-                    .filter((project: any) => !project.winner || project.winner === "")
+                    .filter((project: LegacyProject) => !project.winner || project.winner === "")
                     .slice(3, 6)
-                    .map((project, index) => (
+                    .map((project: LegacyProject, index: number) => (
                       <Card
                         key={project.projectName}
                         className="group hover:shadow-primary transition-all duration-300 animate-fade-in"

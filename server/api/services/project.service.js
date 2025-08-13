@@ -14,7 +14,17 @@ class ProjectService {
     }
 
     async getAllProjects(queryParams) {
-        const { page = 1, limit = 10, search, projectState, bountiesProcessed, sortBy = 'updatedAt', sortOrder = 'desc' } = queryParams;
+        const {
+            page = 1,
+            limit = 10,
+            search,
+            projectState,
+            bountiesProcessed,
+            sortBy = 'updatedAt',
+            sortOrder = 'desc',
+            hackathonId,
+            winnersOnly,
+        } = queryParams;
 
         const query = {};
         if (search) {
@@ -25,6 +35,19 @@ class ProjectService {
         }
         if (bountiesProcessed !== undefined) {
             query.bountiesProcessed = bountiesProcessed === 'true';
+        }
+        if (hackathonId) {
+            query['hackathon.id'] = hackathonId;
+        }
+        // winnersOnly can be boolean or string
+        const winnersOnlyBool = typeof winnersOnly === 'string' ? winnersOnly === 'true' : Boolean(winnersOnly);
+        if (winnersOnlyBool) {
+            if (hackathonId) {
+                query.bountyPrize = { $elemMatch: { hackathonWonAtId: hackathonId } };
+            } else {
+                // Non-empty bountyPrize array
+                query.bountyPrize = { $exists: true, $not: { $size: 0 } };
+            }
         }
 
         const sortOptions = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
