@@ -68,3 +68,36 @@ Content-Type: application/json
   "projectState": "Milestone Delivered",
   "bountiesProcessed": true
 }
+
+###
+# @name replaceTeamMembers
+# Replace a project's team entirely (team member or admin auth required)
+POST http://localhost:2000/api/projects/{{projectId}}/team
+Content-Type: application/json
+x-siws-auth: {{teamMemberToken}}
+
+{
+  "teamMembers": [
+    { "name": "Alice", "walletAddress": "5....", "customUrl": "" },
+    { "name": "Bob", "walletAddress": "", "customUrl": "" }
+  ]
+}
+
+
+### ========================================
+### User Journey: Hackathon Browsing
+### ========================================
+
+# A user wants to browse past projects for a specific hackathon.
+
+# @name browseSynergy2025
+GET http://localhost:2000/api/projects?hackathonId=synergy-2025&limit=100&sortBy=updatedAt&sortOrder=desc
+
+###
+# @name browseSymmetry2024
+GET http://localhost:2000/api/projects?hackathonId=symmetry-2024&limit=100&sortBy=updatedAt&sortOrder=desc
+
+###
+# Winners of a specific hackathon only (requires server support for winnersOnly)
+# @name winnersSynergy2025
+GET http://localhost:2000/api/projects?hackathonId=synergy-2025&winnersOnly=true&limit=100&sortBy=updatedAt&sortOrder=desc

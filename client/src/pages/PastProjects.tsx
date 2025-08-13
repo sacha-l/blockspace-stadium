@@ -1,13 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import symmetryProjects from "@/data/symmetry-2024.json";
-import synergyProjects from "@/data/synergy-2025.json";
 import { FilterSidebar } from "@/components/FilterSidebar";
 import { ProjectBubble } from "@/components/ProjectBubble";
 import { DemoVideoModal } from "@/components/DemoVideoModal";
 import { AnimatePresence, motion } from "framer-motion";
+import { api } from "@/lib/api";
 
 const CATEGORY_MAP: Record<string, string> = {
   // Symmetry 2024 categories
@@ -102,29 +101,55 @@ function extractCategories(techStack: string): string[] {
     });
 }
 
+type ApiProject = {
+  id: string;
+  projectName: string;
+  description: string;
+  teamMembers?: { name: string }[];
+  projectRepo?: string;
+  demoUrl?: string;
+  slidesUrl?: string;
+  donationAddress?: string;
+  bountyPrize?: { name: string; amount: number; hackathonWonAtId: string }[];
+  techStack?: string[];
+};
+
 const PastProjectsPage = () => {
   const [search, setSearch] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState("synergy-2025");
-  const [videoProject, setVideoProject] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false); // Simulate loading if needed
+  const [videoProject, setVideoProject] = useState<ApiProject | null>(null);
+  const [loading, setLoading] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [projects, setProjects] = useState<ApiProject[]>([]);
 
-  // Select projects based on event
-  const projects = selectedEvent === "symmetry-2024" ? symmetryProjects : synergyProjects;
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        const hackathonId = selectedEvent === "symmetry-2024" ? "symmetry-2024" : "synergy-2025";
+        const response = await api.getProjects({ hackathonId, limit: 1000, sortBy: "updatedAt", sortOrder: "desc" });
+        const apiProjects: ApiProject[] = Array.isArray(response?.data) ? response.data : [];
+        setProjects(apiProjects);
+      } catch (e) {
+        console.error("[PastProjects] Failed to load projects:", e);
+        setProjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [selectedEvent]);
+
   const filteredProjects = useMemo(() => {
-    return projects.filter((project: any) => {
-      // Event filter
-      const matchesEvent = selectedEvent === "symmetry-2024" || 
-        (selectedEvent === "synergy-2025" && project.eventStartedAt === "synergy-hack-2024");
-      
+    return projects.filter((project) => {
       // Search
       const matchesSearch =
         !search ||
         project.projectName.toLowerCase().includes(search.toLowerCase()) ||
-        project.teamLead.toLowerCase().includes(search.toLowerCase()) ||
+        (project.teamMembers?.[0]?.name || "").toLowerCase().includes(search.toLowerCase()) ||
         project.description.toLowerCase().includes(search.toLowerCase());
-      
+
       // Filters
       let matchesFilter = true;
       if (activeFilters.length > 0) {
@@ -132,40 +157,39 @@ const PastProjectsPage = () => {
         for (const filter of activeFilters) {
           if (filter === "Winners") {
             let isWinner = false;
-            
             if (selectedEvent === "symmetry-2024") {
-              // Check for specific winner projects in symmetry-2024
               const winnerProjects = [
                 "anytype - nft gating",
-                "delegit", 
+                "delegit",
                 "empathy technologies",
                 "hypertents",
                 "papi actions",
                 "propcorn",
-                "ChainView"
+                "ChainView",
               ];
-              isWinner = winnerProjects.some(winner =>
+              isWinner = winnerProjects.some((winner) =>
                 project.projectName.toLowerCase().includes(winner.toLowerCase())
-              ) || (project.milestones && project.milestones.length > 3);
+              );
             } else {
-              // Check for winner projects based on winner field in synergy-2025
-              isWinner = project.winner && project.winner !== "";
+              isWinner = Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0;
             }
-            
+
             if (isWinner) {
               matchesFilter = true;
               break;
             }
           }
           // Check techStack
-          const cats = extractCategories(project.techStack);
+          const cats = extractCategories(
+            Array.isArray(project.techStack) ? project.techStack.join(", ") : (project.techStack as unknown as string) || ""
+          );
           if (cats.includes(filter)) {
             matchesFilter = true;
             break;
           }
         }
       }
-      return matchesEvent && matchesSearch && matchesFilter;
+      return matchesSearch && matchesFilter;
     });
   }, [projects, search, activeFilters, selectedEvent]);
 

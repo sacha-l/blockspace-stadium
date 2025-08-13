@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { projectApi } from "@/lib/mockApi";
+import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
 import { SiwsMessage } from '@talismn/siws';
@@ -29,16 +29,38 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 
 const ProjectDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [project, setProject] = useState<any | null>(null);
+  type ApiTeamMember = { name: string; customUrl?: string; walletAddress?: string };
+  type ApiMilestone = string | { description?: string };
+  type ApiBounty = { name: string; amount: number; hackathonWonAtId: string };
+  type ApiProject = {
+    id: string;
+    projectName: string;
+    description: string;
+    teamLead?: string; // legacy
+    teamMembers?: ApiTeamMember[];
+    projectRepo?: string;
+    demoUrl?: string;
+    slidesUrl?: string;
+    techStack?: string | string[];
+    milestones?: ApiMilestone[];
+    bountyPrize?: ApiBounty[];
+    donationAddress?: string;
+    winner?: string; // legacy
+    eventStartedAt?: string;
+  };
+
+  const [project, setProject] = useState<ApiProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [connectedAddress, setConnectedAddress] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<false | 'updateAddress' | 'edit'>(false);
-  const [editFields, setEditFields] = useState<any>({});
+  const [editFields, setEditFields] = useState<Partial<ApiProject>>({});
   const [registerAddress, setRegisterAddress] = useState('');
   const [registerSig, setRegisterSig] = useState('');
+  const [teamEditing, setTeamEditing] = useState(false);
+  const [teamDraft, setTeamDraft] = useState<ApiTeamMember[]>([]);
   // Add state for modal and form fields
   const [deliverableModalOpen, setDeliverableModalOpen] = useState(false);
   const [milestoneName, setMilestoneName] = useState("");
@@ -66,7 +88,8 @@ const ProjectDetailsPage = () => {
         return;
       }
       try {
-        const projectData = await projectApi.getProject(id);
+        const response = await api.getProject(id);
+        const projectData = response?.data || response; // support both {status,data} and raw
         if (projectData) {
           setProject(projectData);
         } else {
@@ -91,7 +114,7 @@ const ProjectDetailsPage = () => {
       projectName: project.projectName,
       description: project.description,
       teamLead: project.teamLead,
-      githubRepo: project.githubRepo,
+      projectRepo: project.projectRepo,
       demoUrl: project.demoUrl,
       slidesUrl: project.slidesUrl,
       techStack: project.techStack,
@@ -100,9 +123,54 @@ const ProjectDetailsPage = () => {
     setEditMode('edit');
   };
 
+  // Team editing helpers
+  const startTeamEdit = () => {
+    setTeamDraft([...(project?.teamMembers || [])]);
+    setTeamEditing(true);
+  };
+  const addTeamMember = () => setTeamDraft((prev) => [...prev, { name: "" }]);
+  const removeTeamMember = (index: number) => setTeamDraft((prev) => prev.filter((_, i) => i !== index));
+  const updateTeamMember = (index: number, field: keyof ApiTeamMember, value: string) => {
+    setTeamDraft((prev) => prev.map((m, i) => (i === index ? { ...m, [field]: value } : m)));
+  };
+
+  const submitTeamUpdate = async () => {
+    if (!project) return;
+    try {
+      // Build SIWS header from connectedAddress or prompt flow
+      await web3Enable('Hackathonia');
+      const accounts = await web3Accounts();
+      const account = accounts.find(a => a.address === connectedAddress) || accounts[0];
+      if (!account) throw new Error('No wallet found');
+      const siws = new SiwsMessage({
+        domain: window.location.hostname,
+        uri: window.location.origin,
+        address: account.address,
+        nonce: Math.random().toString(36).slice(2),
+        statement: "Submit milestone deliverables for Hackathonia",
+      });
+      const injector = await web3FromSource(account.meta.source);
+      const signed = await siws.sign(injector) as unknown as { signature: string; message?: string };
+      const messageStr = typeof signed.message === 'string' && signed.message
+        ? signed.message
+        : (siws as unknown as { toString: () => string }).toString();
+      const authHeader = btoa(JSON.stringify({ message: messageStr, signature: signed.signature, address: account.address }));
+
+      // Send full replacement of teamMembers
+      const sanitized = teamDraft.map(t => ({ name: t.name, walletAddress: t.walletAddress || "", customUrl: t.customUrl || "" }));
+      const updated = await api.updateProjectTeam(project.id, sanitized, authHeader);
+      const updatedProject = updated?.data || updated;
+      setProject(updatedProject);
+      setTeamEditing(false);
+      toast({ title: 'Team updated', description: 'Team members saved.' });
+    } catch (e) {
+      toast({ title: 'Update failed', description: (e as Error)?.message || String(e), variant: 'destructive' });
+    }
+  };
+
   // Save edits (mock)
   const saveEdit = () => {
-    setProject((prev: any) => ({ ...prev, ...editFields }));
+    setProject((prev: ApiProject | null) => (prev ? { ...prev, ...editFields } as ApiProject : prev));
     setEditMode(false);
     toast({ title: 'Project updated (mock)', description: 'Your changes have been saved locally.' });
   };
@@ -141,8 +209,8 @@ const ProjectDetailsPage = () => {
       const signed = await siws.sign(injector);
       setRegisterSig(signed.signature);
       toast({ title: 'Address registered (mock)', description: `Signature: ${signed.signature.slice(0, 16)}...` });
-    } catch (err: any) {
-      toast({ title: 'Signature failed', description: err.message || String(err) });
+    } catch (err: unknown) {
+      toast({ title: 'Signature failed', description: (err as Error)?.message || String(err) });
     }
   };
 
@@ -166,8 +234,12 @@ const ProjectDetailsPage = () => {
       const accounts = await web3Accounts();
       const account = accounts[0];
       if (!account) throw new Error("No wallet found");
-      if (project.donationAddress && account.address !== project.donationAddress) {
-        setFormError("You must sign in with the project team address to submit deliverables.");
+      // New schema: require signer to be a team member (server also enforces via SIWS)
+      const isTeamMember = Array.isArray(project.teamMembers) && project.teamMembers.some(
+        (m: ApiTeamMember) => (m.walletAddress || '').toLowerCase() === account.address.toLowerCase()
+      );
+      if (!isTeamMember) {
+        setFormError("You must sign in with a team member wallet to submit deliverables (or use an admin wallet).");
         setFormLoading(false);
         return;
       }
@@ -182,13 +254,15 @@ const ProjectDetailsPage = () => {
       await siws.sign(injector);
       // Mock API call to save milestone
       const newMilestone = `${milestoneName}: ${milestoneDesc}\n${deliverables.map((d, i) => `- ${d}`).join("\n")}`;
-      setProject((prev: any) => ({ ...prev, milestones: [...(prev.milestones || []), newMilestone] }));
+      setProject((prev: ApiProject | null) => (
+        prev ? { ...prev, milestones: [ ...(prev.milestones || []), newMilestone ] } as ApiProject : prev
+      ));
       setDeliverableModalOpen(false);
       setMilestoneName("");
       setMilestoneDesc("");
       setDeliverables([""]);
-    } catch (err: any) {
-      setFormError(err.message || String(err));
+    } catch (err: unknown) {
+      setFormError((err as Error)?.message || String(err));
     } finally {
       setFormLoading(false);
     }
@@ -268,17 +342,17 @@ const ProjectDetailsPage = () => {
             <Card className="w-full max-w-full sm:max-w-4xl p-2 sm:p-4">
               <CardHeader className="pb-2 relative">
                 {/* Badge in top right */}
-                {project.winner && (
+                {(project.winner || (Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0)) && (
                   <div className="absolute right-4 top-4 mt-0 sm:mt-4">
                     <Badge
                       className={
-                        project.winner.toLowerCase().includes("kusama")
+                        (project.winner || project.bountyPrize?.[0]?.name || "").toLowerCase().includes("kusama")
                           ? "bg-purple-600/20 text-purple-300 border-purple-600/30"
                           : "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
                       }
                       variant="secondary"
                     >
-                      🏆 {project.winner
+                      🏆 {(project.winner || project.bountyPrize?.[0]?.name || "")
                         .split(" ")
                         .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
                         .join(" ")}
@@ -286,35 +360,39 @@ const ProjectDetailsPage = () => {
                   </div>
                 )}
                 {/* Add vertical space below the label and before the heading */}
-                {project.winner && <div className="h-8 sm:h-10" />}
+                {(project.winner || (Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0)) && <div className="h-8 sm:h-10" />}
                 {/* Project Title */}
                 <CardTitle className="text-xl sm:text-2xl mb-2">{project.projectName}</CardTitle>
                 {/* Team Name(s) below title */}
-                {project.teamLead && (
-                  <span className="block text-sm text-white mb-2">Team Name: {project.teamLead}</span>
-                )}
+                <span className="block text-sm text-white mb-2">
+                  Team: {Array.isArray(project.teamMembers) && project.teamMembers.length > 0 ? project.teamMembers.map((m: ApiTeamMember) => m?.name).filter(Boolean).join(', ') : (project.teamLead || '')}
+                </span>
                 <p className="text-sm sm:text-base text-muted-foreground mb-2">{project.description}</p>
                 {/* Tech stack badges with improved spacing */}
                 {project.techStack && (
                   <div className="flex flex-wrap gap-3 mb-4">
-                    <Badge variant="outline" className="text-xs">
-                      {project.techStack}
-                    </Badge>
+                    {Array.isArray(project.techStack) ? (
+                      project.techStack.map((t: string, idx: number) => (
+                        <Badge key={idx} variant="outline" className="text-xs">{t}</Badge>
+                      ))
+                    ) : (
+                      <Badge variant="outline" className="text-xs">{project.techStack}</Badge>
+                    )}
                   </div>
                 )}
                 <div className="flex gap-3 mt-4 flex-wrap">
-                  {project.githubRepo && (
+                  {project.projectRepo && (
                     <Button variant="outline" asChild>
-                      <a href={project.githubRepo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <a href={project.projectRepo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                         <Github className="h-4 w-4" />
                         <span>Source Code</span>
                         <ExternalLink className="h-4 w-4 ml-1" />
                       </a>
                     </Button>
                   )}
-                  {project.demoUrl && (
+                  {(project.demoUrl || project.slidesUrl) && (
                     <Button variant="outline" asChild>
-                      <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <a href={project.demoUrl || project.slidesUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                         <Globe className="h-4 w-4" />
                         <span>Live Demo</span>
                         <ExternalLink className="h-4 w-4 ml-1" />
@@ -356,28 +434,32 @@ const ProjectDetailsPage = () => {
                   <span className="text-xs mt-2">Milestone Delivered</span>
                 </div>
               </div>
-              {/* Team Address section */}
+              {/* Team Members section */}
               <div className="mb-6">
-                <h4 className="font-semibold text-base mb-2 text-green-400">Team Address</h4>
-                {project.donationAddress && (
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-white">Current registered address: {project.donationAddress.slice(0, 6)}...{project.donationAddress.slice(-4)}</span>
-                    {editMode === 'updateAddress' && (
-                      <div className="flex gap-2 mt-1">
-                        <input
-                          className="flex-1 border rounded px-2 py-1 text-xs"
-                          value={registerAddress}
-                          onChange={e => setRegisterAddress(e.target.value)}
-                          placeholder="New Polkadot address"
-                          style={{ minWidth: 0 }}
-                        />
-                        <Button size="sm" className="text-xs px-2 py-1" onClick={handleRegisterTeamAddress}>Sign & Update</Button>
+                <h4 className="font-semibold text-base mb-2 text-green-400">Team Members</h4>
+                {!teamEditing ? (
+                  <div className="space-y-1">
+                    {(project.teamMembers || []).map((m, i) => (
+                      <div key={i} className="text-xs text-white">{m.name}{m.walletAddress ? ` — ${m.walletAddress}` : ''}</div>
+                    ))}
+                    <Button size="sm" variant="default" className="text-xs px-3 py-1 mt-2" onClick={startTeamEdit}>Edit Team</Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {teamDraft.map((m, i) => (
+                      <div key={i} className="flex flex-col sm:flex-row gap-2">
+                        <input className="flex-1 border rounded px-2 py-1 text-xs" placeholder="Name" value={m.name} onChange={e => updateTeamMember(i, 'name', e.target.value)} />
+                        <input className="flex-1 border rounded px-2 py-1 text-xs" placeholder="Wallet Address (optional)" value={m.walletAddress || ''} onChange={e => updateTeamMember(i, 'walletAddress', e.target.value)} />
+                        <input className="flex-1 border rounded px-2 py-1 text-xs" placeholder="Custom URL (optional)" value={m.customUrl || ''} onChange={e => updateTeamMember(i, 'customUrl', e.target.value)} />
+                        <Button size="icon" variant="ghost" onClick={() => removeTeamMember(i)}><span className="text-lg">&times;</span></Button>
                       </div>
-                    )}
-                    {registerSig && editMode === 'updateAddress' && (
-                      <div className="text-xs text-muted-foreground break-all">Signature: {registerSig}</div>
-                    )}
-                    <Button size="sm" variant="default" className="text-xs px-3 py-1 mt-1" onClick={() => setEditMode(editMode === 'updateAddress' ? false : 'updateAddress')}>Update Team Address</Button>
+                    ))}
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={addTeamMember}>Add Member</Button>
+                      <Button size="sm" variant="default" onClick={submitTeamUpdate}>Save Team</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setTeamEditing(false)}>Cancel</Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Note: Saving will replace the entire team list.</p>
                   </div>
                 )}
               </div>
@@ -391,8 +473,8 @@ const ProjectDetailsPage = () => {
               {project.milestones && project.milestones.length > 0 ? (
                 <div className="mb-4">
                   <ul className="list-disc pl-6 space-y-1">
-                    {project.milestones.map((m: string, i: number) => (
-                      <li key={i} className="text-white text-xs sm:text-sm">{m}</li>
+                    {project.milestones.map((m: ApiMilestone, i: number) => (
+                      <li key={i} className="text-white text-xs sm:text-sm">{typeof m === 'string' ? m : (m?.description || '')}</li>
                     ))}
                   </ul>
                 </div>

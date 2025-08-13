@@ -3,13 +3,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:2000
 const request = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
 
-  const config: RequestInit = {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-    ...options,
-  };
+  // Ensure we never drop the default Content-Type when custom headers are provided
+  const config: RequestInit = { ...options };
+  const defaultHeaders: Record<string, string> = { "Content-Type": "application/json" };
+  const optionHeaders = (options.headers || {}) as Record<string, string>;
+  config.headers = { ...defaultHeaders, ...optionHeaders };
 
   const response = await fetch(url, config);
 
@@ -33,7 +31,7 @@ type GetProjectsParams = {
 };
 
 export const api = {
-  submitEntry: (data: any) =>
+  submitEntry: (data: unknown) =>
     request("/entry", {
       method: "POST",
       body: JSON.stringify(data),
@@ -55,11 +53,12 @@ export const api = {
     return request(`/projects${queryString ? `?${queryString}` : ""}`);
   },
 
-  getProject: (id: string) => request(`/entry/${id}`),
+  getProject: (id: string) => request(`/projects/${id}`),
 
-  updateProjectStatus: (ss58Address: string, status: string) =>
-    request(`/update-project/${ss58Address}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
+  updateProjectTeam: (projectId: string, teamMembers: Array<{ name: string; walletAddress?: string; customUrl?: string }>, authHeader: string) =>
+    request(`/projects/${projectId}/team`, {
+      method: "POST",
+      headers: { "x-siws-auth": authHeader },
+      body: JSON.stringify({ teamMembers }),
     }),
 };

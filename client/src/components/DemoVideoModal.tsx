@@ -122,7 +122,8 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   if (!project) return null;
 
   // Check if project is a winner - handle both data structures
-  const isWinner = project.winner && project.winner !== "";
+  const hasBountyWinner = Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0;
+  const isWinner = (project.winner && project.winner !== "") || hasBountyWinner;
 
   // Check milestone completion status - 2025 winners don't have completed milestones yet
   const getMilestoneStatus = () => {
@@ -134,7 +135,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   const milestoneStatus = getMilestoneStatus();
 
   // Extract categories from tech stack
-  const projectCategories = extractCategories(project.techStack);
+  const projectCategories = extractCategories(Array.isArray(project.techStack) ? project.techStack.join(", ") : project.techStack || "");
 
   // Override demo URL for delegit to use their live site
   const getDemoUrl = () => {
@@ -144,7 +145,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
     if (project.projectName.toLowerCase().includes("propcorn")) {
       return "https://propcorn.xyz/";
     }
-    return project.demoUrl;
+    return project.demoUrl && project.demoUrl !== "nan" ? project.demoUrl : (project.slidesUrl && project.slidesUrl !== "nan" ? project.slidesUrl : "");
   };
 
   const demoUrl = getDemoUrl();

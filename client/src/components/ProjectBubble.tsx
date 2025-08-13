@@ -8,8 +8,14 @@ interface ProjectBubbleProps {
 }
 
 export const ProjectBubble: React.FC<ProjectBubbleProps> = ({ project, onPlayDemo }) => {
+  // Determine author names from either legacy field or API teamMembers
+  const authorNames = Array.isArray(project.teamMembers) && project.teamMembers.length > 0
+    ? project.teamMembers.map((m: any) => m?.name).filter(Boolean).join(", ")
+    : (project.teamLead || "");
+
   // Check if project is a winner - handle both data structures
-  const isWinner = project.winner && project.winner !== "";
+  const hasBountyWinner = Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0;
+  const isWinner = (project.winner && project.winner !== "") || hasBountyWinner;
   
   // Check if project is a symmetry-2024 winner (hardcoded list)
   const isSymmetryWinner = () => {
@@ -32,8 +38,11 @@ export const ProjectBubble: React.FC<ProjectBubbleProps> = ({ project, onPlayDem
   
   // Get the winner text for symmetry-2024 projects
   const getWinnerText = () => {
-    if (isWinner) {
+    if (project.winner && project.winner !== "") {
       return project.winner;
+    }
+    if (hasBountyWinner) {
+      return project.bountyPrize[0]?.name || "";
     }
     if (isSymmetryWinner()) {
       return "Polkadot main track";
@@ -50,7 +59,7 @@ export const ProjectBubble: React.FC<ProjectBubbleProps> = ({ project, onPlayDem
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-bold text-lg truncate text-white drop-shadow-sm flex-1 mr-2">{project.projectName}</h3>
           </div>
-          <p className="text-sm text-muted-foreground mb-2 truncate">By {project.teamLead}</p>
+          <p className="text-sm text-muted-foreground mb-2 truncate">By {authorNames}</p>
         </div>
         {shouldShowWinnerBadge && (
           <Badge 

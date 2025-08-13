@@ -11,5 +11,7 @@ router.get('/:projectId', projectController.getProjectById);
 // --- Admin-Only, Write Routes ---
 router.post('/', requireAdmin, projectController.createProject);
 router.patch('/:projectId', requireTeamMemberOrAdmin, projectController.updateProject);
+// --- Team management ---
+router.post('/:projectId/team', requireTeamMemberOrAdmin, projectController.replaceTeamMembers);
 
 export default router;

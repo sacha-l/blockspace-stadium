@@ -41,20 +41,61 @@ class ProjectController {
             const { projectId } = req.params;
             const updateData = req.body;
 
-            if (Object.keys(updateData).length === 0) {
+            // Debug logging for incoming payload (safe fields only)
+            try {
+                const preview = JSON.stringify(updateData)?.slice(0, 500);
+                console.log(`[ProjectController] updateProject payload for ${projectId}:`, preview);
+            } catch {}
+
+            if (!updateData || typeof updateData !== 'object' || Object.keys(updateData).length === 0) {
                 return res.status(400).json({ status: "error", message: "Request body cannot be empty." });
             }
-            
+
+            // Basic shape validation for teamMembers replacement updates
+            if (Object.prototype.hasOwnProperty.call(updateData, 'teamMembers')) {
+                if (!Array.isArray(updateData.teamMembers)) {
+                    return res.status(422).json({ status: "error", message: "teamMembers must be an array" });
+                }
+                const invalid = updateData.teamMembers.some(m => !m || typeof m !== 'object' || typeof (m.name || '') !== 'string');
+                if (invalid) {
+                    return res.status(422).json({ status: "error", message: "Each team member must be an object with at least a name string." });
+                }
+            }
+
             const updatedProject = await projectService.updateProject(projectId, updateData);
-            
+
             if (!updatedProject) {
                 return res.status(404).json({ status: "error", message: "Project not found" });
             }
-            
+
             res.status(200).json({ status: "success", data: updatedProject });
         } catch (error) {
             console.error("❌ Error updating project:", error);
             res.status(500).json({ status: "error", message: "Failed to update project" });
+        }
+    }
+
+    async replaceTeamMembers(req, res) {
+        try {
+            const { projectId } = req.params;
+            const { teamMembers } = req.body || {};
+
+            if (!Array.isArray(teamMembers)) {
+                return res.status(422).json({ status: "error", message: "teamMembers must be an array" });
+            }
+            const invalid = teamMembers.some(m => !m || typeof m !== 'object' || typeof (m.name || '') !== 'string');
+            if (invalid) {
+                return res.status(422).json({ status: "error", message: "Each team member must have a name (string)." });
+            }
+
+            const updated = await projectService.updateProject(projectId, { teamMembers });
+            if (!updated) {
+                return res.status(404).json({ status: "error", message: "Project not found" });
+            }
+            res.status(200).json({ status: "success", data: updated });
+        } catch (error) {
+            console.error("❌ Error replacing team members:", error);
+            res.status(500).json({ status: "error", message: "Failed to replace team members" });
         }
     }
 }
