@@ -86,9 +86,10 @@ const PayoutModal = ({
       onClose();
       setAmount("");
     } catch (error) {
+      const err = error as Error;
       toast({
         title: "Payout Failed",
-        description: "Failed to create payout. Please try again.",
+        description: err?.message || "Failed to create payout. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -318,9 +319,10 @@ const AdminPage = () => {
       setProjects(projectsData);
       setPayouts(payoutsData);
     } catch (error) {
+      const err = error as Error;
       toast({
         title: "Error",
-        description: "Failed to load admin data.",
+        description: err?.message || "Failed to load admin data.",
         variant: "destructive",
       });
     } finally {
@@ -346,9 +348,10 @@ const AdminPage = () => {
         description: `Project status changed to ${newStatus}`,
       });
     } catch (error) {
+      const err = error as Error;
       toast({
         title: "Update Failed",
-        description: "Failed to update project status.",
+        description: err?.message || "Failed to update project status.",
         variant: "destructive",
       });
     }
