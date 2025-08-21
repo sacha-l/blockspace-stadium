@@ -582,13 +582,49 @@ const ProjectDetailsPage = () => {
               {/* Milestone work in progress section */}
               <h3 className="font-semibold mb-2 text-base text-green-400">Milestone work in progress</h3>
               {project.milestones && project.milestones.length > 0 ? (
-                <div className="mb-4">
-                  <ul className="list-disc pl-6 space-y-1">
-                    {project.milestones.map((m: ApiMilestone, i: number) => (
-                      <li key={i} className="text-white text-xs sm:text-sm">{typeof m === 'string' ? m : (m?.description || '')}</li>
-                    ))}
-                  </ul>
-                </div>
+                (() => {
+                  // Normalize text and collect bullets. Handle literal "\\n" and the first non-dash line.
+                  const bulletItems: string[] = [];
+                  (project.milestones || []).forEach((m: ApiMilestone) => {
+                    const raw = typeof m === 'string' ? m : (m?.description || '');
+                    const normalized = (raw || '').replace(/\\n/g, '\n');
+                    const lines = normalized.split('\n').map((l) => l.trim()).filter(Boolean);
+                    let encounteredDash = false;
+                    lines.forEach((line, idx) => {
+                      if (line.startsWith('- ')) {
+                        encounteredDash = true;
+                        bulletItems.push(line.slice(2));
+                      } else {
+                        // If this is the first line and subsequent lines include dashes, include it as a bullet too
+                        // or if no dash has been encountered yet but this looks like a deliverable style line
+                        if (idx === 0) {
+                          bulletItems.push(line);
+                        }
+                      }
+                    });
+                  });
+                  if (bulletItems.length > 0) {
+                    return (
+                      <div className="mb-4">
+                        <ul className="list-disc pl-6 space-y-1">
+                          {bulletItems.map((item: string, idx: number) => (
+                            <li key={idx} className="text-white text-xs sm:text-sm">{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  }
+                  // Fallback: render raw milestone lines
+                  return (
+                    <div className="mb-4">
+                      <ul className="list-disc pl-6 space-y-1">
+                        {project.milestones.map((m: ApiMilestone, i: number) => (
+                          <li key={i} className="text-white text-xs sm:text-sm">{typeof m === 'string' ? m : (m?.description || '')}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })()
               ) : (
                 <div className="mb-4 text-white text-xs sm:text-sm">No milestones confirmed.</div>
               )}
