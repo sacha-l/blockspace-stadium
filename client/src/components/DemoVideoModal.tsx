@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, Globe, CheckCircle, XCircle, ExternalLink, Heart } from "lucide-react";
@@ -137,6 +137,11 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   // Extract categories from tech stack
   const projectCategories = extractCategories(Array.isArray(project.techStack) ? project.techStack.join(", ") : project.techStack || "");
 
+  // Determine winner text safely
+  const winnerText = (project.winner && project.winner !== "")
+    ? project.winner
+    : (hasBountyWinner ? (project.bountyPrize?.[0]?.name || "") : "");
+
   // Override demo URL for delegit to use their live site
   const getDemoUrl = () => {
     if (project.projectName.toLowerCase().includes("delegit")) {
@@ -153,6 +158,10 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-full max-w-xs sm:max-w-md md:max-w-3xl p-2 sm:p-6 mx-auto my-4 max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{project.projectName}</DialogTitle>
+          <DialogDescription>Project details and demo media</DialogDescription>
+        </DialogHeader>
         <div className="relative bg-black min-h-[220px] h-56 sm:aspect-video sm:h-auto sm:max-h-[50vh] mb-6 rounded overflow-hidden">
           {demoUrl && demoUrl !== "nan" ? (
             <iframe
@@ -174,7 +183,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             <div className="flex gap-2 flex-wrap">
               {isWinner && (
                 <Badge variant="secondary" className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs break-words max-w-full">
-                  🏆 {project.winner
+                  🏆 {(winnerText || "Winner")
                     .split(' ')
                     .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
                     .join(' ')}
