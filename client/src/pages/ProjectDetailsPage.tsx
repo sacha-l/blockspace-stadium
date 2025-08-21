@@ -105,9 +105,10 @@ const ProjectDetailsPage = () => {
           setNotFound(true);
         }
       } catch (error) {
+        const err = error as Error;
         toast({
           title: "Error",
-          description: "Failed to load project details. Please try again.",
+          description: err?.message || "Failed to load project details. Please try again.",
           variant: "destructive",
         });
       } finally {
@@ -178,9 +179,8 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  // Save edits (mock)
+  // Save edits (persist categories; update UI on success only)
   const saveEdit = async () => {
-    setProject((prev: ApiProject | null) => (prev ? { ...prev, ...editFields } as ApiProject : prev));
     try {
       if (project && Array.isArray(editFields.categories)) {
         // Sign SIWS and persist categories via PATCH (protected route)
@@ -202,17 +202,17 @@ const ProjectDetailsPage = () => {
           : (siws as unknown as { toString: () => string }).toString();
         const authHeader = btoa(JSON.stringify({ message: messageStr, signature: signed.signature, address: account.address }));
 
-        await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:2000/api'}/projects/${project.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'x-siws-auth': authHeader },
-          body: JSON.stringify({ categories: editFields.categories }),
-        });
+        await api.updateProjectCategories(project.id, editFields.categories as string[], authHeader);
       }
+
+      // Update local UI after successful server update
+      setProject((prev: ApiProject | null) => (prev ? { ...prev, ...editFields } as ApiProject : prev));
+      setEditMode(false);
+      toast({ title: 'Project updated', description: 'Changes have been saved.' });
     } catch (e) {
-      toast({ title: 'Save failed', description: (e as Error)?.message || String(e), variant: 'destructive' });
+      const err = e as Error;
+      toast({ title: 'Save failed', description: err?.message || String(e), variant: 'destructive' });
     }
-    setEditMode(false);
-    toast({ title: 'Project updated', description: 'Changes have been saved.' });
   };
 
   // Wallet connect logic
