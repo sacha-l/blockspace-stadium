@@ -1,0 +1,38 @@
+Copyright (c) 2025 Sacha Lansky. All Rights Reserved.
+
+PROPRIETARY LICENSE
+
+This license governs use of the accompanying software and smart contracts ("Software").
+
+GRANT OF LICENSE
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+Software, to use, copy, modify, and distribute the Software for NON-COMMERCIAL purposes
+only, subject to the following restrictions:
+
+RESTRICTIONS
+1. COMMERCIAL USE PROHIBITED: You may NOT use this Software or any derivative works
+   for commercial purposes, including but not limited to:
+   - Selling the Software or charging fees for access
+   - Using the Software in any revenue-generating product or service
+   - Deploying smart contracts from this code on mainnet for commercial purposes
+   - Using the Software to provide paid services to third parties
+   - Including the Software in any commercial offering
+
+2. ATTRIBUTION: All copies or substantial portions of the Software must include this
+   license and copyright notice.
+
+3. MODIFICATIONS: Any modifications must be clearly marked and must not be
+   misrepresented as the original Software.
+
+4. NO SUBLICENSING: You may not sublicense or transfer rights to the Software.
+
+COMMERCIAL LICENSING
+For commercial use rights, please contact: sacha@joinwebzero.com
+
+DISCLAIMER
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
