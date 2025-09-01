@@ -24,6 +24,7 @@ import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
 import { SiwsMessage } from '@talismn/siws';
+import { generateSiwsStatement } from '@/lib/siwsUtils';
 import Header from "@/components/Header";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
@@ -147,7 +148,11 @@ const ProjectDetailsPage = () => {
         uri: window.location.origin,
         address: account.address,
         nonce: Math.random().toString(36).slice(2),
-        statement: "Submit milestone deliverables for Hackathonia",
+        statement: generateSiwsStatement({
+          action: 'update-team',
+          projectTitle: project.projectName,
+          projectId: project.id
+        }),
       });
       const injector = await web3FromSource(account.meta.source);
       const signed = await siws.sign(injector) as unknown as { signature: string; message?: string };
@@ -197,7 +202,9 @@ const ProjectDetailsPage = () => {
         uri: window.location.origin,
         address: registerAddress,
         nonce: Math.random().toString(36).slice(2),
-        statement: "Registering team address for Hackathonia"
+        statement: generateSiwsStatement({
+          action: 'register-address'
+        })
       });
       const accounts = await web3Accounts();
       const account = accounts.find(a => a.address === registerAddress);
@@ -248,7 +255,11 @@ const ProjectDetailsPage = () => {
         uri: window.location.origin,
         address: account.address,
         nonce: Math.random().toString(36).slice(2),
-        statement: "Submit milestone deliverables for Hackathonia"
+        statement: generateSiwsStatement({
+          action: 'submit-deliverable',
+          projectTitle: project.projectName,
+          projectId: project.id
+        })
       });
       const injector = await web3FromSource(account.meta.source);
       await siws.sign(injector);

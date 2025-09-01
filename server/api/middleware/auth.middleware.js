@@ -13,13 +13,56 @@ const ADMIN_WALLETS = (process.env.ADMIN_WALLETS || '')
   .filter(Boolean)
   .map(s => s.toLowerCase());
 
-const EXPECTED_STATEMENT = "Submit milestone deliverables for Hackathonia";
+// Multiple valid statements for different actions
+const VALID_STATEMENTS = [
+  "Submit milestone deliverables for Stadium",
+  "Update team members for project on Stadium",
+  "Update project details for project on Stadium",
+  "Register team address for Stadium",
+  "Perform administrative action on Stadium",
+  "Sign in to Stadium",
+  // Additional context-specific statements
+  "Submit milestone deliverables for project on Stadium",
+  "Update team members for Stadium",
+  "Update project details for Stadium",
+  "Register team address for project on Stadium",
+  // Project-specific statements (these will be generated dynamically)
+  "Create new project on Stadium",
+  "Delete project on Stadium",
+  // Admin action statements
+  "Review project on Stadium",
+  "Approve project on Stadium",
+  "Reject project on Stadium"
+];
+
 const EXPECTED_DOMAIN = process.env.EXPECTED_DOMAIN || 'localhost';
 
 const log = (message) => console.log(chalk.cyan(`[AuthMiddleware] ${message}`));
 const logError = (message) => console.log(chalk.red(`[AuthMiddleware] ${message}`));
 const logSuccess = (message) => console.log(chalk.green(`[AuthMiddleware] ${message}`));
 
+/**
+ * Validate SIWS statement with support for context-aware and project-specific statements
+ */
+function validateSiwsStatement(statement) {
+  // Check exact matches first
+  if (VALID_STATEMENTS.includes(statement)) {
+    return true;
+  }
+  
+  // Pattern match for project-specific statements
+  const projectPatterns = [
+    /^Update team members for .+ on Stadium$/,
+    /^Submit milestone deliverables for .+ on Stadium$/,
+    /^Update project details for .+ on Stadium$/,
+    /^Delete project .+ on Stadium$/,
+    /^Review project .+ on Stadium$/,
+    /^Approve project .+ on Stadium$/,
+    /^Reject project .+ on Stadium$/
+  ];
+  
+  return projectPatterns.some(pattern => pattern.test(statement));
+}
 
 // --- Middleware ---
 export const requireAdmin = async (req, res, next) => {
@@ -65,12 +108,13 @@ export const requireAdmin = async (req, res, next) => {
     const siwsMessage = await verifySIWS(message, signature, address);
     logSuccess('SIWS signature verified successfully.');
 
-    log(`Checking statement. Expected: "${EXPECTED_STATEMENT}"`);
-    if (siwsMessage.statement !== EXPECTED_STATEMENT) {
+    log(`Checking statement. Received: "${siwsMessage.statement}"`);
+    if (!validateSiwsStatement(siwsMessage.statement)) {
       logError(`Invalid statement. Received: "${siwsMessage.statement}"`);
+      logError(`Valid statements: ${VALID_STATEMENTS.join(', ')}`);
       return res.status(403).json({ status: 'error', message: 'Invalid statement in SIWS message.' });
     }
-    logSuccess('Statement matches.');
+    logSuccess('Statement is valid.');
 
     log(`Checking domain. Expected: "${EXPECTED_DOMAIN}"`);
     if (siwsMessage.domain !== EXPECTED_DOMAIN) {
@@ -165,6 +209,15 @@ export const requireTeamMemberOrAdmin = async (req, res, next) => {
     log(`Verifying SIWS for address: ${address}`);
     siwsMessage = await verifySIWS(message, signature, address);
     logSuccess('SIWS signature verified successfully.');
+
+    // Validate statement with context-aware validation
+    log(`Checking statement. Received: "${siwsMessage.statement}"`);
+    if (!validateSiwsStatement(siwsMessage.statement)) {
+      logError(`Invalid statement. Received: "${siwsMessage.statement}"`);
+      logError(`Valid statements: ${VALID_STATEMENTS.join(', ')}`);
+      return res.status(403).json({ status: 'error', message: 'Invalid statement in SIWS message.' });
+    }
+    logSuccess('Statement is valid.');
 
   } catch (e) {
     logError(`SIWS verification failed. Error: ${e.message}`);
