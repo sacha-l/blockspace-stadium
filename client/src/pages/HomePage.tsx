@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import synergyProjects from "@/data/synergy-2025.json";
 import { Project } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 import { DemoVideoModal } from "@/components/DemoVideoModal";
 import { motion, AnimatePresence } from "framer-motion";
+import { api } from "@/lib/api";
+import { getProjectUrl } from "@/lib/projectUtils";
 
 const HomePage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -34,8 +35,19 @@ const HomePage = () => {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        setProjects(synergyProjects as any[]);
+        // Use API to fetch projects with proper IDs instead of static JSON
+        const response = await api.getProjects({ 
+          hackathonId: 'synergy-2025',
+          limit: 100 // Get enough projects to find winners
+        });
+        
+        // Extract projects from the API response structure
+        const apiProjects = response.data || [];
+        console.log('Loaded projects from API:', apiProjects.length);
+        
+        setProjects(apiProjects);
       } catch (error) {
+        console.error('Failed to load projects from API:', error);
         toast({
           title: "Error",
           description: "Failed to load projects. Please try again.",
@@ -51,7 +63,11 @@ const HomePage = () => {
   const totalProjects = projects.length;
   const totalRewards = 40;
   const totalTeams = new Set(projects.map((p: any) => p.teamLead)).size;
-  const winningProjects = projects.filter((p: any) => p.winner && p.winner !== "").slice(0, 9);
+  
+  // Filter for winning projects based on bountyPrize (API response structure)
+  const winningProjects = projects.filter((p: any) => 
+    p.bountyPrize && Array.isArray(p.bountyPrize) && p.bountyPrize.length > 0
+  ).slice(0, 9);
 
   // Carousel navigation
   const prevCard = () => setCarouselIndex((i) => (i - 1 + winningProjects.length) % winningProjects.length);
@@ -217,12 +233,12 @@ const HomePage = () => {
                             <Play className="h-4 w-4 mr-2" />
                             <span>View Demo</span>
                           </Button>
-                          <Button asChild size="sm" variant="outline" className="w-full md:flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
-                            <Link to={project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`} className="flex items-center justify-center space-x-2">
-                              <span>Project Page</span>
-                              <ChevronRight className="h-4 w-4" />
-                            </Link>
-                          </Button>
+                                                                                <Button asChild size="sm" variant="outline" className="w-full md:flex-1 text-muted-foreground hover:text-primary bg-gray-100/10 border-gray-300/30">
+                             <Link to={getProjectUrl(project)} className="flex items-center justify-center space-x-2">
+                               <span>Project Page</span>
+                               <ChevronRight className="h-4 w-4" />
+                             </Link>
+                           </Button>
                         </div>
                       </CardFooter>
                     </Card>

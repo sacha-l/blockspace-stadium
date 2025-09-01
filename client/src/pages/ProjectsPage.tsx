@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/pagination";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
+import { getProjectUrl } from "@/lib/projectUtils";
 
 type ApiProject = {
   id: string;
@@ -245,7 +246,7 @@ const ProjectsPage = () => {
                           <div className="flex-1" />
                           <Button asChild size="sm" className="text-[10px] px-2 py-1">
                             <Link
-                              to={project.id ? `/projects/${project.id}` : project.donationAddress ? `/projects/${project.donationAddress}` : `/project/not-found`}
+                              to={getProjectUrl(project)}
                               className="flex items-center space-x-1"
                             >
                               <span>Details</span>
@@ -340,7 +341,7 @@ const ProjectsPage = () => {
                         <CardFooter className="pt-0">
                           <Button asChild size="sm" variant="outline" className="w-full text-xs">
                             <Link
-                              to="/project-page"
+                              to={getProjectUrl(project)}
                               className="flex items-center justify-center space-x-1"
                             >
                               <span>Project Details</span>
@@ -410,7 +411,7 @@ const ProjectsPage = () => {
                         <CardFooter className="pt-0">
                           <Button asChild size="sm" variant="outline" className="w-full text-xs">
                             <Link
-                              to="/project-page"
+                              to={getProjectUrl(project)}
                               className="flex items-center justify-center space-x-1"
                             >
                               <span>Project Details</span>

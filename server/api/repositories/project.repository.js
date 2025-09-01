@@ -2,7 +2,62 @@ import Project from '../../models/Project.js';
 
 class ProjectRepository {
     async getProjectById(projectId) {
-        return await Project.findById(projectId).select('-createdAt');
+        // First try to find by MongoDB ObjectId
+        let project = await Project.findById(projectId).select('-createdAt');
+        
+        if (project) {
+            return project;
+        }
+        
+        // If not found by ObjectId, try to find by donationAddress
+        project = await Project.findOne({ donationAddress: projectId }).select('-createdAt');
+        
+        if (project) {
+            return project;
+        }
+        
+        // If still not found, try to find by generated ID pattern
+        // Look for projects where the projectName matches the pattern
+        if (projectId.includes('-')) {
+            // Try to find by project name pattern
+            // Convert the URL slug back to a readable project name
+            const projectNamePattern = projectId
+                .split('-')
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1)) // Capitalize first letter
+                .join(' ');
+            
+            // Search by project name (case-insensitive, partial match)
+            project = await Project.findOne({
+                projectName: { $regex: new RegExp(projectNamePattern.replace(/\s+/g, '.*'), 'i') }
+            }).select('-createdAt');
+            
+            if (project) {
+                return project;
+            }
+            
+            // If still not found, try a more flexible search
+            // Split the ID and search for projects containing these words
+            const searchTerms = projectId.split('-').filter(term => term.length > 2);
+            if (searchTerms.length > 0) {
+                const searchQuery = searchTerms.map(term => ({
+                    $or: [
+                        { projectName: { $regex: new RegExp(term, 'i') } },
+                        { 'teamMembers.name': { $regex: new RegExp(term, 'i') } }
+                    ]
+                }));
+                
+                project = await Project.findOne({
+                    $and: searchQuery
+                }).select('-createdAt');
+                
+                if (project) {
+                    return project;
+                }
+            }
+        }
+        
+        // If nothing found, return null
+        return null;
     }
 
     async createProject(projectData) {
