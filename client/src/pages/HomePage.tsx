@@ -266,7 +266,7 @@ const HomePage = () => {
       </div>
       {/* View All Projects Button */}
       <div className="flex justify-center mt-8">
-        <Button asChild size="lg" className="hover:bg-accent hover:text-accent-foreground transition-colors">
+        <Button asChild size="lg" className="bg-atariGreen text-black hover:bg-atariGreen/90 transition-colors font-semibold">
           <Link to="/past-projects" className="flex items-center space-x-2">
             <span>View All Past Projects</span>
             <ChevronRight className="h-4 w-4" />
