@@ -123,7 +123,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
 
   // Check if project is a winner - handle both data structures
   const hasBountyWinner = Array.isArray(project.bountyPrize) && project.bountyPrize.length > 0;
-  const isWinner = (project.winner && project.winner !== "") || hasBountyWinner;
+  const isWinner = hasBountyWinner || (project.winner && project.winner !== "");
 
   // Check milestone completion status - 2025 winners don't have completed milestones yet
   const getMilestoneStatus = () => {
@@ -174,10 +174,12 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ open, onClose, p
             <div className="flex gap-2 flex-wrap">
               {isWinner && (
                 <Badge variant="secondary" className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs break-words max-w-full">
-                  🏆 {project.winner
-                    .split(' ')
-                    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-                    .join(' ')}
+                  🏆 {project.bountyPrize?.[0]?.name
+                    ? project.bountyPrize[0].name
+                        .split(' ')
+                        .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                        .join(' ')
+                    : 'Winner'}
                 </Badge>
               )}
               {milestoneStatus === "completed" && (

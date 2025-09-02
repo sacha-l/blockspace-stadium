@@ -215,12 +215,6 @@ const ProjectsPage = () => {
                         </CardHeader>
                         <CardContent className="pt-0 pb-2">
                           <div className="space-y-2">
-                            <div className="flex items-center text-xs text-muted-foreground">
-                              <Users className="h-3 w-3 mr-1" />
-                              <span className="text-xs">
-                                {project.teamLead}
-                              </span>
-                            </div>
                             <div className="flex flex-wrap gap-1">
                               {/* Remove Badge from here if present */}
                             </div>
@@ -330,12 +324,7 @@ const ProjectsPage = () => {
                         </CardHeader>
 
                         <CardContent className="pt-0 pb-3">
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Users className="h-4 w-4 mr-2" />
-                            <span className="text-xs">
-                              {project.teamLead}
-                            </span>
-                          </div>
+                          {/* Team name removed */}
                         </CardContent>
 
                         <CardFooter className="pt-0">
@@ -400,12 +389,7 @@ const ProjectsPage = () => {
                         </CardHeader>
 
                         <CardContent className="pt-0 pb-3">
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Users className="h-4 w-4 mr-2" />
-                            <span className="text-xs">
-                              {project.teamLead}
-                            </span>
-                          </div>
+                          {/* Team name removed */}
                         </CardContent>
 
                         <CardFooter className="pt-0">
