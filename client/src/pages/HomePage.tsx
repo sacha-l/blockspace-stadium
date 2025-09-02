@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  Users,
   ChevronRight,
   Loader2,
   Play,
@@ -206,12 +205,6 @@ const HomePage = () => {
                         <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
                           {project.description}
                         </p>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Users className="h-4 w-4 mr-2" />
-                          <span className="text-xs">
-                            {project.teamLead}
-                          </span>
-                        </div>
                       </CardContent>
                       <CardContent className="pt-0 pb-4">
                         <div className="flex flex-wrap gap-2 mb-3">
