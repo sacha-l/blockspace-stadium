@@ -180,18 +180,18 @@ const HomePage = () => {
                           <div className="flex flex-col gap-1">
                             <Badge 
                               className={`${
-                                project.winner?.toLowerCase().includes('kusama') 
+                                project.bountyPrize?.[0]?.name?.toLowerCase().includes('kusama') 
                                   ? 'bg-purple-600/20 text-purple-300 border-purple-600/30' 
                                   : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
                               }`} 
                               variant="secondary"
                             >
-                              🏆 {project.winner
-                                ? project.winner
+                              🏆 {project.bountyPrize?.[0]?.name
+                                ? project.bountyPrize[0].name
                                     .split(' ')
                                     .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
                                     .join(' ')
-                                : ''}
+                                : 'Winner'}
                             </Badge>
                             <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-300 border-blue-500/30">
                               Blockspace Synergy 2025
