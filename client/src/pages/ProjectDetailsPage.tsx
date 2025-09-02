@@ -484,9 +484,20 @@ const ProjectDetailsPage = () => {
               {project.milestones && project.milestones.length > 0 ? (
                 <div className="mb-4">
                   <ul className="list-disc pl-6 space-y-1">
-                    {project.milestones.map((m: ApiMilestone, i: number) => (
-                      <li key={i} className="text-white text-xs sm:text-sm">{typeof m === 'string' ? m : (m?.description || '')}</li>
-                    ))}
+                    {project.milestones.map((m: ApiMilestone, i: number) => {
+                      const milestoneText = typeof m === 'string' ? m : (m?.description || '');
+                      // Handle both actual newlines and escaped newlines (\n)
+                      const lines = milestoneText
+                        .replace(/\\n/g, '\n') // Replace escaped newlines with actual newlines
+                        .split('\n')
+                        .filter(line => line.trim() !== '');
+                      
+                      return lines.map((line, lineIndex) => (
+                        <li key={`${i}-${lineIndex}`} className="text-white text-xs sm:text-sm">
+                          {line.trim().replace(/^-+/, '').trim()}
+                        </li>
+                      ));
+                    })}
                   </ul>
                 </div>
               ) : (
