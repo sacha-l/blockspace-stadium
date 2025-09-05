@@ -98,9 +98,10 @@ const ProjectsPage = () => {
       } catch (error) {
         console.error("[ProjectsPage] failed to load API projects:", error);
         setProjects([]);
+        const err = error as Error;
         toast({
           title: "Error",
-          description: "Failed to load latest projects from server.",
+          description: err?.message || "Failed to load latest projects from server.",
           variant: "destructive",
         });
       } finally {
