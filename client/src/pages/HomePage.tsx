@@ -108,6 +108,12 @@ const HomePage = () => {
           A Blockspace Builder's project progress and showcase portal.
         </span>
       </div>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 text-lg font-mono">
+        <span className="w-full text-center font-pressStart text-base sm:text-lg text-gray-300 tracking-wide mt-2 block" style={{ textShadow: '0 2px 8px #8888' }}>
+          Past events: Blockspace Symmetry 2024, Blockspace Synergy 2025.
+          Upcoming: sub0 hack 2025
+        </span>
+      </div>
 
       {/* Winning Projects Carousel */}
       <div className="mb-8 flex flex-col items-center">
